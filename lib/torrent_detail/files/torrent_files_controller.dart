@@ -16,21 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
+import 'package:trireme/common/common.dart';
+
 import 'package:kilobyte/kilobyte.dart';
 
-import 'torrent_file.dart';
+import 'file.dart';
 
 class TorrentFileListController {
   static const priorities = {
-    0: "Do not download",
-    1: "Normal",
-    2: "Normal",
-    3: "Normal",
-    4: "Normal",
-    5: "High",
-    6: "High",
-    7: "Highest",
+    Priority.dontDownload: "Do not download",
+    Priority.normal: "Normal",
+    Priority.high: "High",
+    Priority.highest: "Highest",
+    Priority.mixed: "Mixed"
   };
+
+  TriremeRepository repository;
 
   String getFileSize(File file) {
     return Size(bytes: file.size).toString();
@@ -38,5 +41,41 @@ class TorrentFileListController {
 
   String getFilePriority(File file) {
     return priorities[file.priority];
+  }
+
+  Future setPriorityForFiles(List<File> files, List<int> currentPriorities,
+      String torrentId, int newPriority) {
+    var indices = <int>[];
+    for (var file in files) {
+      indices.addAll(getIndicesOfChildren(file));
+    }
+
+    var newPriorities = List.of(currentPriorities);
+    for (var index in indices) {
+      newPriorities[index] = newPriority;
+    }
+
+    return repository.setTorrentFilePriorities(torrentId, newPriorities);
+  }
+
+  List<int> getIndicesOfChildren(File file) {
+    if (file.isFile) return [file.index];
+    var indices = <int>[];
+    for (var child in file.children) {
+      indices.addAll(getIndicesOfChildren(child));
+    }
+    return indices;
+  }
+
+  String getPath(File file) {
+    if (file.isRoot) return "/";
+
+    var segments = <String>[];
+    var currentDir = file;
+    while (!currentDir.isRoot) {
+      segments.add(currentDir.name);
+      currentDir = currentDir.parent;
+    }
+    return "/${segments.reversed.join("/")}";
   }
 }

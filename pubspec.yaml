@@ -4,23 +4,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  intl: "^0.15.6"
   charts_flutter: "^0.3.0"
+  isolate: "^2.0.1"
+  intl: "^0.15.6"
 
   trireme_client:
-    git: git@github.com:teal77/trireme_client.git
+#    git: git@github.com:teal77/trireme_client.git
+    path: /home/aash/git/trireme_client
 
   rxdart: "^0.16.7"
 
   path: "^1.5.1"
   path_provider: "^0.4.0"
-  sqflite: "^0.8.6"
   shared_preferences: "^0.4.1"
+  sqflite: "^0.8.6"
 
   cached_network_image: "^0.4.1+1"
 
-  kilobyte: "^0.1.0"
   duration: "^1.0.0"
+  kilobyte: "^0.1.0"
 
 dev_dependencies:
   flutter_test:

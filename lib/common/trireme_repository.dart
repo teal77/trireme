@@ -31,7 +31,6 @@ import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/common/log.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
-import 'package:trireme/torrent_detail/files/torrent_file.dart';
 
 abstract class TriremeRepository {
   static const _tag = "TriremeRepository";
@@ -127,9 +126,9 @@ abstract class TriremeRepository {
 
   Future setTorrentLabel(String torrentId, String label);
 
-  Future<List<File>> getTorrentFiles(String torrentId);
+  Future<TorrentFiles> getTorrentFiles(String torrentId);
 
-  Stream<List<File>> getTorrentFilesUpdates(String torrentId);
+  Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId);
 
   Stream<Peers> getTorrentPeers(String torrentId);
 
@@ -517,18 +516,13 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   }
 
   @override
-  Future<List<File>> getTorrentFiles(String torrentId) async {
+  Future<TorrentFiles> getTorrentFiles(String torrentId) async {
     if (client == null || torrentId == null || torrentId.isEmpty) return null;
-
-    var torrentFiles = await client.getTorrentFileList(torrentId);
-    return List.generate(
-        torrentFiles.files.length,
-        (i) => File(torrentFiles.files[i], torrentFiles.filePriorities[i],
-            torrentFiles.fileProgress[i]));
+    return await client.getTorrentFileList(torrentId);
   }
 
   @override
-  Stream<List<File>> getTorrentFilesUpdates(String torrentId) {
+  Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId) {
     torrentFileListRefresher.torrentId = torrentId;
     torrentFileListRefresher.clearData();
     return Observable.merge([
@@ -806,7 +800,7 @@ class _TorrentPeerListRefresher extends _BasicRefresher<Peers> {
   }
 }
 
-class _TorrentFileListRefresher extends _BasicRefresher<List<File>> {
+class _TorrentFileListRefresher extends _BasicRefresher<TorrentFiles> {
   String torrentId;
 
   @override

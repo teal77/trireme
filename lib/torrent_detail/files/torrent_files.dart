@@ -16,12 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/selectable.dart';
 
-import 'torrent_file.dart';
+import 'package:trireme_client/deserialization.dart';
+
+import 'file.dart';
 import 'torrent_files_controller.dart';
 
 class TorrentFileListPage extends StatefulWidget {
@@ -45,17 +50,25 @@ class TorrentFileListPageState extends State<TorrentFileListPage>
     repository = RepositoryProvider.repositoryOf(context);
   }
 
+  Stream<TorrentFileData> _dataStream() {
+    return repository
+        .getTorrentFilesUpdate(widget.torrentId)
+//        .asyncMap((t) => TorrentFileData.createAsync(t));
+        .map((t) => TorrentFileData.create(t));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<File>>(
-      stream: repository.getTorrentFilesUpdates(widget.torrentId),
+    return StreamBuilder<TorrentFileData>(
+      stream: _dataStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           hideProgressBar();
           if (snapshot.hasData) {
             return _TorrentFileList(
               torrentId: widget.torrentId,
-              files: snapshot.data,
+              torrentFiles: snapshot.data.torrentFiles,
+              root: snapshot.data.root,
             );
           } else if (snapshot.hasError) {
             return ErrorPage(snapshot.error);
@@ -71,9 +84,11 @@ class TorrentFileListPageState extends State<TorrentFileListPage>
 
 class _TorrentFileList extends StatefulWidget {
   final String torrentId;
-  final List<File> files;
+  final TorrentFiles torrentFiles;
+  final File root;
 
-  _TorrentFileList({Key key, this.torrentId, this.files}) : super(key: key);
+  _TorrentFileList({Key key, this.torrentId, this.torrentFiles, this.root})
+      : super(key: key);
 
   @override
   State createState() {
@@ -83,23 +98,52 @@ class _TorrentFileList extends StatefulWidget {
 
 class _TorrentFileListState extends State<_TorrentFileList>
     with TriremeProgressBarMixin {
+  File currentDirectory;
   List<File> selectedFiles = [];
   bool disableButtons = false;
+
   TriremeRepository repository;
+  TorrentFileListController controller = TorrentFileListController();
+
+  @override
+  void initState() {
+    super.initState();
+    currentDirectory = widget.root;
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     repository = RepositoryProvider.repositoryOf(context);
+    controller.repository = repository;
+  }
+
+  @override
+  void didUpdateWidget(_TorrentFileList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    currentDirectory = currentDirectory.isRoot
+        ? widget.root
+        : widget.root.findChild(currentDirectory.path);
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.files.sort((f1, f2) => f1.index.compareTo(f2.index));
     return Column(children: <Widget>[
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        alignment: Alignment.topLeft,
+        child: Text(
+          controller.getPath(currentDirectory),
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.grey.shade700,
+          ),
+          textAlign: TextAlign.start,
+        ),
+      ),
       Expanded(
           child: ListView(
-        children: widget.files.map((f) => getListTileForFile(f)).toList(),
+        children: getListChildren(),
       )),
       Offstage(
         offstage: selectedFiles.isEmpty,
@@ -142,9 +186,38 @@ class _TorrentFileListState extends State<_TorrentFileList>
     ]);
   }
 
-  Widget getListTileForFile(File file) {
-    return _TorrentFileListTile(file, selectedFiles.contains(file),
-        selectedFiles.isNotEmpty, onFileSelected);
+  List<Widget> getListChildren() {
+    var children = <Widget>[];
+    if (!currentDirectory.isRoot) {
+      children.add(ListTile(
+        leading: Icon(Icons.folder),
+        title: Text(".."),
+        onTap: onParentClicked,
+      ));
+    }
+    currentDirectory.children.sort((f1, f2) => f2.size.compareTo(f1.size));
+    for (var file in currentDirectory.children) {
+      var isSelected = selectedFiles.contains(file);
+      var isSelectionMode = selectedFiles.isNotEmpty;
+      children.add(_TorrentFileListTile(
+          file, isSelected, isSelectionMode, onFileClicked, onFileSelected));
+    }
+    return children;
+  }
+
+  void onParentClicked() {
+    onFileClicked(currentDirectory.parent);
+    setState(() {
+      selectedFiles.clear();
+    });
+  }
+
+  void onFileClicked(File file) {
+    if (file.isFolder) {
+      setState(() {
+        currentDirectory = file;
+      });
+    }
   }
 
   void onFileSelected(File file) {
@@ -159,7 +232,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
   void selectAll() {
     selectedFiles.clear();
     setState(() {
-      selectedFiles.addAll(widget.files);
+      selectedFiles.addAll(currentDirectory.children);
     });
   }
 
@@ -168,11 +241,9 @@ class _TorrentFileListState extends State<_TorrentFileList>
       disableButtons = true;
     });
     showProgressBar();
-    List<int> priorities = List(widget.files.length);
-    widget.files.forEach((f) => priorities[f.index] = f.priority);
-    selectedFiles.forEach((f) => priorities[f.index] = priority);
     try {
-      await repository.setTorrentFilePriorities(widget.torrentId, priorities);
+      await controller.setPriorityForFiles(selectedFiles,
+          widget.torrentFiles.filePriorities, widget.torrentId, priority);
       setState(() {
         selectedFiles.clear();
       });
@@ -192,61 +263,56 @@ class _TorrentFileListState extends State<_TorrentFileList>
 }
 
 typedef void _TorrentFileSelectedCallback(File file);
+typedef void _TorrentFileClickedCallback(File file);
 
 class _TorrentFileListTile extends StatelessWidget {
   final File file;
   final bool isSelected;
   final bool isSelectionMode;
-  final _TorrentFileSelectedCallback callback;
+  final _TorrentFileClickedCallback fileClickedCallback;
+  final _TorrentFileSelectedCallback fileSelectedCallback;
 
   final TorrentFileListController controller = new TorrentFileListController();
 
-  _TorrentFileListTile(
-      this.file, this.isSelected, this.isSelectionMode, this.callback);
+  _TorrentFileListTile(this.file, this.isSelected, this.isSelectionMode,
+      this.fileClickedCallback, this.fileSelectedCallback);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: isSelectionMode ? () => callback(file) : null,
-      onLongPress: isSelectionMode ? null : () => callback(file),
+      onTap: isSelectionMode
+          ? () => fileSelectedCallback(file)
+          : () => fileClickedCallback(file),
+      onLongPress: isSelectionMode ? null : () => fileSelectedCallback(file),
       child: Selectable(
-        selected: isSelected,
-        child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          selected: isSelected,
+          child: ListTile(
+            leading:
+                Icon(file.isFolder ? Icons.folder : Icons.insert_drive_file),
+            title: Text(file.name),
+            subtitle: Row(
               children: <Widget>[
                 Text(
-                  file.path,
-                  style: const TextStyle(fontSize: 16.0),
+                  controller.getFileSize(file),
                 ),
-                Container(
-                  height: 8.0,
-                ),
-                ClipRect(
-                    child: Align(
-                  heightFactor: 0.5,
-                  child: LinearProgressIndicator(
-                    value: file.progress,
-                  ),
-                )),
-                Container(
-                  height: 8.0,
-                ),
-                DefaultTextStyle(
-                    style: const TextStyle(
-                        fontSize: 14.0, color: const Color(0x99000000)),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(controller.getFileSize(file)),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ClipRect(
+                      child: Align(
+                        heightFactor: 0.5,
+                        child: LinearProgressIndicator(
+                          value: file.progress,
                         ),
-                        Text(controller.getFilePriority(file)),
-                      ],
-                    )),
+                      ),
+                    ),
+                  ),
+                ),
+                Text(controller.getFilePriority(file)),
               ],
-            )),
-      ),
+            ),
+            dense: true,
+          )),
     );
   }
 }
