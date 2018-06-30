@@ -21,10 +21,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:trireme/common/common.dart';
-import 'package:trireme/common/selectable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:trireme_client/deserialization.dart';
+
+import 'package:trireme/common/common.dart';
+import 'package:trireme/common/selectable.dart';
 
 import 'file.dart';
 import 'torrent_files_controller.dart';
@@ -153,28 +155,37 @@ class _TorrentFileListState extends State<_TorrentFileList>
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.select_all),
+                tooltip: Strings.detailFileSelectAllTooltip,
                 onPressed: disableButtons ? null : selectAll,
               ),
               IconButton(
                 icon: Icon(Icons.block),
+                tooltip: Strings.detailFileDoNotDownload,
                 onPressed: disableButtons
                     ? null
                     : () => setPrioritiesForSelectedFiles(0),
               ),
               IconButton(
                 icon: Icon(Icons.play_arrow),
+                tooltip: Strings.detailFileNormal,
                 onPressed: disableButtons
                     ? null
                     : () => setPrioritiesForSelectedFiles(1),
               ),
               IconButton(
                 icon: Icon(Icons.fast_forward),
+                tooltip: Strings.detailFileHigh,
                 onPressed: disableButtons
                     ? null
                     : () => setPrioritiesForSelectedFiles(5),
               ),
               IconButton(
-                icon: Icon(Icons.priority_high),
+                icon: SvgPicture.asset(
+                  "assets/icons/highest.svg",
+                  width: 24.0,
+                  height: 24.0,
+                ),
+                tooltip: Strings.detailFileHighest,
                 onPressed: disableButtons
                     ? null
                     : () => setPrioritiesForSelectedFiles(7),

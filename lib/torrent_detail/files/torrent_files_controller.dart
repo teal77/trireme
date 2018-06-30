@@ -25,12 +25,12 @@ import 'package:kilobyte/kilobyte.dart';
 import 'file.dart';
 
 class TorrentFileListController {
-  static const priorities = {
-    Priority.dontDownload: "Do not download",
-    Priority.normal: "Normal",
-    Priority.high: "High",
-    Priority.highest: "Highest",
-    Priority.mixed: "Mixed"
+  static final priorities = {
+    Priority.dontDownload: Strings.detailFileDoNotDownload,
+    Priority.normal: Strings.detailFileNormal,
+    Priority.high: Strings.detailFileHigh,
+    Priority.highest: Strings.detailFileHighest,
+    Priority.mixed: Strings.detailFileMixed,
   };
 
   TriremeRepository repository;

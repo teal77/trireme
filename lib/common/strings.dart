@@ -124,6 +124,12 @@ class Strings {
   static String detailMoveStorageDialogTitle = "Set storage path";
   static String detailNoLabel = "No label";
   static String detailRenameDialogTitle = "Rename";
+  static String detailFileSelectAllTooltip = "Select all";
+  static String detailFileDoNotDownload = "Do not download";
+  static String detailFileNormal = "Normal";
+  static String detailFileHigh = "High";
+  static String detailFileHighest = "Highest";
+  static String detailFileMixed = "Mixed";
 
   static String strYes = "Yes";
   static String strNo = "No";
