@@ -439,9 +439,11 @@ packages:
   trireme_client:
     dependency: "direct main"
     description:
-      path: "/home/aash/git/trireme_client"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "049055a789d0117174cfce5a6657a98ebbe25ad0"
+      url: "git@github.com:teal77/trireme_client.git"
+    source: git
     version: "0.0.1"
   typed_data:
     dependency: transitive

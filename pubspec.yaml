@@ -8,8 +8,7 @@ dependencies:
   intl: "^0.15.6"
 
   trireme_client:
-#    git: git@github.com:teal77/trireme_client.git
-    path: /home/aash/git/trireme_client
+    git: git@github.com:teal77/trireme_client.git
 
   rxdart: "^0.16.7"
 
