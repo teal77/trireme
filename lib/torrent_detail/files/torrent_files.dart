@@ -179,6 +179,13 @@ class _TorrentFileListState extends State<_TorrentFileList>
                     ? null
                     : () => setPrioritiesForSelectedFiles(7),
               ),
+              /*Offstage(
+                offstage: selectedFiles.length != 1,
+                child: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: disableButtons ? null : renameSelectedFile,
+                ),
+              )*/
             ],
           ),
         ),
@@ -259,6 +266,52 @@ class _TorrentFileListState extends State<_TorrentFileList>
         disableButtons = false;
       });
     }
+  }
+
+  void renameSelectedFile() async {
+    var fileForRename = selectedFiles.first;
+    setState(() {
+      selectedFiles.clear();
+    });
+    var newName = await showRenameDialog(fileForRename.name);
+
+    if (newName == null || newName.isEmpty) return;
+
+    showProgressBar();
+    try {
+      await controller.renameFile(widget.torrentId, fileForRename, newName);
+    } catch (e) {
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(prettifyError(e)),
+        ));
+    } finally {
+      hideProgressBar();
+    }
+  }
+
+  Future<String> showRenameDialog(String oldFileName) {
+    return showDialog<String>(
+        context: context,
+        builder: (context) {
+          String text = "";
+          return AlertDialog(
+            title: Text(Strings.detailRenameDialogTitle),
+            content: TextField(
+              controller: TextEditingController(text: oldFileName),
+              onChanged: (s) => text = s,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(Strings.strOk),
+                onPressed: () {
+                  Navigator.pop(context, text);
+                },
+              )
+            ],
+          );
+        });
   }
 }
 

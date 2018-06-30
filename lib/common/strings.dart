@@ -123,6 +123,7 @@ class Strings {
   static String detailMoveStorageFailedText = "Could not move storage";
   static String detailMoveStorageDialogTitle = "Set storage path";
   static String detailNoLabel = "No label";
+  static String detailRenameDialogTitle = "Rename";
 
   static String strYes = "Yes";
   static String strNo = "No";

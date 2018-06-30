@@ -78,4 +78,14 @@ class TorrentFileListController {
     }
     return "/${segments.reversed.join("/")}";
   }
+
+  Future renameFile(String torrentId, File file, String newName) {
+    var oldPath = file.path.substring(1); //we need to skip the first "/"
+    var newPath = "${file.parent.path}/$newName".substring(1);
+    if (file.isFolder) {
+      return repository.renameFolder(torrentId, oldPath, newPath);
+    } else {
+      return repository.renameFile(torrentId, file.index, newPath);
+    }
+  }
 }

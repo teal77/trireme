@@ -130,6 +130,10 @@ abstract class TriremeRepository {
 
   Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId);
 
+  Future renameFile(String torrentId, int index, String newName);
+
+  Future renameFolder(String torrentId, String oldName, String newName);
+
   Stream<Peers> getTorrentPeers(String torrentId);
 
   Future setTorrentFilePriorities(String torrentId, List<int> priorities);
@@ -529,6 +533,18 @@ class _TriremeRepositoryImpl extends TriremeRepository {
       Stream.fromFuture(getTorrentFiles(torrentId)),
       torrentFileListRefresher.updateStream()
     ]);
+  }
+
+  @override
+  Future renameFile(String torrentId, int index, String newName) {
+    if (client == null || torrentId == null || torrentId.isEmpty) return null;
+    return client.renameTorrentFiles(torrentId, [[index, newName]]);
+  }
+
+  @override
+  Future renameFolder(String torrentId, String oldName, String newName) {
+    if (client == null || torrentId == null || torrentId.isEmpty) return null;
+    return client.renameTorrentFolder(torrentId, oldName, newName);
   }
 
   @override

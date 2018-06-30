@@ -5,7 +5,6 @@ dependencies:
     sdk: flutter
 
   charts_flutter: "^0.3.0"
-  isolate: "^2.0.1"
   intl: "^0.15.6"
 
   trireme_client:
@@ -20,6 +19,7 @@ dependencies:
   sqflite: "^0.8.6"
 
   cached_network_image: "^0.4.1+1"
+  flutter_svg: "^0.5.0"
 
   duration: "^1.0.0"
   kilobyte: "^0.1.0"
