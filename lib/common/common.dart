@@ -42,6 +42,11 @@ String prettifyError(Object error) {
       }
     }
     return "Network error. Could not connect to server.";
+  } else if (error is HandshakeException) {
+    if (error.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+      return "SSL Handshake exception, certificate was changed on the remote server.";
+    }
+    return "Network error. Could not connect to server.";
   }
   throw error;
 }
