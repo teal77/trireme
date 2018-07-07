@@ -34,10 +34,12 @@ String prettifyError(Object error) {
   if (error is DelugeRpcError) {
     return error.toString();
   } else if (error is SocketException) {
-    if (error.osError.errorCode == 111) {
-      return "Connection refused. Is the deluge server running and configured to accept remote connections?";
-    } else if (error.osError.errorCode == 113) {
-      return "No route to host";
+    if (error.osError != null) {
+      if (error.osError.errorCode == 111) {
+        return "Connection refused. Is the deluge server running and configured to accept remote connections?";
+      } else if (error.osError.errorCode == 113) {
+        return "No route to host";
+      }
     }
     return "Network error. Could not connect to server.";
   }

@@ -20,6 +20,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:trireme_client/trireme_client.dart';
+
 import 'package:trireme/common/common.dart';
 import 'add_server_controller.dart';
 
@@ -41,13 +43,20 @@ class _AddServerPageContent extends StatefulWidget {
 
 class _AddServerState extends State<_AddServerPageContent>
     with TriremeProgressBarMixin {
-  AddServerController controller = AddServerController();
-  bool loading = false;
+  var hostDetailsFormKey = GlobalKey<FormState>();
+  var userDetailsFormKey = GlobalKey<FormState>();
+
+  var controller = AddServerController();
+  var loading = false;
 
   String host;
   String port;
+  DaemonDetails daemonDetails;
+  var saveCertificate = false;
   String username;
   String password;
+
+  var currentStep = 0;
 
   @override
   void initState() {
@@ -58,89 +67,164 @@ class _AddServerState extends State<_AddServerPageContent>
   Widget build(BuildContext context) {
     showProgressBarIf(loading);
 
-    return SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(child: Builder(builder: (context) {
-          return Column(
-            children: <Widget>[
-              TextFormField(
-                decoration:
-                    InputDecoration(labelText: Strings.addServerHostLabel),
-                keyboardType: TextInputType.url,
-                onSaved: (s) => host = s,
-                validator: controller.validateHost,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                initialValue: "58846",
-                decoration:
-                    InputDecoration(labelText: Strings.addServerPortLabel),
-                keyboardType: TextInputType.number,
-                onSaved: (s) => port = s,
-                validator: controller.validatePort,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    labelText: Strings.addServerUsernameLabel),
-                onSaved: (s) => username = s,
-                validator: controller.validateUsername,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              PasswordField(
-                labelText: Strings.addServerPasswordLabel,
-                onSaved: (s) => password = s,
-                validator: controller.validatePassword,
-              ),
-              SizedBox(
-                height: 32.0,
-              ),
-              RaisedButton(
-                child: Text(Strings.addServerAddServerButtonText),
-                onPressed: loading ? null : () => onAddServerClicked(context),
-              )
-            ],
-          );
-        })));
+    return Stepper(
+      steps: [
+        Step(
+            title: Text(Strings.addServerHostDetailsTitle),
+            content: Form(
+                key: hostDetailsFormKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: Strings.addServerHostLabel),
+                      keyboardType: TextInputType.url,
+                      onSaved: (s) => host = s,
+                      validator: controller.validateHost,
+                    ),
+                    Container(
+                      height: 16.0,
+                    ),
+                    TextFormField(
+                      initialValue: "58846",
+                      decoration: InputDecoration(
+                          labelText: Strings.addServerPortLabel),
+                      keyboardType: TextInputType.number,
+                      onSaved: (s) => port = s,
+                      validator: controller.validatePort,
+                    ),
+                  ],
+                )),
+            state: getStepState(0)),
+        Step(
+            title: Text(Strings.addServerCertDetailsTitle),
+            content: Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text(Strings.addServerPublicKeyLabel),
+                  subtitle: Text(
+                      controller.getDaemonCertificatePubKey(daemonDetails)),
+                ),
+                ListTile(
+                  title: Text(Strings.addServerCertificateIssuer),
+                  subtitle: Text(
+                    controller.getDaemonCertificateIssuer(daemonDetails),
+                  ),
+                ),
+                SwitchListTile(
+                  value: saveCertificate,
+                  onChanged: (value) {
+                    setState(() {
+                      saveCertificate = !saveCertificate;
+                    });
+                  },
+                  title: Text(Strings.addServerSaveCertificate),
+                  subtitle: Text(Strings.addServerSaveCertificateInfo),
+                )
+              ],
+            ),
+            state: getStepState(1)),
+        Step(
+            title: Text(Strings.addServerUserDetailsTitle),
+            content: Form(
+                key: userDetailsFormKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: Strings.addServerUsernameLabel),
+                      keyboardType: TextInputType.emailAddress,
+                      onSaved: (s) => username = s,
+                      validator: controller.validateUsername,
+                    ),
+                    Container(
+                      height: 16.0,
+                    ),
+                    PasswordField(
+                      labelText: Strings.addServerPasswordLabel,
+                      onSaved: (s) => password = s,
+                      validator: controller.validatePassword,
+                    ),
+                  ],
+                )),
+            state: getStepState(2))
+      ],
+      currentStep: currentStep,
+      onStepContinue: loading ? null : onStepContinue,
+    );
   }
 
-  void onAddServerClicked(BuildContext context) async {
-    if (Form.of(context).validate()) {
-      Form.of(context).save();
-      await validateAndSaveServerCredentials(context);
+  StepState getStepState(int step) {
+    if (step == currentStep)
+      return StepState.editing;
+    else if (step < currentStep) return StepState.complete;
+    return StepState.indexed;
+  }
+
+  void onStepContinue() async {
+    if (currentStep == 0) {
+      if (hostDetailsFormKey.currentState.validate()) {
+        hostDetailsFormKey.currentState.save();
+        detectDaemonAndContinue();
+      }
+    } else if (currentStep == 1) {
+      setState(() {
+        currentStep = 2;
+      });
+    } else if (currentStep == 2) {
+      if (userDetailsFormKey.currentState.validate()) {
+        userDetailsFormKey.currentState.save();
+        validateAndSaveServerCredentials();
+      }
     }
   }
 
-  Future validateAndSaveServerCredentials(BuildContext scaffoldContext) async {
-    setState(() => loading = true);
-
+  void detectDaemonAndContinue() async {
+    setState(() {
+      loading = true;
+    });
     try {
-      if (await controller.validateServerCredentials(
-          username, password, host, port)) {
-        showSnackbar(scaffoldContext, Strings.strSuccess);
-        await controller.addServer(username, password, host, port);
+      var daemonDetails =
+          await TriremeClient.detectDaemon(host, int.parse(port));
+      setState(() {
+        currentStep = 1;
+        this.daemonDetails = daemonDetails;
+      });
+    } catch (e) {
+      showSnackBar(prettifyError(e));
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  void validateAndSaveServerCredentials() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      var valid = await controller.validateServerCredentials(
+          username, password, host, port);
+      if (valid) {
+        showSnackBar(Strings.strSuccess);
+        var pemCert =
+            saveCertificate ? daemonDetails.daemonCertificate.pem : null;
+        await controller.addServer(username, password, host, port, pemCert);
         await Future.delayed(const Duration(seconds: 1));
         Navigator.of(context).pop(true);
       }
     } catch (e) {
-      if (e is String) {
-        showSnackbar(scaffoldContext, e);
-      } else {
-        rethrow;
-      }
+      showSnackBar(e);
     } finally {
-      setState(() => loading = false);
+      setState(() {
+        loading = false;
+      });
     }
   }
 
-  void showSnackbar(BuildContext scaffoldContext, String message) {
-    Scaffold.of(scaffoldContext)
+  void showSnackBar(String message) {
+    Scaffold.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text(message),
@@ -191,8 +275,7 @@ class _PasswordFieldState extends State<PasswordField> {
               _obscureText = !_obscureText;
             });
           },
-          child:
-              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+          child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
         ),
       ),
     );

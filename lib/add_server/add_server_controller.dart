@@ -19,6 +19,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:convert/convert.dart';
+
 import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/core/persistence.dart';
@@ -61,33 +63,47 @@ class AddServerController {
     return null;
   }
 
+  String getDaemonCertificatePubKey(DaemonDetails daemonDetails) {
+    if (daemonDetails == null) return "";
+    if (daemonDetails.daemonCertificate == null) return "";
+    return hex.encode(daemonDetails.daemonCertificate.sha1);
+  }
+
+  String getDaemonCertificateIssuer(DaemonDetails daemonDetails) {
+    if (daemonDetails == null) return "";
+    if (daemonDetails.daemonCertificate == null) return "";
+    return daemonDetails.daemonCertificate.issuer;
+  }
+
   Future<bool> validateServerCredentials(
       String username, String password, String host, String port) {
     int portInt = int.parse(port);
     TriremeClient client =
-    TriremeClient(username, password, host, port: portInt);
+        TriremeClient(username, password, host, port: portInt);
 
     return client
         .init()
         .then((_) => true)
         .catchError((e) {
-      var se = e as SocketException;
-      if (se.osError != null) {
-        if (se.osError.errorCode == 111) {
-          throw "Connection refused. Is the deluge server running and configured to accept remote connections?";
-        } else if (se.osError.errorCode == 113) {
-          throw "No route to host";
-        }
-      }
-      throw "Network error. Could not connect to server.";
-    }, test: (e) => e is SocketException)
+          var se = e as SocketException;
+          if (se.osError != null) {
+            if (se.osError.errorCode == 111) {
+              throw "Connection refused. Is the deluge server running and configured to accept remote connections?";
+            } else if (se.osError.errorCode == 113) {
+              throw "No route to host";
+            }
+          }
+          throw "Network error. Could not connect to server.";
+        }, test: (e) => e is SocketException)
         .catchError((e) => throw e.toString(), test: (e) => e is DelugeRpcError)
         .whenComplete(() {
-      client.dispose();
-    });
+          client.dispose();
+        });
   }
 
-  Future addServer(String username, String password, String host, String port) async {
+  Future addServer(String username, String password, String host, String port,
+      String pemCertificate) async {
+
     var portInt = int.parse(port);
     var dbModel = ServerDBModel(host, portInt, username, password);
     var database = ServerDetailsDatabase();

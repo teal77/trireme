@@ -24,6 +24,13 @@ class Strings {
   static String addServerPasswordLabel = "Password";
   static String addServerAddServerButtonText = "ADD SERVER";
   static String strSuccess = "Success!";
+  static String addServerHostDetailsTitle = "Host";
+  static String addServerCertDetailsTitle = "Certifcate";
+  static String addServerUserDetailsTitle = "User";
+  static String addServerPublicKeyLabel = "Public key SHA1";
+  static String addServerCertificateIssuer = "Issuer";
+  static String addServerSaveCertificate = "Save certificate details";
+  static String addServerSaveCertificateInfo = "Connect only with this certificate, if the certificate changes on the server, connection will be refused";
 
   static String homeTitle = "Deluge";
   static String homeSelectAll = "Select all";
