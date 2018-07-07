@@ -27,13 +27,14 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 
 const _dbFileName = "trireme.db";
-const _dbVersion = 1;
+const _dbVersion = 2;
 const _tableName = "servers";
 const _columnId = "id";
 const _columnHost = "host";
 const _columnPort = "port";
 const _columnUsername = "username";
 const _columnPassword = "password";
+const _columnCertificate = "certificate";
 
 class ServerDBModel {
   final int id;
@@ -41,15 +42,18 @@ class ServerDBModel {
   final int port;
   final String username;
   final String password;
+  final String certificate;
 
-  ServerDBModel._(this.id, this.host, this.port, this.username, this.password);
+  ServerDBModel._(this.id, this.host, this.port, this.username, this.password,
+      this.certificate);
 
   Map<String, Object> toMap() {
     var map = {
       _columnHost: host,
       _columnPort: port,
       _columnUsername: username,
-      _columnPassword: password
+      _columnPassword: password,
+      _columnCertificate: certificate
     };
 
     if (id != null) {
@@ -61,12 +65,13 @@ class ServerDBModel {
 
   factory ServerDBModel.fromMap(Map<String, Object> map) {
     return ServerDBModel._(map[_columnId], map[_columnHost], map[_columnPort],
-        map[_columnUsername], map[_columnPassword]);
+        map[_columnUsername], map[_columnPassword], map[_columnCertificate]);
   }
 
-  factory ServerDBModel(
-      String host, int port, String username, String password) {
-    return ServerDBModel._(null, host, port, username, password);
+  factory ServerDBModel(String host, int port, String username, String password,
+      String certificate) {
+    return ServerDBModel._(
+        null, host, port, username, password, certificate ?? "");
   }
 
   @override
@@ -79,8 +84,8 @@ class ServerDetailsDatabase {
   Future open() async {
     var appDataDir = await getApplicationDocumentsDirectory();
     var path = join(appDataDir.path, _dbFileName);
-    _database =
-        await openDatabase(path, version: _dbVersion, onCreate: _createDb);
+    _database = await openDatabase(path,
+        version: _dbVersion, onCreate: _createDb, onUpgrade: _upgradeDb);
   }
 
   Future addServer(ServerDBModel server) async {
@@ -115,7 +120,17 @@ void _createDb(Database db, int version) async {
       "$_columnHost text not null,"
       "$_columnPort integer not null,"
       "$_columnUsername text not null,"
-      "$_columnPassword text not null)");
+      "$_columnPassword text not null,"
+      "$_columnCertificate text not null)");
+}
+
+void _upgradeDb(Database db, int oldVersion, int newVersion) async {
+  switch (oldVersion) {
+    case 1:
+      await db.execute(
+          "alter table $_tableName add column $_columnCertificate text not null "
+          "default ''");
+  }
 }
 
 const _sortModeKey = "sortMode";

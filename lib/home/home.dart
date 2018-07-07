@@ -107,9 +107,14 @@ class _HomePageState extends State<_HomePageContent> {
       this.filterSpec = savedFilterSpec;
     });
 
+    List<int> certificate;
+    if (selectedServer.certificate != null &&
+        selectedServer.certificate.isNotEmpty) {
+      certificate = selectedServer.certificate.codeUnits;
+    }
     var client = TriremeClient(
         selectedServer.username, selectedServer.password, selectedServer.host,
-        port: selectedServer.port);
+        port: selectedServer.port, pinnedCertificate: certificate);
 
     try {
       await client.init();

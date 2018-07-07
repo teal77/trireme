@@ -105,7 +105,7 @@ class AddServerController {
       String pemCertificate) async {
 
     var portInt = int.parse(port);
-    var dbModel = ServerDBModel(host, portInt, username, password);
+    var dbModel = ServerDBModel(host, portInt, username, password, pemCertificate);
     var database = ServerDetailsDatabase();
     await database.open();
     await database.addServer(dbModel);
