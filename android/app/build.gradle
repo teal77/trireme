@@ -44,7 +44,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "org.deluge.trireme"
         minSdkVersion 16
         targetSdkVersion 27
@@ -54,7 +53,7 @@ android {
     }
 
     signingConfigs {
-        release {
+        github {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
@@ -62,9 +61,25 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
+    flavorDimensions "deploy"
+
+    productFlavors {
+        github {
+            dimension "deploy"
+            signingConfig signingConfigs.github
+        }
+
+        fdroid {
+            dimension "deploy"
+            signingConfig null
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        if (variant.flavorName == "fdroid") {
+            variant.outputs.all { output ->
+                output.outputFileName = "app-fdroid-release.apk"
+            }
         }
     }
 }
