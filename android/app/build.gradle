@@ -32,10 +32,6 @@ if (flutterRoot == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-def keystorePropertiesFile = rootProject.file("key.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     compileSdkVersion 27
 
@@ -54,6 +50,13 @@ android {
 
     signingConfigs {
         github {
+            def keystorePropertiesFile = rootProject.file("key.properties")
+            def keystoreProperties = new Properties()
+
+            if (!keystorePropertiesFile.exists()) return;
+
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
