@@ -19,6 +19,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:rxdart/rxdart.dart';
+
 import 'package:trireme_client/events.dart';
 import 'package:trireme_client/trireme_client.dart';
 
@@ -54,7 +56,7 @@ class TorrentListController {
     _repository = repository;
     listenForTorrentListUpdates();
     listenForRpcEvents();
-    getTorrentsWithFilter();
+    getFilteredTorrentList();
   }
 
   TriremeRepository get repository => _repository;
@@ -75,7 +77,7 @@ class TorrentListController {
 
   TorrentItem getItemAt(int index) => _torrentItems[index];
 
-  Future getTorrentsWithFilter() async {
+  Future getFilteredTorrentList() async {
     if (!repository.isReady()) {
       await repository.readiness();
     }
@@ -85,7 +87,7 @@ class TorrentListController {
       if (e is DelugeRpcError || e is SocketException) {
         Log.e(_tag, e.toString());
         await Future.delayed(const Duration(seconds: 1));
-        getTorrentsWithFilter();
+        getFilteredTorrentList();
       } else {
         rethrow;
       }
@@ -109,11 +111,15 @@ class TorrentListController {
   void listenForRpcEvents() async {
     _eventsStreamSubscription?.cancel();
     _eventsStreamSubscription =
-        repository.getDelugeRpcEvents().listen((data) {
-          if (isListAlteringEvent(data)) {
-            getTorrentsWithFilter();
-          }
+        _listEventsStream().listen((data) {
+            getFilteredTorrentList();
         });
+  }
+
+  Stream<DelugeRpcEvent> _listEventsStream() {
+    return Observable(repository.getDelugeRpcEvents())
+        .where((e) => isListAlteringEvent(e))
+        .debounce(const Duration(seconds: 1));
   }
 
   bool isListAlteringEvent(DelugeRpcEvent event) {
@@ -175,7 +181,7 @@ class TorrentListController {
 
   void filter(FilterSpec filterSpec) {
     _filterSpec = filterSpec;
-    getTorrentsWithFilter();
+    getFilteredTorrentList();
   }
 
   bool isItemSelected(TorrentItem torrentItem) {
@@ -235,7 +241,7 @@ class TorrentListController {
             .map((t) => repository.removeTorrent(t, removeData)))
         .whenComplete(() {
       clearSelection();
-      getTorrentsWithFilter();
+      getFilteredTorrentList();
     });
   }
 
