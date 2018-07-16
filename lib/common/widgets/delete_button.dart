@@ -18,7 +18,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'common.dart';
+import '../common.dart';
 
 class DeleteButton extends StatelessWidget {
   final String toolTip;

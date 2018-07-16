@@ -22,8 +22,8 @@ import 'package:flutter/rendering.dart';
 import 'package:trireme_client/deserialization.dart';
 
 import 'package:trireme/common/common.dart';
-import 'package:trireme/common/delete_button.dart';
-import 'package:trireme/common/label_button.dart';
+import 'package:trireme/common/widgets/delete_button.dart';
+import 'package:trireme/common/widgets/label_button.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
 import 'package:trireme/torrent_list/torrent_list_tile/torrent_list_tile.dart';
 

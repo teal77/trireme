@@ -24,8 +24,8 @@ import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/add_server/add_server.dart';
 import 'package:trireme/common/common.dart';
-import 'package:trireme/common/label_button.dart';
-import 'package:trireme/common/delete_button.dart';
+import 'package:trireme/common/widgets/label_button.dart';
+import 'package:trireme/common/widgets/delete_button.dart';
 import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';

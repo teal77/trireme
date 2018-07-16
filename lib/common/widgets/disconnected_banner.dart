@@ -18,31 +18,16 @@
 
 import 'package:flutter/material.dart';
 
-import 'common.dart';
+class DisconnectedBanner extends StatefulWidget {
+  @override
+  _DisconnectedBannerState createState() => _DisconnectedBannerState();
+}
 
-class ErrorPage extends StatelessWidget {
-  static const _tag = "ErrorPage";
-  final Object error;
+class _DisconnectedBannerState extends State<DisconnectedBanner> {
 
-  ErrorPage(this.error);
 
   @override
   Widget build(BuildContext context) {
-    if (error is Error) {
-      Log.e(_tag, error.toString());
-      Log.e(_tag, (error as Error).stackTrace.toString());
-    } else {
-      Log.e(_tag, error.toString());
-    }
-    try {
-      var errorString = prettifyError(error);
-      return Center(
-        child: Text(errorString),
-      );
-    } catch (e) {
-      return Center(
-        child: Text(e.toString()),
-      );
-    }
+    return Container();
   }
 }

@@ -26,7 +26,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trireme_client/deserialization.dart';
 
 import 'package:trireme/common/common.dart';
-import 'package:trireme/common/selectable.dart';
+import 'package:trireme/common/widgets/selectable.dart';
 
 import 'file.dart';
 import 'torrent_files_controller.dart';

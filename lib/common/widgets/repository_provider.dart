@@ -22,8 +22,8 @@ import 'package:meta/meta.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
+import '../trireme_repository.dart';
 import 'client_provider.dart';
-import 'trireme_repository.dart';
 
 class RepositoryProvider extends StatelessWidget {
   final Widget child;

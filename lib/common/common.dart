@@ -22,11 +22,12 @@ import 'package:kilobyte/kilobyte.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
-export 'client_provider.dart';
-export 'error_page.dart';
-export 'loading_container.dart';
+export 'package:trireme/common/widgets/client_provider.dart';
+export 'package:trireme/common/widgets/error_page.dart';
+export 'package:trireme/common/widgets/loading_container.dart';
+export 'package:trireme/common/widgets/repository_provider.dart';
+
 export 'log.dart';
-export 'repository_provider.dart';
 export 'strings.dart';
 export 'trireme_repository.dart';
 

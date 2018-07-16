@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
-import 'common.dart';
+import '../common.dart';
 
 class ClientProvider extends StatefulWidget {
   final Widget child;

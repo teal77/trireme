@@ -37,6 +37,7 @@ abstract class TriremeRepository {
 
   TriremeClient _client;
   StreamController<bool> _readinessStream = StreamController.broadcast();
+  StreamController<Object> _errorStream = StreamController.broadcast();
 
   factory TriremeRepository() {
     return _TriremeRepositoryImpl();
@@ -51,17 +52,16 @@ abstract class TriremeRepository {
 
   TriremeClient get client => _client;
 
-  bool isReady() {
-    return _client != null;
-  }
+  bool isReady() => _client != null;
 
-  Future readiness() {
-    return _readinessStream.stream.firstWhere((b) => b);
-  }
+  Future readiness() => _readinessStream.stream.firstWhere((b) => b);
+
+  Stream<Object> errorStream() => _errorStream.stream;
 
   @mustCallSuper
   void init() {
     _readinessStream = StreamController.broadcast();
+    _errorStream = StreamController.broadcast();
   }
 
   void pause();
@@ -72,9 +72,12 @@ abstract class TriremeRepository {
   void dispose() {
     Log.d(_tag, "Disposed");
     _readinessStream.close();
+    _errorStream.close();
   }
 
   Stream<DelugeRpcEvent> getDelugeRpcEvents();
+
+  Future<String> getDaemonInfo();
 
   Stream<String> getSessionDownloadSpeed();
 
@@ -250,6 +253,7 @@ class _TriremeRepositoryImpl extends TriremeRepository {
         ..add(Future.delayed(refreshInterval)));
     } catch (e) {
       Log.e(_tag, e.toString());
+      _errorStream.add(e);
     }
   }
 
@@ -258,12 +262,6 @@ class _TriremeRepositoryImpl extends TriremeRepository {
         .updateStream()
         .transform(new _BootlegTakeLastTransformer(speedHistorySize))
         .listen((s) => sessionStatusHistory.add(s));
-  }
-
-  List<int> zeroPad(Iterable<int> input, int totalLength) {
-    if (input.length >= totalLength) return input;
-    var padding = List.filled(totalLength - input.length, 0, growable: true);
-    return padding..addAll(input);
   }
 
   void stopRecordingSpeedHistory() {
@@ -331,6 +329,12 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   @override
   Stream<DelugeRpcEvent> getDelugeRpcEvents() {
     return eventsStream.stream;
+  }
+
+  @override
+  Future<String> getDaemonInfo() {
+    if (client == null) return null;
+    return client.daemonInfo();
   }
 
   @override
