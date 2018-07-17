@@ -68,6 +68,8 @@ class Strings {
   static String homePayloadSpeedLabel = "Payload";
   static String homeProtocolSpeedLabel = "Protocol";
   static String homeSpeedLimitTitle = "SPEED LIMIT";
+  static String homeDisconnectedInfo = "Lost connection to daemon";
+  static String strcRetry = "RETRY";
 
   static String addTorrentTitle = "Add Torrent";
   static String addTorrentUrlHint = "Enter torrent URL";

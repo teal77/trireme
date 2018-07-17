@@ -24,8 +24,9 @@ import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/add_server/add_server.dart';
 import 'package:trireme/common/common.dart';
-import 'package:trireme/common/widgets/label_button.dart';
 import 'package:trireme/common/widgets/delete_button.dart';
+import 'package:trireme/common/widgets/disconnected_banner.dart';
+import 'package:trireme/common/widgets/label_button.dart';
 import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
@@ -169,6 +170,7 @@ class _HomePageState extends State<_HomePageContent> {
           key: loadingContainerKey,
           child: Column(
             children: <Widget>[
+              DisconnectedBanner(),
               FilterSpecContainer(
                 filterSpec,
                 setFilter,

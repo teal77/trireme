@@ -28,17 +28,19 @@ class TriremeBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 4.0),
-      child: Padding(
-        padding: const EdgeInsets.only(
-            left: 16.0, right: 8.0, top: 16.0, bottom: 8.0),
-        child: Column(
-          children: <Widget>[
-            Text(text),
-            ButtonBar(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 8.0, top: 16.0, bottom: 8.0),
+              child: Text(text)),
+          ButtonTheme.bar(
+            child: ButtonBar(
               children: actions,
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
