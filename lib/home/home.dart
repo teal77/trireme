@@ -35,6 +35,7 @@ import 'add_torrent.dart';
 import 'filter.dart';
 import 'home_app_bar.dart';
 import 'home_controller.dart';
+import 'navigation_drawer.dart';
 import 'network_speed_bottomsheet_content.dart';
 
 class HomePage extends StatelessWidget {
@@ -186,19 +187,8 @@ class _HomePageState extends State<_HomePageContent> {
               )
             ],
           )),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-              height: 160.0,
-            ),
-            DrawerUserSwitcher(
-                servers, selectedServer, onAddServerClicked, changeServer),
-          ],
-          padding: EdgeInsets.zero,
-        ),
-      ),
+      drawer: NavDrawer(DrawerUserSwitcher(
+          servers, selectedServer, onAddServerClicked, changeServer)),
       bottomNavigationBar: BottomAppBar(
           color: Colors.white,
           hasNotch: true,
