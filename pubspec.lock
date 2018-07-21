@@ -164,7 +164,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.6"
+    version: "0.15.7"
   io:
     dependency: transitive
     description:
@@ -441,7 +441,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "46c3bf4894b0139116eb0698eaffcbc54eb6221b"
+      resolved-ref: e6e8903d405b7171939e94fb64fb8146272f8380
       url: "git@github.com:teal77/trireme_client.git"
     source: git
     version: "0.0.1"
