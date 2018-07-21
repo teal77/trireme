@@ -47,7 +47,7 @@ class TorrentListController {
   FilterSpec _filterSpec = FilterSpec.all;
 
   StreamSubscription<List<TorrentItem>> _torrentListUpdateStreamSubscription;
-  StreamSubscription<DelugeRpcEvent> _eventsStreamSubscription;
+  StreamSubscription _eventsStreamSubscription;
 
   TorrentListController(
       this.stateUpdateCallback, this.selectedItemsChangedCallback);
@@ -111,22 +111,22 @@ class TorrentListController {
   void listenForRpcEvents() async {
     _eventsStreamSubscription?.cancel();
     _eventsStreamSubscription =
-        _listEventsStream().listen((data) {
+        _listEventsStream().listen((_) {
             getFilteredTorrentList();
         });
   }
 
-  Stream<DelugeRpcEvent> _listEventsStream() {
+  Stream<List<DelugeRpcEvent>> _listEventsStream() {
     return Observable(repository.getDelugeRpcEvents())
         .where((e) => isListAlteringEvent(e))
-        .debounce(const Duration(seconds: 1));
+        .bufferTime(const Duration(seconds: 1))
+        .where((l) => l.isNotEmpty);
   }
 
   bool isListAlteringEvent(DelugeRpcEvent event) {
     return event is TorrentAddedEvent ||
         event is TorrentRemovedEvent ||
         event is TorrentStateChangedEvent ||
-        event is TorrentResumedEvent ||
         event is TorrentFinishedEvent ||
         event is SessionPausedEvent ||
         event is SessionResumedEvent;
