@@ -71,6 +71,7 @@ class Strings {
   static String homeDisconnectedInfo = "Lost connection to daemon";
   static String strcRetry = "RETRY";
   static String homeSettings = "Settings";
+  static String homeErrorCouldNotOpenFile = "Error trying to open the file";
 
   static String addTorrentTitle = "Add Torrent";
   static String addTorrentUrlHint = "Enter torrent URL";

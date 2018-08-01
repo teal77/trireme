@@ -19,6 +19,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
@@ -35,6 +36,7 @@ import 'package:trireme/torrent_list/torrent_list_controller.dart';
 import 'filter.dart';
 import 'home_app_bar.dart';
 import 'home_controller.dart';
+import 'intent_data.dart';
 import 'navigation_drawer.dart';
 import 'network_speed_bottomsheet_content.dart';
 
@@ -129,6 +131,8 @@ class _HomePageState extends State<_HomePageContent> {
 
     ClientProvider.of(context).setClient(client);
     loadingContainerKey.currentState.hideProgress();
+
+    checkIntentDataAndShowAddTorrent();
   }
 
   @override
@@ -361,11 +365,44 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddTorrentClicked() async {
+    showAddTorrentPage(AddTorrentPage(AddTorrentKind.url, null));
+  }
+
+  void showAddTorrentPage(Widget addTorrentPage) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => AddTorrentPage(AddTorrentKind.url)));
+            fullscreenDialog: true, builder: (context) => addTorrentPage));
+  }
+
+  void checkIntentDataAndShowAddTorrent() async {
+    try {
+      var intentUrl = await IntentData.getOpenedUrl();
+      showAddTorrentPageWithUrl(intentUrl);
+      return;
+    } on PlatformException {
+      //nop
+    }
+
+    try {
+      var intentFilePath = await IntentData.getOpenedFile();
+      showAddTorrentPageWithFile(intentFilePath);
+    } on PlatformException catch (e) {
+      if (e.code == "ERROR") {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(Strings.homeErrorCouldNotOpenFile),
+          duration: const Duration(seconds: 3),
+        ));
+      }
+    }
+  }
+
+  void showAddTorrentPageWithUrl(String url) {
+    showAddTorrentPage(AddTorrentPage(AddTorrentKind.url, url));
+  }
+
+  void showAddTorrentPageWithFile(String filePath) {
+    showAddTorrentPage(AddTorrentPage(AddTorrentKind.file, filePath));
   }
 
   Future persistFilter() async {

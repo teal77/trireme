@@ -30,9 +30,10 @@ import 'package:trireme/common/common.dart';
 import 'file_picker.dart';
 
 class AddTorrentPage extends StatefulWidget {
-  final AddTorrentKind addTorrentKind; //unused right now
+  final AddTorrentKind addTorrentKind;
+  final String data;
 
-  AddTorrentPage(this.addTorrentKind);
+  AddTorrentPage(this.addTorrentKind, this.data);
 
   @override
   State createState() => AddTorrentState();
@@ -58,7 +59,7 @@ class AddTorrentState extends State<AddTorrentPage> {
         ],
       ),
       body: LoadingContainer(
-        child: _AddTorrent(key, widget.addTorrentKind),
+        child: _AddTorrent(key, widget.addTorrentKind, widget.data),
       ),
     );
   }
@@ -66,11 +67,9 @@ class AddTorrentState extends State<AddTorrentPage> {
 
 class _AddTorrent extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
+  final String data;
 
-  _AddTorrent(
-    Key key,
-    this.addTorrentKind,
-  ) : super(key: key);
+  _AddTorrent(Key key, this.addTorrentKind, this.data) : super(key: key);
 
   @override
   State createState() => _AddTorrentState();
@@ -93,12 +92,24 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   bool addPaused = false;
   bool prioritiseFirstLast = false;
 
+  TextEditingController urlEditController;
   String selectedFilePath;
 
   @override
   void initState() {
     super.initState();
     initStateAsync();
+    if (widget.data != null) {
+      if (widget.addTorrentKind == AddTorrentKind.url) {
+        torrentUrl = widget.data;
+        urlEditController = TextEditingController(text: torrentUrl);
+      } else if (widget.addTorrentKind == AddTorrentKind.file) {
+        selectedFilePath = widget.data;
+        torrentFileName = getTorrentFileNameFromPath();
+      }
+    } else {
+      urlEditController = TextEditingController();
+    }
   }
 
   void initStateAsync() async {
@@ -149,13 +160,13 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       children: <Widget>[
         ListTile(
           title: TextField(
+            enabled: selectedFilePath == null,
             decoration: InputDecoration(
               hintText: Strings.addTorrentUrlHint,
             ),
             keyboardType: TextInputType.url,
             maxLines: 1,
-            onChanged: (s) => torrentUrl = s,
-            enabled: selectedFilePath == null,
+            controller: urlEditController,
           ),
         ),
         Align(

@@ -18,8 +18,8 @@
 
 package org.deluge.trireme;
 
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,31 +41,16 @@ public class MainActivity extends FlutterActivity {
 
     MethodChannel.Result pickFileResult;
 
+    String intentTorrentUrl;
+    Uri intentTorrentFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
-        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler((call, result) -> {
-            if (call.method.equals("pickFile")) {
-                if (pickFileResult != null) {
-                    result.error("ALREADY_SHOWING","Already showing file picker", null);
-                    return;
-                }
-                pickFileResult = result;
-                pickFile();
-            } else {
-                result.notImplemented();
-            }
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                pickFile();
-            }
+        listenForMethodChannelCalls();
+        if (getIntent() != null) {
+            saveIntentData();
         }
     }
 
@@ -84,7 +69,31 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
-    void pickFile() {
+    void listenForMethodChannelCalls() {
+        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler((call, result) -> {
+            switch (call.method) {
+                case "pickFile":
+                    pickFile(result);
+                    break;
+                case "getOpenedUrl":
+                    getOpenedUrl(result);
+                    break;
+                case "getOpenedFile":
+                    getOpenedFile(result);
+                    break;
+                default:
+                    result.notImplemented();
+                    break;
+            }
+        });
+    }
+
+    void pickFile(MethodChannel.Result result) {
+        if (pickFileResult != null) {
+            result.error("ALREADY_SHOWING", "Already showing file picker", null);
+            return;
+        }
+        pickFileResult = result;
         showPicker();
     }
 
@@ -96,14 +105,46 @@ public class MainActivity extends FlutterActivity {
         startActivityForResult(intent, REQUEST_CODE_FILE_PICKER);
     }
 
+    void getOpenedUrl(MethodChannel.Result result) {
+        if (intentTorrentUrl != null) {
+            result.success(intentTorrentUrl);
+        } else {
+            result.error("NODATA", "No intent data", null);
+        }
+        intentTorrentUrl = null;
+    }
+
+    void getOpenedFile(MethodChannel.Result result) {
+        if (intentTorrentFile != null) {
+            try {
+                File f = copyFileToCacheDir(intentTorrentFile);
+                String intentTorrentFilePath = f.getAbsolutePath();
+                result.success(intentTorrentFilePath);
+            } catch (IOException e) {
+                result.error("ERROR", "Error opening file", null);
+            }
+        } else {
+            result.error("NODATA", "No intent data", null);
+        }
+        intentTorrentFile = null;
+    }
+
     void onFilePickerResult(Intent data) {
+        Uri uri = data.getData();
+        try {
+            File f = copyFileToCacheDir(uri);
+            pickFileResult.success(f.getAbsolutePath());
+        } catch (IOException e) {
+            pickFileResult.error("IMPORT_ERROR", "Error importing file", null);
+        }
+    }
+
+    File copyFileToCacheDir(Uri uri) throws IOException {
         //https://github.com/lucaslcode/import_file/blob/954a15be869abb8919199ccdfccf545efbd139ee/android/src/main/java/io/github/lucaslcode/importfile/ImportFilePlugin.java
         //copy file to cache dir so that it can be accessed by dart code
-
-        Uri uri = data.getData();
         String fileName = null;
 
-        if (uri.getScheme().equals("content")) {
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -117,21 +158,28 @@ public class MainActivity extends FlutterActivity {
                 fileName = fileName.substring(cut + 1);
             }
         }
-        try {
-            File file = File.createTempFile(fileName, "", getCacheDir());
-            try (InputStream input = getContentResolver().openInputStream(uri)) {
-                try (OutputStream output = new FileOutputStream(file)) {
-                    byte[] buffer = new byte[4 * 1024];
-                    int read;
-                    while ((read = input.read(buffer)) != -1) {
-                        output.write(buffer, 0, read);
-                    }
-                    output.flush();
+        File file = File.createTempFile(fileName, "", getCacheDir());
+        try (InputStream input = getContentResolver().openInputStream(uri)) {
+            try (OutputStream output = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4 * 1024];
+                int read;
+                while ((read = input.read(buffer)) != -1) {
+                    output.write(buffer, 0, read);
                 }
+                output.flush();
             }
-            pickFileResult.success(file.getAbsolutePath());
-        } catch (IOException e){
-            pickFileResult.error("IMPORT_ERROR", "Error importing file", null);
+        }
+        return file;
+    }
+
+    void saveIntentData() {
+        Intent intent = getIntent();
+        if (intent.getData() == null) return;
+        if (intent.getData().getScheme().equals(ContentResolver.SCHEME_CONTENT)
+                || intent.getData().getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            intentTorrentFile = intent.getData();
+        } else {
+            intentTorrentUrl = intent.getDataString();
         }
     }
 }
