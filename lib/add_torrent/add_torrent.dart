@@ -17,15 +17,20 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:kilobyte/kilobyte.dart' as kb;
 
 import 'package:trireme/common/common.dart';
 
+import 'file_picker.dart';
+
 class AddTorrentPage extends StatefulWidget {
-  final AddTorrentKind addTorrentKind;
+  final AddTorrentKind addTorrentKind; //unused right now
 
   AddTorrentPage(this.addTorrentKind);
 
@@ -33,9 +38,7 @@ class AddTorrentPage extends StatefulWidget {
   State createState() => AddTorrentState();
 }
 
-enum AddTorrentKind {
-  url,
-}
+enum AddTorrentKind { url, file }
 
 class AddTorrentState extends State<AddTorrentPage> {
   var key = GlobalKey<_AddTorrentState>();
@@ -74,9 +77,12 @@ class _AddTorrent extends StatefulWidget {
 }
 
 class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
+  static const _tag = "_AddTorrentState";
+
   TriremeRepository repository;
 
   String torrentUrl = "";
+  String torrentFileName = "";
   String downloadPath = "";
   bool moveCompleted = false;
   String moveCompletedPath = "";
@@ -86,6 +92,8 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   int uploadSlotLimit = -1;
   bool addPaused = false;
   bool prioritiseFirstLast = false;
+
+  String selectedFilePath;
 
   @override
   void initState() {
@@ -147,7 +155,18 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
             keyboardType: TextInputType.url,
             maxLines: 1,
             onChanged: (s) => torrentUrl = s,
+            enabled: selectedFilePath == null,
           ),
+        ),
+        Align(
+          child: Text(Strings.strOr),
+        ),
+        ListTile(
+          title: Text(Strings.addTorrentFile),
+          subtitle: Text(torrentFileName),
+          onTap: () {
+            showFilePicker();
+          },
         ),
         getDivider(),
         getSubHeader(Strings.addTorrentLocationSubHeader),
@@ -247,6 +266,33 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
         color: Theme.of(context).dividerColor,
       ),
     );
+  }
+
+  void showFilePicker() async {
+    try {
+      selectedFilePath = await FilePicker.pickFile();
+    } on PlatformException catch (e) {
+      Log.e(_tag, e.toString());
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      torrentFileName = getTorrentFileNameFromPath();
+    });
+  }
+
+  String getTorrentFileNameFromPath() {
+    if (selectedFilePath == null || selectedFilePath.isEmpty) return "";
+    var tempName = selectedFilePath.split("/").last;
+    if (tempName.contains(".torrent")) {
+      return tempName.replaceRange(
+          tempName.lastIndexOf(".torrent"), null, ".torrent");
+    } else {
+      return tempName;
+    }
   }
 
   Future<String> showPathInputDialog(String title) async {
@@ -383,7 +429,11 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   void addTorrent() async {
     try {
       showProgressBar();
-      await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
+      if (selectedFilePath == null || selectedFilePath.isEmpty) {
+        addTorrentUrl();
+      } else {
+        addTorrentFile();
+      }
       Navigator.pop(context);
     } catch (e) {
       showSnackBar(prettifyError(e));
@@ -392,23 +442,38 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     }
   }
 
+  void addTorrentUrl() async {
+    await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
+  }
+
+  void addTorrentFile() async {
+    var fileName = torrentFileName;
+    var torrentFile = File(selectedFilePath);
+    if (await torrentFile.exists()) {
+      var fileContent = await torrentFile.readAsBytes();
+      var fileDump = base64.encode(fileContent);
+      await repository.addTorrentFile(fileName, fileDump, getTorrentOptions());
+    } else {
+      throw "Torrent file $fileName does not exist";
+    }
+  }
+
   Map<String, Object> getTorrentOptions() {
     return {
-      "download_location" : downloadPath,
-      "move_completed" : moveCompleted,
-      "move_completed_path" : moveCompletedPath,
-      "max_download_speed" : downloadSpeedLimit,
-      "max_upload_speed" : uploadSpeedLimit,
-      "max_connections" : connectionLimit,
-      "max_upload_slots" : uploadSlotLimit,
-      "add_paused" : addPaused,
-      "prioritize_first_last_pieces" : prioritiseFirstLast,
-      "owner" : repository.client.username
+      "download_location": downloadPath,
+      "move_completed": moveCompleted,
+      "move_completed_path": moveCompletedPath,
+      "max_download_speed": downloadSpeedLimit,
+      "max_upload_speed": uploadSpeedLimit,
+      "max_connections": connectionLimit,
+      "max_upload_slots": uploadSlotLimit,
+      "add_paused": addPaused,
+      "prioritize_first_last_pieces": prioritiseFirstLast,
+      "owner": repository.client.username
     };
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text(text)));
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }

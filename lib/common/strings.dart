@@ -93,6 +93,8 @@ class Strings {
   static String addTorrentDownloadSpeedHint = "Download speed in kB/s";
   static String addTorrentSelectUploadSpeedTitle = "Set upload speed limit";
   static String addTorrentUploadSpeedHint = "Upload speed in kB/s";
+  static String strOr = "Or";
+  static String addTorrentFile = "Add torrent file";
 
   static String detailTabDetails = "DETAILS";
   static String detailTabFiles = "FILES";

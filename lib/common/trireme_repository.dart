@@ -97,6 +97,9 @@ abstract class TriremeRepository {
 
   Future addTorrentUrl(String url, Map<String, Object> options);
 
+  Future addTorrentFile(
+      String fileName, String fileDump, Map<String, Object> options);
+
   Future<FilterTree> getFilterTree();
 
   Future<List<TorrentItem>> getTorrentList(Map<String, Object> filterDict);
@@ -370,7 +373,7 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   @override
   Future setDownloadSpeedLimit(int kibps) {
     if (client == null) return null;
-    return client.setConfig({"max_download_speed" : kibps.toString()});
+    return client.setConfig({"max_download_speed": kibps.toString()});
   }
 
   @override
@@ -383,7 +386,7 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   @override
   Future setUploadSpeedLimit(int kibps) {
     if (client == null) return null;
-    return client.setConfig({"max_upload_speed" : kibps.toString()});
+    return client.setConfig({"max_upload_speed": kibps.toString()});
   }
 
   @override
@@ -400,6 +403,13 @@ class _TriremeRepositoryImpl extends TriremeRepository {
     } else {
       return client.addTorrentUrl(url, options);
     }
+  }
+
+  @override
+  Future addTorrentFile(
+      String fileName, String fileDump, Map<String, Object> options) {
+    if (client == null) return null;
+    return client.addTorrentFile(fileName, fileDump, options);
   }
 
   @override
@@ -542,7 +552,9 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   @override
   Future renameFile(String torrentId, int index, String newName) {
     if (client == null || torrentId == null || torrentId.isEmpty) return null;
-    return client.renameTorrentFiles(torrentId, [[index, newName]]);
+    return client.renameTorrentFiles(torrentId, [
+      [index, newName]
+    ]);
   }
 
   @override
