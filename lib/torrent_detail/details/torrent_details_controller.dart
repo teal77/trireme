@@ -49,6 +49,24 @@ class TorrentDetailsController {
     }
   }
 
+  String getCompletedDate() {
+    if (torrentDetail.timeCompleted == null) return "";
+
+    var completedDate = DateTime.fromMillisecondsSinceEpoch(
+        torrentDetail.timeCompleted.toInt() * 1000);
+    var since = DateTime.now().difference(completedDate);
+
+    if (since.inDays > 365) {
+      return "${DateFormat.yMMMd().add_jm().format(completedDate)}";
+    } else if (since.inDays > 30) {
+      return "${DateFormat("MMM d").add_jm().format(completedDate)}";
+    } else if (since.inHours > 24) {
+      return "${DateFormat("EEEEE, MMM d").add_jm().format(completedDate)}";
+    } else {
+      return "${DateFormat.jms().format(completedDate)}";
+    }
+  }
+
   String getTotalSize() {
     return Size(bytes: torrentDetail.totalSize).toString();
   }
@@ -99,6 +117,19 @@ class TorrentDetailsController {
           tersity: DurationTersity.minute, abbreviated: true);
     } else {
       return prettyDuration(etaDuration, abbreviated: true);
+    }
+  }
+
+  String getSeedingTime() {
+    var seedingTime = seconds(torrentDetail.seedingTime);
+    if (seedingTime.inDays > 0) {
+      return prettyDuration(seedingTime,
+          tersity: DurationTersity.hour, abbreviated: true);
+    } else if (seedingTime.inHours > 0) {
+      return prettyDuration(seedingTime,
+          tersity: DurationTersity.minute, abbreviated: true);
+    } else {
+      return prettyDuration(seedingTime, abbreviated: true);
     }
   }
 }

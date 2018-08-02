@@ -110,7 +110,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.1"
+    version: "0.5.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -262,7 +262,14 @@ packages:
       name: path_drawing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   path_provider:
     dependency: "direct main"
     description:
@@ -441,7 +448,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e6e8903d405b7171939e94fb64fb8146272f8380
+      resolved-ref: "9ba0c6ddb8ac25e9ebc492e52af05ee908a9d497"
       url: "git@github.com:teal77/trireme_client.git"
     source: git
     version: "0.0.1"

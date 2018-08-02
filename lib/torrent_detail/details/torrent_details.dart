@@ -366,9 +366,33 @@ class _TorrentDetail extends StatelessWidget {
                   .strYes : Strings.strNo}"),
           Offstage(
             offstage: torrentDetail.comment.isEmpty,
-            child: Text(
-              "${Strings.detailCommentLabel} ${torrentDetail.comment}",
-              softWrap: true,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "${Strings.detailCommentLabel} ${torrentDetail.comment}",
+                softWrap: true,
+              ),
+            ),
+          ),
+          Offstage(
+            offstage: torrentDetail.timeCompleted == null ||
+                !torrentDetail.isFinished,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "${Strings.detailCompletedLabel} ${controller.getCompletedDate()}",
+                softWrap: true,
+              ),
+            ),
+          ),
+          Offstage(
+            offstage: !torrentDetail.isFinished,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "${Strings.detailSeedingTime} ${controller.getSeedingTime()}",
+                softWrap: true,
+              ),
             ),
           ),
           Padding(

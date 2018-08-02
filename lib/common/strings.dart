@@ -108,6 +108,8 @@ class Strings {
   static String detailFilesLabel = "Files:";
   static String detailIsPrivateLabel = "Private:";
   static String detailCommentLabel = "Comment:";
+  static String detailCompletedLabel = "Completed:";
+  static String detailSeedingTime = "Seeding time:";
   static String detailStatusSubHeader = "STATUS";
   static String detailRatioLabel = "Ratio";
   static String detailUp = "Up";
