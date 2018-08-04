@@ -21,11 +21,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:trireme/common/common.dart';
+import 'package:trireme/core/persistence.dart';
 
 class NavDrawer extends StatelessWidget {
-  final Widget userSwitcher;
+  final List<ServerDBModel> servers;
+  final ServerDBModel selectedServer;
+  final VoidCallback onAddServerPressed;
+  final ValueChanged<ServerDBModel> onServerChanged;
 
-  NavDrawer(this.userSwitcher);
+  NavDrawer(this.servers, this.selectedServer, this.onAddServerPressed,
+      this.onServerChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +41,10 @@ class NavDrawer extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               NavDrawerHeader(),
-              userSwitcher,
-            ],
+              buildSelectedServer(context),
+            ]
+              ..addAll(buildServerSwitchTiles())
+              ..add(buildAddServerTile()),
             padding: EdgeInsets.zero,
           ),
         ),
@@ -48,6 +55,41 @@ class NavDrawer extends StatelessWidget {
         AboutListTile()*/
       ],
     ));
+  }
+
+  Widget buildSelectedServer(BuildContext context) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: selectedServer == null
+          ? Container()
+          : ListTile(
+              title: Text(selectedServer.toString()),
+            ),
+    );
+  }
+
+  List<Widget> buildServerSwitchTiles() {
+    return servers
+        .where((s) => s != selectedServer)
+        .map(
+          (s) => buildServerTile(s),
+        )
+        .toList();
+  }
+
+  Widget buildServerTile(ServerDBModel server) {
+    return ListTile(
+      title: Text(server.toString()),
+      onTap: () => onServerChanged(server),
+    );
+  }
+
+  Widget buildAddServerTile() {
+    return ListTile(
+      title: Text(Strings.homeAddServerDrawerButtonText),
+      onTap: onAddServerPressed,
+      trailing: Icon(Icons.add),
+    );
   }
 }
 

@@ -191,8 +191,13 @@ class _HomePageState extends State<_HomePageContent> {
               )
             ],
           )),
-      drawer: NavDrawer(DrawerUserSwitcher(
-          servers, selectedServer, onAddServerClicked, changeServer)),
+      drawer: NavDrawer(servers, selectedServer, () {
+        Navigator.pop(context);
+        onAddServerClicked();
+      }, (s) {
+        Navigator.pop(context);
+        changeServer(s);
+      }),
       bottomNavigationBar: BottomAppBar(
           color: Colors.white,
           hasNotch: true,
@@ -424,53 +429,6 @@ class _HomePageState extends State<_HomePageContent> {
 }
 
 enum OverflowButtons { selectAll, invertSelection }
-
-class DrawerUserSwitcher extends StatelessWidget {
-  final List<ServerDBModel> servers;
-  final ServerDBModel selectedServer;
-  final VoidCallback onAddServerPressed;
-  final ValueChanged<ServerDBModel> onServerChanged;
-
-  DrawerUserSwitcher(this.servers, this.selectedServer, this.onAddServerPressed,
-      this.onServerChanged);
-
-  @override
-  Widget build(BuildContext context) {
-    Widget getAddServerListItem() {
-      return ListTile(
-        title: Text(Strings.homeAddServerDrawerButtonText),
-        onTap: () {
-          Navigator.pop(context);
-          onAddServerPressed();
-        },
-        trailing: Icon(Icons.add),
-      );
-    }
-
-    if (servers.isEmpty) {
-      return getAddServerListItem();
-    } else {
-      return Container(
-          color: Theme.of(context).primaryColor,
-          child: ExpansionTile(
-            title: Text(selectedServer.toString()),
-            children: servers
-                .where((s) => s != selectedServer)
-                .map((s) => ListTile(
-                      title: Text(s.toString()),
-                      onTap: () => onServerTapped(context, s),
-                    ))
-                .toList()
-                  ..add(getAddServerListItem()),
-          ));
-    }
-  }
-
-  void onServerTapped(BuildContext context, ServerDBModel newServer) {
-    Navigator.pop(context);
-    onServerChanged(newServer);
-  }
-}
 
 class SpeedIndicator extends StatelessWidget {
   final IconData iconData;
