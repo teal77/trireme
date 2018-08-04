@@ -50,6 +50,7 @@ class Strings {
   static String homeSortByName = "Name";
   static String homeSortByStatus = "Status";
   static String homeSortByDateAdded = "Date Added";
+  static String homeSortBySeedingTime = "Seeding time";
   static String homeSortByDownloadProgress = "Download Progress";
   static String homeSortByDownloadSpeed = "Download Speed";
   static String homeSortByUploadSpeed = "Upload Speed";

@@ -467,6 +467,9 @@ Widget _getSortingButton(OnSortModeSelected callback) {
                 value: SortCriteria.dateAdded,
                 child: Text(Strings.homeSortByDateAdded)),
             PopupMenuItem<SortCriteria>(
+                value: SortCriteria.seedingTime,
+                child: Text(Strings.homeSortBySeedingTime)),
+            PopupMenuItem<SortCriteria>(
                 value: SortCriteria.downloadProgress,
                 child: Text(Strings.homeSortByDownloadProgress)),
             PopupMenuItem<SortCriteria>(

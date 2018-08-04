@@ -282,6 +282,7 @@ enum SortCriteria {
   name,
   status,
   dateAdded,
+  seedingTime,
   downloadProgress,
   downloadSpeed,
   uploadSpeed,
@@ -293,6 +294,7 @@ Map<SortCriteria, Comparator<TorrentItem>> _comparators = {
   SortCriteria.name: (a, b) => a.name.compareTo(b.name),
   SortCriteria.status: (a, b) => a.state.index.compareTo(b.state.index),
   SortCriteria.dateAdded: (a, b) => a.dateAdded.compareTo(b.dateAdded),
+  SortCriteria.seedingTime: (a, b) => a.seedingTime.compareTo(b.seedingTime),
   SortCriteria.downloadProgress: (a, b) => a.progress.compareTo(b.progress),
   SortCriteria.downloadSpeed: (a, b) =>
       a.downloadSpeed.compareTo(b.downloadSpeed),
