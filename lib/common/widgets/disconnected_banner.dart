@@ -106,8 +106,10 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
       Observable(repository.errorStream()).debounce(const Duration(seconds: 1));
 
   var checking = false;
+
   Future checkConnectionAndShowBanner() async {
     if (checking) return;
+    if (repository == null) return;
     Log.v(_tag, "Checking connection to daemon");
     checking = true;
     try {

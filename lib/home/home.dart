@@ -78,11 +78,11 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   Future initStateAsync() async {
-    loadingContainerKey.currentState.showProgress();
+    loadingContainerKey.currentState?.showProgress();
 
     var servers = await controller.getSavedServers();
 
-    loadingContainerKey.currentState.hideProgress();
+    loadingContainerKey.currentState?.hideProgress();
 
     if (servers.isEmpty) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -200,7 +200,7 @@ class _HomePageState extends State<_HomePageContent> {
       }),
       bottomNavigationBar: BottomAppBar(
           color: Colors.white,
-          hasNotch: true,
+          shape: CircularNotchedRectangle(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(

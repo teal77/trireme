@@ -98,7 +98,6 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   @override
   void initState() {
     super.initState();
-    initStateAsync();
     if (widget.data != null) {
       if (widget.addTorrentKind == AddTorrentKind.url) {
         torrentUrl = widget.data;
@@ -112,7 +111,14 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     }
   }
 
-  void initStateAsync() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    repository = RepositoryProvider.repositoryOf(context);
+    getDefaultConfigs();
+  }
+
+  void getDefaultConfigs() async {
     showProgressBar();
     var defaultConfigs = await repository.getAddTorrentDefaultOptions();
     setState(() {
@@ -127,12 +133,6 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       prioritiseFirstLast = defaultConfigs.prioritiseFirstLastPieces;
     });
     hideProgressBar();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    repository = RepositoryProvider.repositoryOf(context);
   }
 
   @override
