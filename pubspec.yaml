@@ -4,7 +4,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  charts_flutter: "^0.3.0"
+  charts_flutter: "^0.4.0"
   convert: "^2.0.1"
   intl: "^0.15.6"
 
@@ -16,13 +16,12 @@ dependencies:
   path: "^1.5.1"
   path_provider: "^0.4.0"
   shared_preferences: "^0.4.1"
-  sqflite: "^0.8.6"
+  sqflite: "^0.12.1"
 
   cached_network_image: "^0.4.1+1"
   flutter_svg: "^0.5.0"
 
-  duration: "^1.0.0"
-  kilobyte: "^0.1.0"
+  duration: "^2.0.0"
 
 dev_dependencies:
   flutter_test:
