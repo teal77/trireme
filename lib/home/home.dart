@@ -382,7 +382,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void checkIntentDataAndShowAddTorrent() async {
     try {
-      var intentUrl = await IntentData.getOpenedUrl();
+      var intentUrl = await PlatformChannel.getOpenedUrl();
       showAddTorrentPageWithUrl(intentUrl);
       return;
     } on PlatformException {
@@ -390,7 +390,7 @@ class _HomePageState extends State<_HomePageContent> {
     }
 
     try {
-      var intentFilePath = await IntentData.getOpenedFile();
+      var intentFilePath = await PlatformChannel.getOpenedFile();
       showAddTorrentPageWithFile(intentFilePath);
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {

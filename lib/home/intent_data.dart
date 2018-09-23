@@ -20,7 +20,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-class IntentData {
+class PlatformChannel {
   static const platform = const MethodChannel('org.deluge.trireme');
 
   static Future<String> getOpenedFile() async {

@@ -18,12 +18,16 @@
 
 package org.deluge.trireme;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +42,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 public class MainActivity extends FlutterActivity {
     static final String CHANNEL = "org.deluge.trireme";
     static final int REQUEST_CODE_FILE_PICKER = 0;
+    static final int REQUEST_CODE_READ_PERMISSION = 1;
 
     MethodChannel.Result pickFileResult;
 
@@ -51,21 +56,6 @@ public class MainActivity extends FlutterActivity {
         listenForMethodChannelCalls();
         if (getIntent() != null) {
             saveIntentData();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FILE_PICKER) {
-            if (resultCode == RESULT_CANCELED) {
-                pickFileResult.error("CANCELLED", "User cancelled action", null);
-            } else if (resultCode == RESULT_OK && data != null) {
-                onFilePickerResult(data);
-            } else {
-                pickFileResult.error("ERROR", "Unknown error", null);
-            }
-            pickFileResult = null;
         }
     }
 
@@ -86,6 +76,42 @@ public class MainActivity extends FlutterActivity {
                     break;
             }
         });
+    }
+
+    void saveIntentData() {
+        Intent intent = getIntent();
+        if (intent.getData() == null) return;
+        if (intent.getData().getScheme().equals(ContentResolver.SCHEME_CONTENT)
+                || intent.getData().getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            intentTorrentFile = intent.getData();
+        } else {
+            intentTorrentUrl = intent.getDataString();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FILE_PICKER) {
+            if (resultCode == RESULT_CANCELED) {
+                pickFileResult.error("CANCELLED", "User cancelled action", null);
+            } else if (resultCode == RESULT_OK && data != null) {
+                onFilePickerResult(data);
+            } else {
+                pickFileResult.error("ERROR", "Unknown error", null);
+            }
+            pickFileResult = null;
+        }
+    }
+
+    void onFilePickerResult(Intent data) {
+        Uri uri = data.getData();
+        try {
+            File f = copyFileToCacheDir(uri);
+            pickFileResult.success(f.getAbsolutePath());
+        } catch (IOException e) {
+            pickFileResult.error("IMPORT_ERROR", "Error importing file", null);
+        }
     }
 
     void pickFile(MethodChannel.Result result) {
@@ -116,6 +142,10 @@ public class MainActivity extends FlutterActivity {
 
     void getOpenedFile(MethodChannel.Result result) {
         if (intentTorrentFile != null) {
+            if (!isReadPermissionGranted()) {
+                requestReadPermission();
+                return;
+            }
             try {
                 File f = copyFileToCacheDir(intentTorrentFile);
                 String intentTorrentFilePath = f.getAbsolutePath();
@@ -127,16 +157,6 @@ public class MainActivity extends FlutterActivity {
             result.error("NODATA", "No intent data", null);
         }
         intentTorrentFile = null;
-    }
-
-    void onFilePickerResult(Intent data) {
-        Uri uri = data.getData();
-        try {
-            File f = copyFileToCacheDir(uri);
-            pickFileResult.success(f.getAbsolutePath());
-        } catch (IOException e) {
-            pickFileResult.error("IMPORT_ERROR", "Error importing file", null);
-        }
     }
 
     File copyFileToCacheDir(Uri uri) throws IOException {
@@ -172,14 +192,14 @@ public class MainActivity extends FlutterActivity {
         return file;
     }
 
-    void saveIntentData() {
-        Intent intent = getIntent();
-        if (intent.getData() == null) return;
-        if (intent.getData().getScheme().equals(ContentResolver.SCHEME_CONTENT)
-                || intent.getData().getScheme().equals(ContentResolver.SCHEME_FILE)) {
-            intentTorrentFile = intent.getData();
-        } else {
-            intentTorrentUrl = intent.getDataString();
-        }
+    boolean isReadPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    void requestReadPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_CODE_READ_PERMISSION);
     }
 }
