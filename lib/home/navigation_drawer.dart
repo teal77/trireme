@@ -28,9 +28,10 @@ class NavDrawer extends StatelessWidget {
   final ServerDBModel selectedServer;
   final VoidCallback onAddServerPressed;
   final ValueChanged<ServerDBModel> onServerChanged;
+  final VoidCallback onSettingsPressed;
 
   NavDrawer(this.servers, this.selectedServer, this.onAddServerPressed,
-      this.onServerChanged);
+      this.onServerChanged, this.onSettingsPressed);
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +49,12 @@ class NavDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
           ),
         ),
-        /*ListTile(
+        ListTile(
           leading: Icon(Icons.settings),
           title: Text(Strings.homeSettings),
+          onTap: onSettingsPressed,
         ),
-        AboutListTile()*/
+//        AboutListTile()
       ],
     ));
   }
@@ -70,7 +72,7 @@ class NavDrawer extends StatelessWidget {
 
   List<Widget> buildServerSwitchTiles() {
     return servers
-        .where((s) => s != selectedServer)
+        .where((s) => s.id != selectedServer.id)
         .map(
           (s) => buildServerTile(s),
         )

@@ -32,6 +32,7 @@ import 'package:trireme/common/widgets/label_button.dart';
 import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
+import 'package:trireme/settings/settings.dart';
 
 import 'filter.dart';
 import 'home_app_bar.dart';
@@ -197,7 +198,7 @@ class _HomePageState extends State<_HomePageContent> {
       }, (s) {
         Navigator.pop(context);
         changeServer(s);
-      }),
+      }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
           color: Colors.white,
           shape: CircularNotchedRectangle(),
@@ -253,6 +254,18 @@ class _HomePageState extends State<_HomePageContent> {
     repository.client.dispose();
     RepositoryProvider.of(context).setRepository(new TriremeRepository());
     await initStateAsync();
+  }
+
+  void launchSettingsScreen() async {
+    Navigator.pop(context);
+    await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SettingsList())
+    );
+    var servers = await controller.getSavedServers();
+    setState(() {
+      this.servers = servers;
+    });
   }
 
   void onSortCriterionChanged(SortCriteria newCriterion) {

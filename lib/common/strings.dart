@@ -181,4 +181,13 @@ class Strings {
   static String detailMaxUploadSlotsTitle = "Set max upload slots";
   static String detailStopRatioTitle = "Set stop ratio";
   static String detailMoveCompletedPath = "Move completed path";
+
+  static String settingsTitle = "Settings";
+  static String settingsServers = "Servers";
+  static String settingsServersInfo = "View, Remove servers";
+  static String settingsServerDetails = "Server details";
+  static String settingsEditServer = "Edit Server";
+  static String settingsDeleteServerTooltip = "Delete server";
+  static String settingsCertSaved = "Certificate saved";
+  static String settingsDeletingConnectedServer = "Cannot delete this server because it is being used";
 }
