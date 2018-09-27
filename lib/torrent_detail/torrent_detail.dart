@@ -16,7 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/common/common.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
@@ -37,7 +41,8 @@ class TorrentDetailPage extends StatefulWidget {
   }
 }
 
-class TorrentDetailState extends State<TorrentDetailPage> with SingleTickerProviderStateMixin {
+class TorrentDetailState extends State<TorrentDetailPage>
+    with SingleTickerProviderStateMixin {
   final tabs = <Tab>[
     Tab(text: Strings.detailTabDetails),
     Tab(text: Strings.detailTabFiles),
@@ -46,6 +51,7 @@ class TorrentDetailState extends State<TorrentDetailPage> with SingleTickerProvi
   ];
 
   TabController _tabController;
+  StreamSubscription<DelugeRpcEvent> _eventSubscription;
 
   @override
   void initState() {
@@ -55,6 +61,15 @@ class TorrentDetailState extends State<TorrentDetailPage> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
+    _eventSubscription = RepositoryProvider.repositoryOf(context)
+        .getDelugeRpcEvents()
+        .where((e) => e is TorrentRemovedEvent)
+        .map((e) => e as TorrentRemovedEvent)
+        .where((e) => e.torrentId == widget.torrentItem.id)
+        .listen((e) {
+      Navigator.pop(context);
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.torrentItem.name),
@@ -80,6 +95,7 @@ class TorrentDetailState extends State<TorrentDetailPage> with SingleTickerProvi
   @override
   void dispose() {
     _tabController.dispose();
+    _eventSubscription.cancel();
     super.dispose();
   }
 }
