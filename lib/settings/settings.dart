@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import 'package:trireme/common/common.dart';
 
+import 'appearance.dart';
 import 'servers.dart';
 
 class SettingsList extends StatelessWidget {
@@ -37,7 +38,11 @@ class SettingsList extends StatelessWidget {
             title: Text(Strings.settingsServers),
             subtitle: Text(Strings.settingsServersInfo),
             onTap: () => launchServerListScreen(context),
-          )
+          ),
+          ListTile(
+            title: Text(Strings.settingsAppearance),
+            onTap: () => launchAppearanceSettingsScreen(context),
+          ),
         ],
       ).toList()),
     );
@@ -49,5 +54,9 @@ class SettingsList extends StatelessWidget {
 
   void launchServerListScreen(BuildContext context) {
     _launchScreen(context, ServerList());
+  }
+
+  void launchAppearanceSettingsScreen(BuildContext context) {
+    _launchScreen(context, AppearanceSettingsScreen());
   }
 }

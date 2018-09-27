@@ -19,6 +19,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -179,4 +181,40 @@ Future<FilterSpec> getSavedFilterSpec() async {
         filterDict["label"] ?? FilterSpec.strAll,
         filterDict["tracker_host"] ?? FilterSpec.strAll);
   }
+}
+
+const _appColorKey = "appColor";
+
+const colorList = <MaterialColor>[
+  Colors.red,
+  Colors.pink,
+  Colors.purple,
+  Colors.deepPurple,
+  Colors.indigo,
+  Colors.blue,
+  Colors.lightBlue,
+  Colors.cyan,
+  Colors.teal,
+  Colors.green,
+  Colors.lightGreen,
+  Colors.lime,
+  Colors.yellow,
+  Colors.orange,
+  Colors.deepOrange,
+  Colors.brown,
+  Colors.grey,
+  Colors.blueGrey
+];
+
+Future saveAppColor(MaterialColor color) async {
+  if (!colorList.contains(color)) throw "Unknown material color";
+  var s = await SharedPreferences.getInstance();
+  s.setInt(_appColorKey, color.shade500.value);
+}
+
+Future<MaterialColor> getSavedAppColor() async {
+  var s = await SharedPreferences.getInstance();
+  var value = s.getInt(_appColorKey);
+  return colorList.firstWhere((c) => c.shade500.value == value,
+      orElse: () => null);
 }

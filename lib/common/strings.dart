@@ -190,4 +190,6 @@ class Strings {
   static String settingsDeleteServerTooltip = "Delete server";
   static String settingsCertSaved = "Certificate saved";
   static String settingsDeletingConnectedServer = "Cannot delete this server because it is being used";
+  static String settingsAppearance = "Appearance";
+  static String settingsAppThemeColor = "App theme color";
 }

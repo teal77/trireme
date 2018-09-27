@@ -25,10 +25,12 @@ import 'package:trireme_client/trireme_client.dart';
 export 'package:trireme/common/widgets/client_provider.dart';
 export 'package:trireme/common/widgets/error_page.dart';
 export 'package:trireme/common/widgets/loading_container.dart';
+export 'package:trireme/common/widgets/preference_provider.dart';
 export 'package:trireme/common/widgets/repository_provider.dart';
 
 export 'log.dart';
 export 'strings.dart';
+export 'preferences.dart';
 export 'trireme_repository.dart';
 
 String prettifyError(Object error) {

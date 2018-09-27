@@ -18,28 +18,23 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:trireme/home/home.dart';
-import 'package:trireme/common/common.dart';
+class Preferences {
+  static Preferences defaultPreferences = Preferences(
+    ByteSizeStyle.kbps,
+    Colors.blue,
+  );
 
-void main() => runApp(MyApp());
+  ByteSizeStyle byteSizeStyle;
+  MaterialColor appThemeColor;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RepositoryProvider(child: PreferenceProvider(_MyApp()));
-  }
-}
+  Preferences(this.byteSizeStyle, this.appThemeColor);
 
-class _MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Deluge",
-      color: PreferenceProvider.of(context).appThemeColor,
-      theme: ThemeData(
-        primarySwatch: PreferenceProvider.of(context).appThemeColor,
-      ),
-      home: HomePage(),
+  Preferences apply({ByteSizeStyle byteSizeStyle, MaterialColor appThemeColor}) {
+    return Preferences(
+      byteSizeStyle ?? this.byteSizeStyle,
+      appThemeColor ?? this.appThemeColor
     );
   }
 }
+
+enum ByteSizeStyle { kbps, kibps }
