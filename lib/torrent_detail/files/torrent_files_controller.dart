@@ -20,8 +20,6 @@ import 'dart:async';
 
 import 'package:trireme/common/common.dart';
 
-import 'package:kilobyte/kilobyte.dart';
-
 import 'file.dart';
 
 class TorrentFileListController {
@@ -34,10 +32,6 @@ class TorrentFileListController {
   };
 
   TriremeRepository repository;
-
-  String getFileSize(File file) {
-    return Size(bytes: file.size).toString();
-  }
 
   String getFilePriority(File file) {
     return priorities[file.priority];

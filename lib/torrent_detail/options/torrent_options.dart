@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'max_speed_setting.dart';
@@ -109,12 +110,14 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
 
   @override
   Widget build(BuildContext context) {
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
     return ListView(
       children: <Widget>[
         getSubHeader(Strings.detailBandwidthLabel),
         ListTile(
           title: Text(Strings.detailMaxDownloadSpeed),
-          subtitle: Text(controller.getCurrentDownloadSpeedLimit()),
+          subtitle: Text(controller.getCurrentDownloadSpeedLimit(formatter)),
           onTap: () {
             Navigator.push(
                 context,
@@ -128,7 +131,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
         ),
         ListTile(
           title: Text(Strings.detailMaxUploadSpeed),
-          subtitle: Text(controller.getCurrentUploadSpeedLimit()),
+          subtitle: Text(controller.getCurrentUploadSpeedLimit(formatter)),
           onTap: () {
             Navigator.push(
                 context,
@@ -257,8 +260,8 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
 
   showErrorSnackbar(Object error) {
     Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(prettifyError(error)),
-        ));
+      content: Text(prettifyError(error)),
+    ));
   }
 
   Future<String> showPathInputDialog(String title) async {

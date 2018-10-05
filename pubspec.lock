@@ -193,15 +193,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
-  kilobyte:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "199dcdf27603a2c87e215af017b64eb67900eda2"
-      url: "git@github.com:teal77/kilobyte.git"
-    source: git
-    version: "0.1.0+2"
   logging:
     dependency: transitive
     description:

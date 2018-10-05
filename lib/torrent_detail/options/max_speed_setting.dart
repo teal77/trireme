@@ -18,8 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:kilobyte/kilobyte.dart' as kb;
-
 import 'package:trireme/common/common.dart';
 
 class MaxSpeedSettingScreen extends StatelessWidget {
@@ -80,9 +78,8 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
     int currentSpeed = widget.currentMaxSpeed;
     SpeedUnit currentSpeedUnit = SpeedUnit.kbps;
     if (currentSpeed > 0) {
-      var kbSize = kb.Size(kilobytes: currentSpeed);
-      if (kbSize.inMegabytes > 1) {
-        currentSpeed = kbSize.inMegabytes.toInt();
+      if (currentSpeed > 1024) {
+        currentSpeed = currentSpeed ~/ 1024;
         currentSpeedUnit = SpeedUnit.mbps;
       } else {
         currentSpeedUnit = SpeedUnit.kbps;

@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 class NetworkSpeedGraph extends StatelessWidget {
@@ -60,7 +61,8 @@ class _NetworkSpeedGraph extends StatelessWidget {
         renderSpec: NoneRenderSpec(),
       ),
       primaryMeasureAxis: NumericAxisSpec(
-          tickProviderSpec: StaticNumericTickProviderSpec(getSpeedLabels()),
+          tickProviderSpec:
+              StaticNumericTickProviderSpec(getSpeedLabels(context)),
           viewport: NumericExtents(getGraphLowerBound().toDouble(),
               getGraphUpperBound().toDouble())),
       defaultRenderer: LineRendererConfig(stacked: false, includeArea: true),
@@ -90,12 +92,14 @@ class _NetworkSpeedGraph extends StatelessWidget {
     ];
   }
 
-  List<TickSpec<int>> getSpeedLabels() {
+  List<TickSpec<int>> getSpeedLabels(BuildContext context) {
     var graphLowerBound = getGraphLowerBound();
     var graphUpperBound = getGraphUpperBound();
     return [
-      TickSpec<int>(graphLowerBound, label: getSpeedString(graphLowerBound)),
-      TickSpec<int>(graphUpperBound, label: getSpeedString(graphUpperBound)),
+      TickSpec<int>(graphLowerBound,
+          label: getSpeedString(context, graphLowerBound)),
+      TickSpec<int>(graphUpperBound,
+          label: getSpeedString(context, graphUpperBound)),
     ];
   }
 
@@ -112,8 +116,10 @@ class _NetworkSpeedGraph extends StatelessWidget {
     return graphUpperBound;
   }
 
-  String getSpeedString(int speed) {
-    return "${getByteSizeString(speed)}/s";
+  String getSpeedString(BuildContext context, int speed) {
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
+    return formatter.format(speed);
   }
 }
 

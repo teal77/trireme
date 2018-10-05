@@ -18,23 +18,31 @@
 
 import 'package:flutter/material.dart';
 
-import 'bytesize.dart';
+import 'package:trireme/common/bytesize.dart';
+import 'package:trireme/common/common.dart';
 
-class Preferences {
-  static Preferences defaultPreferences = Preferences(
-    ByteSizeStyle.iec,
-    Colors.blue,
-  );
+class ByteSize extends StatelessWidget {
+  final int bytes;
 
-  ByteSizeStyle byteSizeStyle;
-  MaterialColor appThemeColor;
+  ByteSize(this.bytes);
 
-  Preferences(this.byteSizeStyle, this.appThemeColor);
+  @override
+  Widget build(BuildContext context) {
+    var byteSizeStyle = PreferenceProvider.of(context).byteSizeStyle;
+    var formatter = ByteSizeFormatter.of(byteSizeStyle);
+    return Text(formatter.format(bytes));
+  }
+}
 
-  Preferences apply({ByteSizeStyle byteSizeStyle, MaterialColor appThemeColor}) {
-    return Preferences(
-      byteSizeStyle ?? this.byteSizeStyle,
-      appThemeColor ?? this.appThemeColor
-    );
+class ByteSizePerSecond extends StatelessWidget {
+  final int bytes;
+
+  ByteSizePerSecond(this.bytes);
+
+  @override
+  Widget build(BuildContext context) {
+    var byteSizeStyle = PreferenceProvider.of(context).byteSizeStyle;
+    var formatter = ByteSizeFormatter.of(byteSizeStyle);
+    return Text("${formatter.format(bytes)}/s");
   }
 }

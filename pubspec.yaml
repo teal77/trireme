@@ -22,8 +22,6 @@ dependencies:
   flutter_svg: "^0.5.0"
 
   duration: "^2.0.0"
-  kilobyte:
-    git: git@github.com:teal77/kilobyte.git
 
 dev_dependencies:
   flutter_test:

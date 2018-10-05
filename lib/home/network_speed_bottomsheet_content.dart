@@ -20,11 +20,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:kilobyte/kilobyte.dart' as kb;
-
 import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/events.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'network_speed_graph.dart';
@@ -96,10 +95,12 @@ class _NetworkSpeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
     var currentSpeed =
-        dataStream.map((n) => "${getByteSizeString(n.speeds.last)}/s");
+        dataStream.map((n) => "${formatter.format(n.speeds.last)}/s");
     var currentProtocolSpeed =
-        dataStream.map((n) => "${getByteSizeString(n.protocolSpeeds.last)}/s");
+        dataStream.map((n) => "${formatter.format(n.protocolSpeeds.last)}/s");
 
     return Container(
         padding: const EdgeInsets.all(16.0),
@@ -163,7 +164,7 @@ class _SpeedLimitSliderState extends State<SpeedLimitSetter> {
         .where((e) =>
             e.key == keyDownloadSpeedLimit || e.key == keyUploadSpeedLimit)
         .listen((e) {
-          setUiStateForSpeedSetting((e.value as num).toInt());
+      setUiStateForSpeedSetting((e.value as num).toInt());
     });
     currentSpeedLimitSetting = speedLimitSteps.last;
     initStateAsync();
@@ -180,7 +181,7 @@ class _SpeedLimitSliderState extends State<SpeedLimitSetter> {
     var currentStep = getNearestSpeedStep(setting);
     var currentSpeed = currentStep.isUnlimited()
         ? currentStep.label
-        : "${kb.Size(kilobytes: setting)}/s";
+        : "${ByteSizeFormatter.kibiByte.format(setting * 1024)}/s";
     setState(() {
       currentSpeedLimitSetting = currentStep;
       speedLimitLabel = currentSpeed;
@@ -272,10 +273,10 @@ class SpeedLimitStep {
 }
 
 const speedLimitSteps = [
-  SpeedLimitStep("5kB/s", 5),
-  SpeedLimitStep("10kB/s", 10),
-  SpeedLimitStep("30kB/s", 30),
-  SpeedLimitStep("80kB/s", 80),
-  SpeedLimitStep("300kB/s", 300),
+  SpeedLimitStep("5KiB/s", 5),
+  SpeedLimitStep("10KiB/s", 10),
+  SpeedLimitStep("30KiB/s", 30),
+  SpeedLimitStep("80KiB/s", 80),
+  SpeedLimitStep("300KiB/s", 300),
   SpeedLimitStep("Unlimited", -1),
 ];

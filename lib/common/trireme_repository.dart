@@ -23,12 +23,11 @@ import 'package:meta/meta.dart';
 
 import 'package:rxdart/rxdart.dart';
 
-import 'package:kilobyte/kilobyte.dart';
-
 import 'package:trireme_client/events.dart';
 import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/trireme_client.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/log.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
 
@@ -79,9 +78,9 @@ abstract class TriremeRepository {
 
   Future<String> getDaemonInfo();
 
-  Stream<String> getSessionDownloadSpeed();
+  Stream<String> getSessionDownloadSpeed(ByteSizeStyle style);
 
-  Stream<String> getSessionUploadSpeed();
+  Stream<String> getSessionUploadSpeed(ByteSizeStyle style);
 
   Stream<List<SessionStatus>> getSessionStatusHistory();
 
@@ -341,13 +340,15 @@ class _TriremeRepositoryImpl extends TriremeRepository {
   }
 
   @override
-  Stream<String> getSessionDownloadSpeed() {
-    return downloadSpeedStream().map((s) => "${Size(bytes: s)}/s");
+  Stream<String> getSessionDownloadSpeed(ByteSizeStyle style) {
+    var formatter = ByteSizeFormatter.of(style);
+    return downloadSpeedStream().map((s) => "${formatter.format(s)}/s");
   }
 
   @override
-  Stream<String> getSessionUploadSpeed() {
-    return uploadSpeedStream().map((s) => "${Size(bytes: s)}/s");
+  Stream<String> getSessionUploadSpeed(ByteSizeStyle style) {
+    var formatter = ByteSizeFormatter.of(style);
+    return uploadSpeedStream().map((s) => "${formatter.format(s)}/s");
   }
 
   @override

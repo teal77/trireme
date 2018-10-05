@@ -18,10 +18,9 @@
 
 import 'dart:io';
 
-import 'package:kilobyte/kilobyte.dart';
-
 import 'package:trireme_client/trireme_client.dart';
 
+export 'package:trireme/common/widgets/bytesize_widgets.dart';
 export 'package:trireme/common/widgets/client_provider.dart';
 export 'package:trireme/common/widgets/error_page.dart';
 export 'package:trireme/common/widgets/loading_container.dart';
@@ -52,8 +51,4 @@ String prettifyError(Object error) {
     return "Network error. Could not connect to server.";
   }
   throw error;
-}
-
-String getByteSizeString(int size) {
-  return Size(bytes: size).toString();
 }

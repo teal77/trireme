@@ -18,6 +18,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:trireme/common/bytesize.dart';
+import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
 import 'package:trireme/torrent_list/torrent_list_tile/torrent_list_tile_controller.dart';
 import 'package:trireme/torrent_detail/torrent_detail.dart';
@@ -152,9 +154,12 @@ class TorrentListItemState extends State<TorrentListItem> {
   }
 
   String _getStateAndSize() {
-    var totalSize = controller.getTotalSize();
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
+    var totalSize = controller.getTotalSize(formatter);
     var state = data.stateString;
-    var currentSizeExplanation = controller.getCurrentSizeExplanation();
+    var currentSizeExplanation =
+        controller.getCurrentSizeExplanation(formatter);
 
     if (data.isFinished) {
       return "$totalSize $dotSeparator $state $dotSeparator $currentSizeExplanation";
@@ -200,7 +205,7 @@ class TorrentListItemState extends State<TorrentListItem> {
       ));
       children.add(Padding(
         padding: const EdgeInsets.only(right: 4.0),
-        child: Text(controller.getDownloadSpeed()),
+        child: ByteSizePerSecond(data.downloadSpeed),
       ));
     }
 
@@ -209,7 +214,7 @@ class TorrentListItemState extends State<TorrentListItem> {
         Icons.arrow_upward,
         size: 11.0,
       ));
-      children.add(Text(controller.getUploadSpeed()));
+      children.add(ByteSizePerSecond(data.uploadSpeed));
     }
 
     if (data.eta > 0) {

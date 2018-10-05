@@ -18,8 +18,8 @@
 
 import 'package:duration/duration.dart';
 import 'package:intl/intl.dart';
-import 'package:kilobyte/kilobyte.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import '../torrent_item.dart';
 
 class TorrentListItemController {
@@ -28,19 +28,19 @@ class TorrentListItemController {
 
   TorrentItem torrentItem;
 
-  String getTotalSize() {
-    return Size(bytes: torrentItem.totalSize).toString();
+  String getTotalSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentItem.totalSize);
   }
 
-  String getCurrentSize() {
-    return Size(bytes: torrentItem.currentSize).toString();
+  String getCurrentSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentItem.currentSize);
   }
 
-  String getCurrentSizeExplanation() {
+  String getCurrentSizeExplanation(ByteSizeFormatter formatter) {
     if (torrentItem.isFinished) {
-      return "${getCurrentSize()} uploaded";
+      return "${getCurrentSize(formatter)} uploaded";
     } else {
-      return "${getCurrentSize()}/${getTotalSize()} (${getProgressPercentage()})";
+      return "${getCurrentSize(formatter)}/${getTotalSize(formatter)} (${getProgressPercentage()})";
     }
   }
 
@@ -49,8 +49,8 @@ class TorrentListItemController {
     if (truncatedRatio.contains("e")) {
       return "Ratio: $truncatedRatio";
     }
-    var size = Size(bytes: torrentItem.totalSize);
-    if (size.inGigabytes > 1.0) {
+    var aGigabyte = 1024 * 1024 * 1024;
+    if (torrentItem.totalSize > aGigabyte) {
       return "Ratio: ${ratioFormatterPrecise.format(torrentItem.ratio)}";
     }
     return "Ratio: ${ratioFormatter.format(torrentItem.ratio)}";
@@ -62,14 +62,6 @@ class TorrentListItemController {
 
   double getProgressFloat() {
     return torrentItem.progress / 100.0;
-  }
-
-  String getDownloadSpeed() {
-    return "${Size(bytes: torrentItem.downloadSpeed)}/s";
-  }
-
-  String getUploadSpeed() {
-    return "${Size(bytes: torrentItem.uploadSpeed)}/s";
   }
 
   String getEta() {

@@ -21,6 +21,7 @@ import 'package:flutter/rendering.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/delete_button.dart';
 import 'package:trireme/common/widgets/label_button.dart';
@@ -294,8 +295,8 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
 
   void showSnackBar(String text) {
     Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(text),
-        ));
+      content: Text(text),
+    ));
   }
 }
 
@@ -362,8 +363,7 @@ class _TorrentDetail extends StatelessWidget {
             height: 4.0,
           ),
           Text(
-              "${Strings.detailIsPrivateLabel} ${torrentDetail.private ? Strings
-                  .strYes : Strings.strNo}"),
+              "${Strings.detailIsPrivateLabel} ${torrentDetail.private ? Strings.strYes : Strings.strNo}"),
           Offstage(
             offstage: torrentDetail.comment.isEmpty,
             child: Padding(
@@ -451,12 +451,14 @@ class _TorrentStatus extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Theme.of(context).scaffoldBackgroundColor),
                         margin: const EdgeInsets.all(8.0),
-                        child: _buildTorrentStatusContent()),
+                        child: _buildTorrentStatusContent(context)),
                   ],
                 ))));
   }
 
-  Widget _buildTorrentStatusContent() {
+  Widget _buildTorrentStatusContent(BuildContext context) {
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
     return Column(children: <Widget>[
       Container(
         height: 16.0,
@@ -486,12 +488,12 @@ class _TorrentStatus extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    controller.getDoneSize(),
+                    controller.getDoneSize(formatter),
                     style: TextStyle(fontSize: 24.0),
                   ),
-                  Text("of ${controller.getWantedSize()}"),
+                  Text("of ${controller.getWantedSize(formatter)}"),
                   Text(
-                    controller.getDownloadSpeed(),
+                    controller.getDownloadSpeed(formatter),
                     style: TextStyle(fontSize: 18.0),
                   ),
                   Text(
@@ -519,12 +521,12 @@ class _TorrentStatus extends StatelessWidget {
                 ],
               ),
               Text(
-                controller.getUploadedSize(),
+                controller.getUploadedSize(formatter),
                 style: TextStyle(fontSize: 24.0),
               ),
               Text("${Strings.detailRatioLabel} ${controller.getRatio()}"),
               Text(
-                controller.getUploadSpeed(),
+                controller.getUploadSpeed(formatter),
                 style: TextStyle(fontSize: 18.0),
               ),
               Text("${Strings.detailPeers} ${torrentDetail.connectedPeers}"),

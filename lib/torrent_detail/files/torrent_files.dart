@@ -356,9 +356,7 @@ class _TorrentFileListTile extends StatelessWidget {
             title: Text(file.name),
             subtitle: Row(
               children: <Widget>[
-                Text(
-                  controller.getFileSize(file),
-                ),
+                ByteSize(file.size),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),

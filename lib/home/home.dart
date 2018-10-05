@@ -208,12 +208,15 @@ class _HomePageState extends State<_HomePageContent> {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 SpeedIndicator(
-                    Icons.arrow_downward, repository.getSessionDownloadSpeed(),
-                    () {
+                    Icons.arrow_downward,
+                    repository.getSessionDownloadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
                   _showNetworkSpeedBottomSheet(context, true, repository);
                 }),
                 SpeedIndicator(
-                    Icons.arrow_upward, repository.getSessionUploadSpeed(), () {
+                    Icons.arrow_upward,
+                    repository.getSessionUploadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
                   _showNetworkSpeedBottomSheet(context, false, repository);
                 })
               ],
@@ -259,9 +262,7 @@ class _HomePageState extends State<_HomePageContent> {
   void launchSettingsScreen() async {
     Navigator.pop(context);
     await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SettingsList())
-    );
+        context, MaterialPageRoute(builder: (context) => SettingsList()));
     var servers = await controller.getSavedServers();
     setState(() {
       this.servers = servers;

@@ -16,28 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:kilobyte/kilobyte.dart';
-
 import 'package:trireme_client/deserialization.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/strings.dart';
 
 class TorrentOptionsController {
   TorrentOptions torrentOptions;
 
-  String getCurrentDownloadSpeedLimit() {
+  String getCurrentDownloadSpeedLimit(ByteSizeFormatter formatter) {
     if (torrentOptions.maxDownloadSpeed < 0) {
       return Strings.detailOptionUnsetText;
     } else {
-      return "${Size(kilobytes: torrentOptions.maxDownloadSpeed.toInt())}/s";
+      return "${formatter.format(torrentOptions.maxDownloadSpeed.toInt() * 1024)}/s";
     }
   }
 
-  String getCurrentUploadSpeedLimit() {
+  String getCurrentUploadSpeedLimit(ByteSizeFormatter formatter) {
     if (torrentOptions.maxUploadSpeed < 0) {
       return Strings.detailOptionUnsetText;
     } else {
-      return "${Size(kilobytes: torrentOptions.maxUploadSpeed.toInt())}/s";
+      return "${formatter.format(torrentOptions.maxUploadSpeed.toInt() * 1024)}/s";
     }
   }
 

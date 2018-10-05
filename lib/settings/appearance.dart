@@ -73,8 +73,9 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
         });
     if (color != null) {
       await saveAppColor(color);
-      PreferenceProvider.updatePreference(
-          context, Preferences(ByteSizeStyle.kbps, color));
+      var newPreference =
+          PreferenceProvider.of(context).apply(appThemeColor: color);
+      PreferenceProvider.updatePreference(context, newPreference);
     }
   }
 }

@@ -23,8 +23,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:kilobyte/kilobyte.dart' as kb;
-
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'file_picker.dart';
@@ -137,7 +136,9 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
 
   @override
   Widget build(BuildContext context) {
-    String speedString(int speed) => "${kb.Size(kilobytes: speed)}/s";
+    var formatter =
+        ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
+    String speedString(int speed) => "${formatter.format(speed * 1024)}/s";
 
     String getDownloadSpeedLimit() => downloadSpeedLimit == -1
         ? Strings.detailOptionUnsetText

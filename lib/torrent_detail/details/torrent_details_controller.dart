@@ -20,11 +20,11 @@ import 'dart:math';
 
 import 'package:intl/intl.dart';
 
-import 'package:kilobyte/kilobyte.dart';
 import 'package:duration/duration.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
+import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
 
 class TorrentDetailsController {
@@ -67,20 +67,20 @@ class TorrentDetailsController {
     }
   }
 
-  String getTotalSize() {
-    return Size(bytes: torrentDetail.totalSize).toString();
+  String getTotalSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentDetail.totalSize);
   }
 
-  String getWantedSize() {
-    return Size(bytes: torrentDetail.totalWanted).toString();
+  String getWantedSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentDetail.totalWanted);
   }
 
-  String getDoneSize() {
-    return Size(bytes: torrentDetail.totalDone).toString();
+  String getDoneSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentDetail.totalDone);
   }
 
-  String getUploadedSize() {
-    return Size(bytes: torrentDetail.totalUploaded).toString();
+  String getUploadedSize(ByteSizeFormatter formatter) {
+    return formatter.format(torrentDetail.totalUploaded);
   }
 
   String getRatio() {
@@ -99,12 +99,12 @@ class TorrentDetailsController {
     return torrentDetail.progress / 100.0;
   }
 
-  String getDownloadSpeed() {
-    return "${Size(bytes: torrentDetail.downloadPayloadRate)}/s";
+  String getDownloadSpeed(ByteSizeFormatter formatter) {
+    return "${formatter.format(torrentDetail.downloadPayloadRate)}/s";
   }
 
-  String getUploadSpeed() {
-    return "${Size(bytes: torrentDetail.uploadPayloadRate)}/s";
+  String getUploadSpeed(ByteSizeFormatter formatter) {
+    return "${formatter.format(torrentDetail.uploadPayloadRate)}/s";
   }
 
   String getEta() {

@@ -19,7 +19,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:kilobyte/kilobyte.dart' as kb;
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -159,7 +158,8 @@ class _TorrentPeersList extends StatelessWidget {
                         ),
                         Offstage(
                             offstage: peer.downSpeed == 0,
-                            child: Text(getSpeedString(peer.downSpeed))),
+                            child: ByteSizePerSecond(peer.downSpeed),
+                        ),
                         Offstage(
                           offstage: peer.upSpeed == 0,
                           child: const Icon(
@@ -170,7 +170,7 @@ class _TorrentPeersList extends StatelessWidget {
                         ),
                         Offstage(
                           offstage: peer.upSpeed == 0,
-                          child: Text(getSpeedString(peer.upSpeed)),
+                          child: ByteSizePerSecond(peer.upSpeed),
                         ),
                       ],
                     ),
@@ -192,9 +192,5 @@ class _TorrentPeersList extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getSpeedString(int bytesPerSecond) {
-    return "${kb.Size(bytes: bytesPerSecond)}/s";
   }
 }
