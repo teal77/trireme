@@ -455,6 +455,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   void addTorrentUrl() async {
+    var torrentUrl = urlEditController.text;
     await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
   }
 
