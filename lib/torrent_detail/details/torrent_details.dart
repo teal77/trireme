@@ -489,12 +489,12 @@ class _TorrentStatus extends StatelessWidget {
                   ),
                   Text(
                     controller.getDoneSize(formatter),
-                    style: TextStyle(fontSize: 24.0),
+                    style: TextStyle(fontSize: 22.0),
                   ),
                   Text("of ${controller.getWantedSize(formatter)}"),
                   Text(
                     controller.getDownloadSpeed(formatter),
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(fontSize: 16.0),
                   ),
                   Text(
                       "${Strings.detailSeeds} ${torrentDetail.connectedSeeds}"),
@@ -522,12 +522,12 @@ class _TorrentStatus extends StatelessWidget {
               ),
               Text(
                 controller.getUploadedSize(formatter),
-                style: TextStyle(fontSize: 24.0),
+                style: TextStyle(fontSize: 22.0),
               ),
               Text("${Strings.detailRatioLabel} ${controller.getRatio()}"),
               Text(
                 controller.getUploadSpeed(formatter),
-                style: TextStyle(fontSize: 18.0),
+                style: TextStyle(fontSize: 16.0),
               ),
               Text("${Strings.detailPeers} ${torrentDetail.connectedPeers}"),
               Text(
