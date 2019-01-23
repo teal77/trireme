@@ -182,14 +182,6 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
     }
   }
 
-  void deleteTorrent(DeleteOptions deleteOption) {
-    if (deleteOption == DeleteOptions.delete) {
-      showDeleteConfirmationDialog();
-    } else if (deleteOption == DeleteOptions.deleteWithData) {
-      showDeleteDataConfirmationDialog();
-    }
-  }
-
   void setLabel(String label) async {
     showProgressBar();
     try {
@@ -227,12 +219,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
     showConfirmationDialog(Strings.detailDeleteConfirmationText, () async {
       showProgressBar();
       try {
-        bool result = await repository.removeTorrent(widget.torrentId, false);
-        if (result) {
-          Navigator.pop(context);
-        } else {
-          showSnackBar(Strings.detailDeleteTorrentFailedText);
-        }
+        await repository.removeTorrent(widget.torrentId, false);
       } catch (e) {
         showErrorSnackBar(e);
       } finally {
@@ -245,12 +232,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
     showConfirmationDialog(Strings.detailDeleteDataConfirmationText, () async {
       showProgressBar();
       try {
-        bool result = await repository.removeTorrent(widget.torrentId, true);
-        if (result) {
-          Navigator.pop(context);
-        } else {
-          showSnackBar(Strings.detailDeleteTorrentFailedText);
-        }
+        await repository.removeTorrent(widget.torrentId, true);
       } catch (e) {
         showErrorSnackBar(e);
       } finally {
