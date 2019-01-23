@@ -266,7 +266,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: d7c25188a4b164e401c23bd6032d248f32b2a0f4
+      resolved-ref: b4aa9dcf4beaf73564e3f24d70c5a1abc105dc9c
       url: "git@github.com:teal77/trireme_client.git"
     source: git
     version: "0.0.1"
