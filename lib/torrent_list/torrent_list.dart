@@ -70,6 +70,7 @@ class TorrentListState extends State<TorrentList> with TriremeProgressBarMixin {
       children: <Widget>[
         Scrollbar(
             child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 16.0),
                 itemCount: controller.getItemCount(),
                 itemBuilder: (context, index) {
                   TorrentItem t = controller.getItemAt(index);

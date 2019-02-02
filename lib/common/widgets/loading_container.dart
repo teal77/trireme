@@ -87,9 +87,7 @@ class LoadingContainerState extends State<LoadingContainer>
   }
 }
 
-abstract class TriremeProgressBarMixin<T extends StatefulWidget> extends State<T> {
-  factory TriremeProgressBarMixin._() => null;
-
+mixin TriremeProgressBarMixin<T extends StatefulWidget> on State<T> {
   void showProgressBar() {
     if (!mounted) return;
     LoadingContainer.of(context).showProgress();
