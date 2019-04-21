@@ -17,6 +17,8 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -133,7 +135,7 @@ class _HomePageState extends State<_HomePageContent> {
     ClientProvider.of(context).setClient(client);
     loadingContainerKey.currentState.hideProgress();
 
-    checkIntentDataAndShowAddTorrent();
+    checkIntentDataAndAddTorrent();
   }
 
   @override
@@ -383,20 +385,17 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddTorrentClicked() async {
-    showAddTorrentPage(AddTorrentPage(AddTorrentKind.url, null));
-  }
-
-  void showAddTorrentPage(Widget addTorrentPage) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            fullscreenDialog: true, builder: (context) => addTorrentPage));
+            fullscreenDialog: true,
+            builder: (context) => AddTorrentPage(AddTorrentKind.url, null)));
   }
 
-  void checkIntentDataAndShowAddTorrent() async {
+  void checkIntentDataAndAddTorrent() async {
     try {
       var intentUrl = await PlatformChannel.getOpenedUrl();
-      showAddTorrentPageWithUrl(intentUrl);
+      addTorrentUrl(intentUrl);
       return;
     } on PlatformException {
       //nop
@@ -404,7 +403,7 @@ class _HomePageState extends State<_HomePageContent> {
 
     try {
       var intentFilePath = await PlatformChannel.getOpenedFile();
-      showAddTorrentPageWithFile(intentFilePath);
+      addTorrentFile(intentFilePath);
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {
         scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -415,12 +414,40 @@ class _HomePageState extends State<_HomePageContent> {
     }
   }
 
-  void showAddTorrentPageWithUrl(String url) {
-    showAddTorrentPage(AddTorrentPage(AddTorrentKind.url, url));
+  void addTorrentUrl(String url) async {
+    if (!repository.isReady()) {
+      await repository.readiness();
+    }
+    await repository.addTorrentUrl(url, {"owner": repository.client.username});
   }
 
-  void showAddTorrentPageWithFile(String filePath) {
-    showAddTorrentPage(AddTorrentPage(AddTorrentKind.file, filePath));
+  void addTorrentFile(String filePath) async {
+    String getTorrentFileNameFromPath(String filePath) {
+      if (filePath == null || filePath.isEmpty) return "";
+      var tempName = filePath.split("/").last;
+      if (tempName.contains(".torrent")) {
+        return tempName.replaceRange(
+            tempName.lastIndexOf(".torrent"), null, ".torrent");
+      } else {
+        return tempName;
+      }
+    }
+
+    if (!repository.isReady()) {
+      await repository.readiness();
+    }
+
+    var fileName = getTorrentFileNameFromPath(filePath);
+    var torrentFile = File(filePath);
+
+    if (await torrentFile.exists()) {
+      var fileContent = await torrentFile.readAsBytes();
+      var fileDump = base64.encode(fileContent);
+      await repository.addTorrentFile(
+          fileName, fileDump, {"owner": repository.client.username});
+    } else {
+      throw "Torrent file $fileName does not exist";
+    }
   }
 
   Future persistFilter() async {

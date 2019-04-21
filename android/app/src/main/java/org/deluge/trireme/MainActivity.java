@@ -59,6 +59,28 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FILE_PICKER) {
+            if (resultCode == RESULT_CANCELED) {
+                pickFileResult.error("CANCELLED", "User cancelled action", null);
+            } else if (resultCode == RESULT_OK && data != null) {
+                onFilePickerResult(data);
+            } else {
+                pickFileResult.error("ERROR", "Unknown error", null);
+            }
+            pickFileResult = null;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        recreate();
+    }
+
     void listenForMethodChannelCalls() {
         new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler((call, result) -> {
             switch (call.method) {
@@ -86,21 +108,6 @@ public class MainActivity extends FlutterActivity {
             intentTorrentFile = intent.getData();
         } else {
             intentTorrentUrl = intent.getDataString();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FILE_PICKER) {
-            if (resultCode == RESULT_CANCELED) {
-                pickFileResult.error("CANCELLED", "User cancelled action", null);
-            } else if (resultCode == RESULT_OK && data != null) {
-                onFilePickerResult(data);
-            } else {
-                pickFileResult.error("ERROR", "Unknown error", null);
-            }
-            pickFileResult = null;
         }
     }
 
