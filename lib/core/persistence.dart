@@ -26,6 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'package:trireme/common/common.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 
 const _dbFileName = "trireme.db";
@@ -131,7 +132,7 @@ void _upgradeDb(Database db, int oldVersion, int newVersion) async {
     case 1:
       await db.execute(
           "alter table $_tableName add column $_columnCertificate text not null "
-          "default ''");
+              "default ''");
   }
 }
 
@@ -175,7 +176,7 @@ Future<FilterSpec> getSavedFilterSpec() async {
     return FilterSpec.all;
   } else {
     Map<String, String> filterDict =
-        (json.decode(filterStr) as Map).cast<String, String>();
+    (json.decode(filterStr) as Map).cast<String, String>();
     return FilterSpec(
         filterDict["state"] ?? FilterSpec.strAll,
         filterDict["label"] ?? FilterSpec.strAll,
@@ -230,4 +231,17 @@ Future<Brightness> getSavedBrightness() async {
   var s = await SharedPreferences.getInstance();
   var isDark = s.getBool(_appBrightnessKey) ?? false;
   return isDark ? Brightness.dark : Brightness.light;
+}
+
+const _isIecUnits = "isIec";
+
+Future saveByteSizeStyle(ByteSizeStyle b) async {
+  var s = await SharedPreferences.getInstance();
+  s.setBool(_isIecUnits, b == ByteSizeStyle.iec);
+}
+
+Future<ByteSizeStyle> getSavedByteSizeStyle() async {
+  var s = await SharedPreferences.getInstance();
+  var isIec = s.getBool(_isIecUnits) ?? true;
+  return isIec ? ByteSizeStyle.iec : ByteSizeStyle.si;
 }

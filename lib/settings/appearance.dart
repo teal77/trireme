@@ -41,11 +41,14 @@ class AppearanceSettings extends StatefulWidget {
 class _AppearanceSettingsState extends State<AppearanceSettings> {
   MaterialColor appThemeColor;
   bool isDark = false;
+  ByteSizeStyle byteSizeStyle;
 
   @override
   Widget build(BuildContext context) {
     appThemeColor = PreferenceProvider.of(context).appThemeColor;
     isDark = PreferenceProvider.of(context).brightness == Brightness.dark;
+    byteSizeStyle = PreferenceProvider.of(context).byteSizeStyle;
+
     return ListView(
       children: <Widget>[
         ListTile(
@@ -62,7 +65,21 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
           title: Text(Strings.settingsDarkMode),
           value: isDark,
           onChanged: ((value) => {toggleDarkMode(value)}),
-        )
+        ),
+        getDivider(),
+        getSubHeader(Strings.settingsByteSizeStyle),
+        RadioListTile(
+            value: ByteSizeStyle.iec,
+            groupValue: byteSizeStyle,
+            title: Text(Strings.settingsKibibytes),
+            subtitle: Text(Strings.settingsKibibytesInfo),
+            onChanged: ((value) => {setByteSizeStyle(value)})),
+        RadioListTile(
+            value: ByteSizeStyle.si,
+            groupValue: byteSizeStyle,
+            title: Text(Strings.settingsKilobytes),
+            subtitle: Text(Strings.settingsKilobytesInfo),
+            onChanged: ((value) => {setByteSizeStyle(value)})),
       ],
     );
   }
@@ -75,6 +92,15 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
         color: Theme.of(context).dividerColor,
       ),
     );
+  }
+
+  Widget getSubHeader(String text) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 13.0, color: Theme.of(context).hintColor),
+        ));
   }
 
   void showColorPickerDialog() async {
@@ -101,6 +127,12 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
     await saveBrightness(isDark);
     var newPreference = PreferenceProvider.of(context)
         .apply(brightness: isDark ? Brightness.dark : Brightness.light);
+    PreferenceProvider.updatePreference(context, newPreference);
+  }
+
+  void setByteSizeStyle(ByteSizeStyle b) async {
+    await saveByteSizeStyle(b);
+    var newPreference = PreferenceProvider.of(context).apply(byteSizeStyle: b);
     PreferenceProvider.updatePreference(context, newPreference);
   }
 }

@@ -27,6 +27,7 @@ export 'package:trireme/common/widgets/loading_container.dart';
 export 'package:trireme/common/widgets/preference_provider.dart';
 export 'package:trireme/common/widgets/repository_provider.dart';
 
+export 'bytesize.dart';
 export 'log.dart';
 export 'strings.dart';
 export 'preferences.dart';

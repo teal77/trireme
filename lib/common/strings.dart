@@ -193,4 +193,9 @@ class Strings {
   static String settingsAppearance = "Appearance";
   static String settingsAppThemeColor = "App theme color";
   static String settingsDarkMode = "Dark Mode";
+  static String settingsByteSizeStyle = "Byte size unit";
+  static String settingsKibibytes = "Kibibytes (KiB, MiB, GiB)";
+  static String settingsKibibytesInfo = "1024 based";
+  static String settingsKilobytes = "Kilobytes (KB, MB, GB)";
+  static String settingsKilobytesInfo = "1000 based";
 }
