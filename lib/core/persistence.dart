@@ -218,3 +218,16 @@ Future<MaterialColor> getSavedAppColor() async {
   return colorList.firstWhere((c) => c.shade500.value == value,
       orElse: () => null);
 }
+
+const _appBrightnessKey = "isDark";
+
+Future saveBrightness(bool isDark) async {
+  var s = await SharedPreferences.getInstance();
+  s.setBool(_appBrightnessKey, isDark);
+}
+
+Future<Brightness> getSavedBrightness() async {
+  var s = await SharedPreferences.getInstance();
+  var isDark = s.getBool(_appBrightnessKey) ?? false;
+  return isDark ? Brightness.dark : Brightness.light;
+}

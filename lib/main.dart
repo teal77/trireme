@@ -38,6 +38,7 @@ class _MyApp extends StatelessWidget {
       color: PreferenceProvider.of(context).appThemeColor,
       theme: ThemeData(
         primarySwatch: PreferenceProvider.of(context).appThemeColor,
+        brightness: PreferenceProvider.of(context).brightness
       ),
       home: HomePage(),
     );

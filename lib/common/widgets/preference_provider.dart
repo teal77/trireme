@@ -31,14 +31,14 @@ class PreferenceProvider extends StatefulWidget {
 
   static Preferences of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(_PreferenceProviderInherited)
-    as _PreferenceProviderInherited)
+            as _PreferenceProviderInherited)
         .state
         .preferences;
   }
 
   static void updatePreference(BuildContext context, Preferences preferences) {
     (context.inheritFromWidgetOfExactType(_PreferenceProviderInherited)
-    as _PreferenceProviderInherited)
+            as _PreferenceProviderInherited)
         .state
         .setPreference(preferences);
   }
@@ -69,7 +69,9 @@ class _PreferenceProviderState extends State<PreferenceProvider> {
 
   void readSavedPreferences() async {
     var savedColor = await getSavedAppColor();
-    setPreference(_preferences.apply(appThemeColor: savedColor));
+    var savedBrightness = await getSavedBrightness();
+    setPreference(_preferences.apply(
+        appThemeColor: savedColor, brightness: savedBrightness));
   }
 }
 

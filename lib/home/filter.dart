@@ -186,6 +186,8 @@ class _FilterChipContainerState extends State<FilterChipContainer> {
 
   @override
   Widget build(BuildContext context) {
+    var chipSelectedColor = Theme.of(context).brightness == Brightness.dark ?
+        ChipTheme.of(context).selectedColor : ChipTheme.of(context).secondarySelectedColor;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Wrap(
@@ -194,6 +196,7 @@ class _FilterChipContainerState extends State<FilterChipContainer> {
         children: widget.choices
             .map((s) => ChoiceChip(
                   label: Text(s),
+                  selectedColor: chipSelectedColor,
                   selected: selectedChoice == s,
                   onSelected: (selected) {
                     if (selected) {

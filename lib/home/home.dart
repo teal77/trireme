@@ -200,7 +200,6 @@ class _HomePageState extends State<_HomePageContent> {
         changeServer(s);
       }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
-          color: Colors.white,
           shape: CircularNotchedRectangle(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),

@@ -192,4 +192,5 @@ class Strings {
   static String settingsDeletingConnectedServer = "Cannot delete this server because it is being used";
   static String settingsAppearance = "Appearance";
   static String settingsAppThemeColor = "App theme color";
+  static String settingsDarkMode = "Dark Mode";
 }

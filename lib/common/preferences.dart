@@ -24,17 +24,24 @@ class Preferences {
   static Preferences defaultPreferences = Preferences(
     ByteSizeStyle.iec,
     Colors.blue,
+    Brightness.light,
   );
 
   ByteSizeStyle byteSizeStyle;
   MaterialColor appThemeColor;
+  Brightness brightness;
 
-  Preferences(this.byteSizeStyle, this.appThemeColor);
+  Preferences(this.byteSizeStyle, this.appThemeColor, this.brightness);
 
-  Preferences apply({ByteSizeStyle byteSizeStyle, MaterialColor appThemeColor}) {
+  Preferences apply(
+      {ByteSizeStyle byteSizeStyle,
+      MaterialColor appThemeColor,
+      Brightness brightness}) {
+
     return Preferences(
       byteSizeStyle ?? this.byteSizeStyle,
-      appThemeColor ?? this.appThemeColor
+      appThemeColor ?? this.appThemeColor,
+      brightness ?? this.brightness,
     );
   }
 }

@@ -40,10 +40,12 @@ class AppearanceSettings extends StatefulWidget {
 
 class _AppearanceSettingsState extends State<AppearanceSettings> {
   MaterialColor appThemeColor;
+  bool isDark = false;
 
   @override
   Widget build(BuildContext context) {
     appThemeColor = PreferenceProvider.of(context).appThemeColor;
+    isDark = PreferenceProvider.of(context).brightness == Brightness.dark;
     return ListView(
       children: <Widget>[
         ListTile(
@@ -55,7 +57,23 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
             showColorPickerDialog();
           },
         ),
+        getDivider(),
+        SwitchListTile(
+          title: Text(Strings.settingsDarkMode),
+          value: isDark,
+          onChanged: ((value) => {toggleDarkMode(value)}),
+        )
       ],
+    );
+  }
+
+  Widget getDivider() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Container(
+        height: 1.0,
+        color: Theme.of(context).dividerColor,
+      ),
     );
   }
 
@@ -77,6 +95,13 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
           PreferenceProvider.of(context).apply(appThemeColor: color);
       PreferenceProvider.updatePreference(context, newPreference);
     }
+  }
+
+  void toggleDarkMode(bool isDark) async {
+    await saveBrightness(isDark);
+    var newPreference = PreferenceProvider.of(context)
+        .apply(brightness: isDark ? Brightness.dark : Brightness.light);
+    PreferenceProvider.updatePreference(context, newPreference);
   }
 }
 

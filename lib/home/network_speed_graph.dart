@@ -54,6 +54,9 @@ class _NetworkSpeedGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var labelColor = Theme.of(context).brightness == Brightness.dark
+        ? MaterialPalette.gray.shade200
+        : MaterialPalette.gray.shade800;
     return LineChart(
       getChartData(),
       animate: false,
@@ -61,6 +64,8 @@ class _NetworkSpeedGraph extends StatelessWidget {
         renderSpec: NoneRenderSpec(),
       ),
       primaryMeasureAxis: NumericAxisSpec(
+          renderSpec: SmallTickRendererSpec(
+              labelStyle: TextStyleSpec(color: labelColor)),
           tickProviderSpec:
               StaticNumericTickProviderSpec(getSpeedLabels(context)),
           viewport: NumericExtents(getGraphLowerBound().toDouble(),
