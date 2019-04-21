@@ -1,0 +1,29 @@
+<!--
+  ~ Trireme for Deluge - A Deluge thin client for Android.
+  ~ Copyright (C) 2019  Aashrava Holla
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="300.0003"
+    android:viewportHeight="300.00027">
+  <group android:translateX="100.0001"
+      android:translateY="75.00007">
+      <path android:fillColor="#FFFF"
+          android:pathData="M50,0C28.277,37.626 0,72.386 0,100c0,27.614 22.386,50 50,50 27.614,0 50,-22.386 50,-50 0,-27.614 -28.087,-62.045 -50,-100zM59.012,48.017c0.282,-0.002 0.495,0.016 0.627,0.056 0.731,0.222 0.314,0.577 -4.804,4.093 -9.804,6.735 -13.774,10.522 -18.039,17.208 -3.107,4.871 -4.539,8.148 -5.678,12.99 -1.569,6.671 -1.193,12.877 1.065,17.57 1.367,2.841 5.145,6.848 7.48,7.933 1.82,0.846 3.676,1.133 19.797,3.071 8.949,1.076 16.818,2.133 17.486,2.35 1.735,0.564 3.684,2.081 4.324,3.364 1.137,2.281 1.241,4.197 0.406,7.509 -1.33,5.272 -4.064,9.774 -7.754,12.764 -1.473,1.194 -6.03,3.759 -8.706,4.901 -2.549,1.088 -7.431,2.367 -10.179,2.668 -5.001,0.547 -9.495,0.231 -14.856,-1.045 -6.187,-1.473 -10.811,-3.488 -15.961,-6.957 -6.904,-4.65 -12.158,-11.021 -15.625,-18.946 -1.653,-3.778 -3.197,-10.543 -3.323,-14.556 -0.479,-15.254 7.306,-30.951 20.703,-41.74 6.581,-5.3 12.91,-8.512 21.913,-11.121 3.844,-1.114 9.152,-2.098 11.125,-2.112z" android:strokeWidth="0.5720818"/>
+  </group>
+</vector>
