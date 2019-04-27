@@ -28,7 +28,7 @@ dev_dependencies:
     sdk: flutter
 
 environment:
-  flutter: "1.4.9-hotfix.1"
+  flutter: "1.5.4"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
