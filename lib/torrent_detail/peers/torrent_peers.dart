@@ -74,10 +74,10 @@ class _TorrentPeersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: getChildren());
+    return ListView(children: getChildren(context));
   }
 
-  List<Widget> getChildren() {
+  List<Widget> getChildren(BuildContext context) {
     peers.peers.sort((p1, p2) {
       var downSpeedCompare = p2.downSpeed.compareTo(p1.downSpeed);
       if (downSpeedCompare != 0) return downSpeedCompare;
@@ -85,12 +85,10 @@ class _TorrentPeersList extends StatelessWidget {
       if (upSpeedCompare != 0) return upSpeedCompare;
       return p1.country.compareTo(p2.country);
     });
-    return peers.peers
-        .map((p) => getListTileForPeer(p))
-        .toList();
+    return peers.peers.map((p) => getListTileForPeer(context, p)).toList();
   }
 
-  Widget getListTileForPeer(Peer peer) {
+  Widget getListTileForPeer(BuildContext context, Peer peer) {
     Widget placeholder = Container(
       color: Colors.transparent,
       height: 24.0,
@@ -140,9 +138,10 @@ class _TorrentPeersList extends StatelessWidget {
                   Container(
                     height: 4.0,
                   ),
-                  DefaultTextStyle(
-                    style: const TextStyle(
-                        fontSize: 14.0, color: const Color(0x99000000)),
+                  DefaultTextStyle.merge(
+                    style: TextStyle(
+                        fontSize: 12.0,
+                        color: Theme.of(context).textTheme.caption.color),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -157,8 +156,8 @@ class _TorrentPeersList extends StatelessWidget {
                           ),
                         ),
                         Offstage(
-                            offstage: peer.downSpeed == 0,
-                            child: ByteSizePerSecond(peer.downSpeed),
+                          offstage: peer.downSpeed == 0,
+                          child: ByteSizePerSecond(peer.downSpeed),
                         ),
                         Offstage(
                           offstage: peer.upSpeed == 0,
