@@ -149,10 +149,10 @@ class _TorrentPeersList extends StatelessWidget {
                         ),
                         Offstage(
                           offstage: peer.downSpeed == 0,
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_downward,
                             size: 12.0,
-                            color: const Color(0x99000000),
+                            color: Theme.of(context).textTheme.caption.color,
                           ),
                         ),
                         Offstage(
@@ -161,10 +161,10 @@ class _TorrentPeersList extends StatelessWidget {
                         ),
                         Offstage(
                           offstage: peer.upSpeed == 0,
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_upward,
                             size: 12.0,
-                            color: const Color(0x99000000),
+                            color: Theme.of(context).textTheme.caption.color,
                           ),
                         ),
                         Offstage(
