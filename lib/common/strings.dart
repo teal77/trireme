@@ -25,7 +25,7 @@ class Strings {
   static String addServerAddServerButtonText = "ADD SERVER";
   static String strSuccess = "Success!";
   static String addServerHostDetailsTitle = "Host";
-  static String addServerCertDetailsTitle = "Certifcate";
+  static String addServerCertDetailsTitle = "Certificate";
   static String addServerUserDetailsTitle = "User";
   static String addServerPublicKeyLabel = "Certificate SHA1 hash";
   static String addServerCertificateIssuer = "Issuer";
