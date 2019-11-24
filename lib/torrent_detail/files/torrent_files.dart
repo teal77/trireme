@@ -213,7 +213,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
         onTap: onParentClicked,
       ));
     }
-    currentDirectory.children.sort((f1, f2) => f2.size.compareTo(f1.size));
+    currentDirectory.children.sort((f1, f2) => f1.path.compareTo(f2.path));
     for (var file in currentDirectory.children) {
       var isSelected = selectedFiles.contains(file);
       var isSelectionMode = selectedFiles.isNotEmpty;
