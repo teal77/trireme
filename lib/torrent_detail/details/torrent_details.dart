@@ -18,7 +18,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:trireme/torrent_detail/torrent_detail.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -26,6 +25,7 @@ import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/delete_button.dart';
 import 'package:trireme/common/widgets/label_button.dart';
+import 'package:trireme/torrent_detail/torrent_detail.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
 import 'package:trireme/torrent_list/torrent_list_tile/torrent_list_tile.dart';
 
@@ -105,7 +105,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
           child: _TorrentDetail(widget.torrentDetail),
         ),
         SlideTransition(
-          position: barAnimation,
+          position: getOffsetAnimationOfTab(1),
           child: BottomAppBar(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

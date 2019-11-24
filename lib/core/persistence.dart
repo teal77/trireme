@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:trireme/common/common.dart';
+import 'package:trireme/torrent_detail/files/torrent_files.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 
 const _dbFileName = "trireme.db";
@@ -244,4 +245,30 @@ Future<ByteSizeStyle> getSavedByteSizeStyle() async {
   var s = await SharedPreferences.getInstance();
   var isIec = s.getBool(_isIecUnits) ?? true;
   return isIec ? ByteSizeStyle.iec : ByteSizeStyle.si;
+}
+
+const _fileSortModeKey = "fileSortMode";
+
+Future saveFileSortMode(SortBy sortMode) async {
+  var s = await SharedPreferences.getInstance();
+  s.setString(_fileSortModeKey, sortMode.toString());
+}
+
+Future<SortBy> getSavedFileSortMode() async {
+  var s = await SharedPreferences.getInstance();
+  var sortStr = s.get(_fileSortModeKey);
+  return SortBy.values.firstWhere((s) => s.toString() == sortStr,
+      orElse: () => SortBy.name);
+}
+
+const _fileSortReverseKey = "fileReverseSort";
+
+Future saveFileSortReverse(bool reverse) async {
+  var s = await SharedPreferences.getInstance();
+  s.setBool(_fileSortReverseKey, reverse);
+}
+
+Future<bool> getSavedFileSortReverseMode() async {
+  var s = await SharedPreferences.getInstance();
+  return s.getBool(_fileSortReverseKey) ?? false;
 }

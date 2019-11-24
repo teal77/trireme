@@ -27,6 +27,7 @@ import 'package:trireme_client/deserialization.dart';
 
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
+import 'package:trireme/core/persistence.dart';
 
 import 'file.dart';
 import 'torrent_files_controller.dart';
@@ -103,6 +104,8 @@ class _TorrentFileListState extends State<_TorrentFileList>
   File currentDirectory;
   List<File> selectedFiles = [];
   bool disableButtons = false;
+  var _sortBy = SortBy.name;
+  var _reverse = false;
 
   TriremeRepository repository;
   TorrentFileListController controller = TorrentFileListController();
@@ -111,6 +114,16 @@ class _TorrentFileListState extends State<_TorrentFileList>
   void initState() {
     super.initState();
     currentDirectory = widget.root;
+    _getSavedSortModes();
+  }
+
+  void _getSavedSortModes() async {
+    var sortBy = await getSavedFileSortMode();
+    var reverse = await getSavedFileSortReverseMode();
+    setState(() {
+      _sortBy = sortBy;
+      _reverse = reverse;
+    });
   }
 
   @override
@@ -151,8 +164,11 @@ class _TorrentFileListState extends State<_TorrentFileList>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: selectedFiles.isEmpty ?
-            <Widget> [] :
-           <Widget>[
+            <Widget> [
+              Expanded(child: SizedBox(),),
+              _getSortingButton(_onSortByChanged),
+            ] :
+            <Widget>[
             IconButton(
               icon: Icon(Icons.select_all),
               tooltip: Strings.detailFileSelectAllTooltip,
@@ -213,7 +229,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
         onTap: onParentClicked,
       ));
     }
-    currentDirectory.children.sort((f1, f2) => f1.path.compareTo(f2.path));
+    currentDirectory.children.sort(_reverse ? _reverseComparators[_sortBy] : _comparators[_sortBy]);
     for (var file in currentDirectory.children) {
       var isSelected = selectedFiles.contains(file);
       var isSelectionMode = selectedFiles.isNotEmpty;
@@ -221,6 +237,37 @@ class _TorrentFileListState extends State<_TorrentFileList>
           file, isSelected, isSelectionMode, onFileClicked, onFileSelected));
     }
     return children;
+  }
+
+  Map<SortBy, Comparator<File>> _comparators = {
+    SortBy.name: (f1, f2) => f1.name.compareTo(f2.name),
+    SortBy.size: (f1, f2) => f1.size.compareTo(f2.size),
+    SortBy.priority: (f1, f2) => f1.priority.index.compareTo(f2.priority.index),
+    SortBy.progress: (f1, f2) => f1.progress.compareTo(f2.progress)
+  };
+
+  Map<SortBy, Comparator<File>> _reverseComparators = {
+    SortBy.name: (f1, f2) => f2.name.compareTo(f1.name),
+    SortBy.size: (f1, f2) => f2.size.compareTo(f1.size),
+    SortBy.priority: (f1, f2) => f2.priority.index.compareTo(f1.priority.index),
+    SortBy.progress: (f1, f2) => f2.progress.compareTo(f1.progress)
+  };
+
+  void _onSortByChanged(SortBy newSortBy) {
+    setState(() {
+      if (_sortBy == newSortBy) {
+        _reverse = !_reverse;
+      } else {
+        _reverse = false;
+      }
+      _sortBy = newSortBy;
+    });
+    persistSortMode();
+  }
+
+  Future persistSortMode() async {
+    await saveFileSortMode(_sortBy);
+    await saveFileSortReverse(_reverse);
   }
 
   void onParentClicked() {
@@ -377,4 +424,30 @@ class _TorrentFileListTile extends StatelessWidget {
           )),
     );
   }
+}
+
+enum SortBy {
+  name,
+  size,
+  priority,
+  progress
+}
+
+typedef void OnSortModeSelected(SortBy newSortBy);
+
+Widget _getSortingButton(OnSortModeSelected callback) {
+  return PopupMenuButton<SortBy>(
+      onSelected: callback,
+      icon: const Icon(Icons.sort),
+      tooltip: Strings.homeSortTooltip,
+      itemBuilder: (context) => <PopupMenuEntry<SortBy>>[
+            PopupMenuItem<SortBy>(
+                value: SortBy.name, child: Text(Strings.detailFileSortByName)),
+            PopupMenuItem<SortBy>(
+                value: SortBy.size, child: Text(Strings.detailFileSortBySize)),
+            PopupMenuItem<SortBy>(
+                value: SortBy.priority, child: Text(Strings.detailFileSortByPriority)),
+            PopupMenuItem<SortBy>(
+                value: SortBy.progress, child: Text(Strings.detailFileSortByProgress)),
+          ]);
 }

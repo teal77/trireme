@@ -17,6 +17,7 @@
  */
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -93,35 +94,45 @@ class TorrentDetailState extends State<TorrentDetailPage> {
 
 mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
     implements SingleTickerProviderStateMixin<T> {
-  AnimationController _barAnimationController;
-  Animation<Offset> barAnimation;
-  Animation<double> _tabControllerAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _barAnimationController = AnimationController(vsync: this);
-    barAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.5, 1))
-        .animate(_barAnimationController);
-  }
+  Animation<double> tabControllerAnimation;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _tabControllerAnimation?.removeListener(onAnimationValueChanged);
-    _tabControllerAnimation = DefaultTabController.of(context).animation;
-    _tabControllerAnimation.addListener(onAnimationValueChanged);
+    tabControllerAnimation?.removeListener(_onAnimationChanged);
+    tabControllerAnimation = DefaultTabController.of(context).animation;
+    tabControllerAnimation.addListener(_onAnimationChanged);
   }
 
-  void onAnimationValueChanged() {
-    var value = _tabControllerAnimation.value;
-    var decimalPart = value - value.toInt();
-    _barAnimationController.value = decimalPart * 2;
+  void _onAnimationChanged() {
+    onTabControllerValueChanged(tabControllerAnimation.value);
+  }
+
+  void onTabControllerValueChanged(double value) {
+
+  }
+
+  Animation<Offset> getOffsetAnimationOfTab(int tab) {
+    return Tween(begin: Offset.zero, end: Offset(-1, 1))
+    .chain(_CustomTween(tab))
+    .animate(tabControllerAnimation);
   }
 
   @override
   void dispose() {
-    _tabControllerAnimation?.removeListener(onAnimationValueChanged);
+    tabControllerAnimation?.removeListener(_onAnimationChanged);
     super.dispose();
+  }
+
+}
+
+class _CustomTween extends Tween<double> {
+  int tab;
+
+  _CustomTween(this.tab);
+
+  @override
+  double lerp(double d) {
+    return min(1, (d - tab).abs());
   }
 }

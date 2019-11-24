@@ -146,6 +146,10 @@ class Strings {
   static String detailFileHigh = "High";
   static String detailFileHighest = "Highest";
   static String detailFileMixed = "Mixed";
+  static String detailFileSortByName = "Name";
+  static String detailFileSortBySize = "Size";
+  static String detailFileSortByPriority = "Priority";
+  static String detailFileSortByProgress = "Progress";
 
   static String strYes = "Yes";
   static String strNo = "No";
