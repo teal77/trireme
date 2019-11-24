@@ -18,6 +18,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:trireme/torrent_detail/torrent_detail.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -87,7 +88,7 @@ class _TorrentDetailContent extends StatefulWidget {
 }
 
 class _TorrentDetailContentState extends State<_TorrentDetailContent>
-    with TriremeProgressBarMixin {
+    with TriremeProgressBarMixin, TabControllerAnimationProviderMixin, SingleTickerProviderStateMixin {
   TriremeRepository repository;
 
   @override
@@ -103,53 +104,56 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
         Expanded(
           child: _TorrentDetail(widget.torrentDetail),
         ),
-        BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(isPaused() ? Icons.play_arrow : Icons.pause),
-                tooltip: isPaused()
-                    ? Strings.detailResumeTorrentTooltip
-                    : Strings.detailPauseTorrentTooltip,
-                onPressed: () {
-                  if (isPaused()) {
-                    resumeTorrent();
-                  } else {
-                    pauseTorrent();
-                  }
-                },
-              ),
-              DeleteButton(
-                  Strings.detailDeleteTorrentTooltip,
-                  showDeleteConfirmationDialog,
-                  showDeleteDataConfirmationDialog),
-              LabelButton(
-                  repository, Strings.detailLabelTorrentTooltip, setLabel),
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                tooltip: Strings.detailRecheckStorageTooltip,
-                onPressed: () {
-                  recheckTorrent();
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.sync),
-                tooltip: Strings.detailUpdateTrackersTooltip,
-                onPressed: () {
-                  updateTrackers();
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.sd_storage),
-                tooltip: Strings.detailMoveStorageTooltip,
-                onPressed: () {
-                  showMoveStorageDialog();
-                },
-              )
-            ],
+        SlideTransition(
+          position: barAnimation,
+          child: BottomAppBar(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(isPaused() ? Icons.play_arrow : Icons.pause),
+                  tooltip: isPaused()
+                      ? Strings.detailResumeTorrentTooltip
+                      : Strings.detailPauseTorrentTooltip,
+                  onPressed: () {
+                    if (isPaused()) {
+                      resumeTorrent();
+                    } else {
+                      pauseTorrent();
+                    }
+                  },
+                ),
+                DeleteButton(
+                    Strings.detailDeleteTorrentTooltip,
+                    showDeleteConfirmationDialog,
+                    showDeleteDataConfirmationDialog),
+                LabelButton(
+                    repository, Strings.detailLabelTorrentTooltip, setLabel),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: Strings.detailRecheckStorageTooltip,
+                  onPressed: () {
+                    recheckTorrent();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.sync),
+                  tooltip: Strings.detailUpdateTrackersTooltip,
+                  onPressed: () {
+                    updateTrackers();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.sd_storage),
+                  tooltip: Strings.detailMoveStorageTooltip,
+                  onPressed: () {
+                    showMoveStorageDialog();
+                  },
+                )
+              ],
+            ),
           ),
-        )
+        ),
       ],
     );
   }

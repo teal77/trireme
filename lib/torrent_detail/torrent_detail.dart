@@ -41,8 +41,7 @@ class TorrentDetailPage extends StatefulWidget {
   }
 }
 
-class TorrentDetailState extends State<TorrentDetailPage>
-    with SingleTickerProviderStateMixin {
+class TorrentDetailState extends State<TorrentDetailPage> {
   final tabs = <Tab>[
     Tab(text: Strings.detailTabDetails),
     Tab(text: Strings.detailTabFiles),
@@ -50,14 +49,7 @@ class TorrentDetailState extends State<TorrentDetailPage>
     Tab(text: Strings.detailTabOptions),
   ];
 
-  TabController _tabController;
   StreamSubscription<DelugeRpcEvent> _eventSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = new TabController(length: tabs.length, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,32 +62,66 @@ class TorrentDetailState extends State<TorrentDetailPage>
       Navigator.pop(context);
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.torrentItem.name),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: tabs,
-        ),
-      ),
-      body: LoadingContainer(
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            TorrentDetailsPage(widget.torrentItem.id),
-            TorrentFileListPage(widget.torrentItem.id),
-            TorrentPeersPage(widget.torrentItem.id),
-            TorrentOptionsPage(widget.torrentItem.id),
-          ],
-        ),
-      ),
-    );
+    return DefaultTabController(
+        length: tabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(widget.torrentItem.name),
+            bottom: TabBar(
+              tabs: tabs,
+            ),
+          ),
+          body: LoadingContainer(
+            child: TabBarView(
+              children: [
+                TorrentDetailsPage(widget.torrentItem.id),
+                TorrentFileListPage(widget.torrentItem.id),
+                TorrentPeersPage(widget.torrentItem.id),
+                TorrentOptionsPage(widget.torrentItem.id),
+              ],
+            ),
+          ),
+        ));
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     _eventSubscription.cancel();
+    super.dispose();
+  }
+}
+
+mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
+    implements SingleTickerProviderStateMixin<T> {
+  AnimationController _barAnimationController;
+  Animation<Offset> barAnimation;
+  Animation<double> _tabControllerAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _barAnimationController = AnimationController(vsync: this);
+    barAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0.5, 1))
+        .animate(_barAnimationController);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _tabControllerAnimation?.removeListener(onAnimationValueChanged);
+    _tabControllerAnimation = DefaultTabController.of(context).animation;
+    _tabControllerAnimation.addListener(onAnimationValueChanged);
+  }
+
+  void onAnimationValueChanged() {
+    var value = _tabControllerAnimation.value;
+    var decimalPart = value - value.toInt();
+    _barAnimationController.value = decimalPart * 2;
+  }
+
+  @override
+  void dispose() {
+    _tabControllerAnimation?.removeListener(onAnimationValueChanged);
     super.dispose();
   }
 }

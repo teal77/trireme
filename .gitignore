@@ -10,3 +10,6 @@ packages
 .flutter-plugins
 
 *.iml
+
+.mainframer
+mainframer.sh
