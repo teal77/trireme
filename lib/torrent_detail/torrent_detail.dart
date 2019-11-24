@@ -113,9 +113,7 @@ mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
   }
 
   Animation<Offset> getOffsetAnimationOfTab(int tab) {
-    return Tween(begin: Offset.zero, end: Offset(-1, 1))
-    .chain(_CustomTween(tab))
-    .animate(tabControllerAnimation);
+    return _CustomTween(tab).animate(tabControllerAnimation);
   }
 
   @override
@@ -123,16 +121,22 @@ mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
     tabControllerAnimation?.removeListener(_onAnimationChanged);
     super.dispose();
   }
-
 }
 
-class _CustomTween extends Tween<double> {
+class _CustomTween extends Tween<Offset> {
   int tab;
 
   _CustomTween(this.tab);
 
   @override
-  double lerp(double d) {
-    return min(1, (d - tab).abs());
+  Offset lerp(double d) {
+    double x = max(-1, min(d - tab, 1));
+    double y = min((d - tab).abs(), 1);
+    return Offset(x, 2*y);
+  }
+
+  @override
+  Offset transform(double d) {
+    return lerp(d);
   }
 }

@@ -28,6 +28,7 @@ import 'package:trireme_client/deserialization.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
 import 'package:trireme/core/persistence.dart';
+import 'package:trireme/torrent_detail/torrent_detail.dart';
 
 import 'file.dart';
 import 'torrent_files_controller.dart';
@@ -100,7 +101,7 @@ class _TorrentFileList extends StatefulWidget {
 }
 
 class _TorrentFileListState extends State<_TorrentFileList>
-    with TriremeProgressBarMixin {
+    with TriremeProgressBarMixin, TabControllerAnimationProviderMixin, SingleTickerProviderStateMixin {
   File currentDirectory;
   List<File> selectedFiles = [];
   bool disableButtons = false;
@@ -160,62 +161,65 @@ class _TorrentFileListState extends State<_TorrentFileList>
           child: ListView(
         children: getListChildren(),
       )),
-      BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: selectedFiles.isEmpty ?
-            <Widget> [
-              Expanded(child: SizedBox(),),
-              _getSortingButton(_onSortByChanged),
-            ] :
-            <Widget>[
-            IconButton(
-              icon: Icon(Icons.select_all),
-              tooltip: Strings.detailFileSelectAllTooltip,
-              onPressed: disableButtons ? null : selectAll,
-            ),
-            IconButton(
-              icon: Icon(Icons.block),
-              tooltip: Strings.detailFileDoNotDownload,
-              onPressed: disableButtons
-                  ? null
-                  : () => setPrioritiesForSelectedFiles(0),
-            ),
-            IconButton(
-              icon: Icon(Icons.play_arrow),
-              tooltip: Strings.detailFileNormal,
-              onPressed: disableButtons
-                  ? null
-                  : () => setPrioritiesForSelectedFiles(1),
-            ),
-            IconButton(
-              icon: Icon(Icons.fast_forward),
-              tooltip: Strings.detailFileHigh,
-              onPressed: disableButtons
-                  ? null
-                  : () => setPrioritiesForSelectedFiles(5),
-            ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/highest.svg",
-                width: 24.0,
-                height: 24.0,
-                color: IconTheme.of(context).color,
+      SlideTransition(
+        position: getOffsetAnimationOfTab(1),
+        child: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: selectedFiles.isEmpty ?
+              <Widget> [
+                Expanded(child: SizedBox(),),
+                _getSortingButton(_onSortByChanged),
+              ] :
+              <Widget>[
+              IconButton(
+                icon: Icon(Icons.select_all),
+                tooltip: Strings.detailFileSelectAllTooltip,
+                onPressed: disableButtons ? null : selectAll,
               ),
-              tooltip: Strings.detailFileHighest,
-              onPressed: disableButtons
-                  ? null
-                  : () => setPrioritiesForSelectedFiles(7),
-            ),
-            /*Offstage(
-                offstage: selectedFiles.length != 1,
-                child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: disableButtons ? null : renameSelectedFile,
+              IconButton(
+                icon: Icon(Icons.block),
+                tooltip: Strings.detailFileDoNotDownload,
+                onPressed: disableButtons
+                    ? null
+                    : () => setPrioritiesForSelectedFiles(0),
+              ),
+              IconButton(
+                icon: Icon(Icons.play_arrow),
+                tooltip: Strings.detailFileNormal,
+                onPressed: disableButtons
+                    ? null
+                    : () => setPrioritiesForSelectedFiles(1),
+              ),
+              IconButton(
+                icon: Icon(Icons.fast_forward),
+                tooltip: Strings.detailFileHigh,
+                onPressed: disableButtons
+                    ? null
+                    : () => setPrioritiesForSelectedFiles(5),
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  "assets/icons/highest.svg",
+                  width: 24.0,
+                  height: 24.0,
+                  color: IconTheme.of(context).color,
                 ),
-              )*/
-          ],
-        ),
+                tooltip: Strings.detailFileHighest,
+                onPressed: disableButtons
+                    ? null
+                    : () => setPrioritiesForSelectedFiles(7),
+              ),
+              /*Offstage(
+                  offstage: selectedFiles.length != 1,
+                  child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: disableButtons ? null : renameSelectedFile,
+                  ),
+                )*/
+            ],
+          ),
+        )
       )
     ]);
   }

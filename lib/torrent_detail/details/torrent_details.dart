@@ -105,7 +105,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
           child: _TorrentDetail(widget.torrentDetail),
         ),
         SlideTransition(
-          position: getOffsetAnimationOfTab(1),
+          position: getOffsetAnimationOfTab(0),
           child: BottomAppBar(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
