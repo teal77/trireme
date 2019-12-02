@@ -100,8 +100,8 @@ class _TorrentPeersList extends StatelessWidget {
         return placeholder;
       } else {
         return CachedNetworkImage(
-          placeholder: placeholder,
-          errorWidget: placeholder,
+          placeholder: (_,__) => placeholder,
+          errorWidget: (_,__,___) => placeholder,
           imageUrl: flagUrl.replaceFirst("XX", peer.country),
           height: 24.0,
           width: 24.0,
