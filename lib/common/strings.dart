@@ -29,7 +29,7 @@ class Strings {
   static String addServerUserDetailsTitle = "User";
   static String addServerPublicKeyLabel = "Certificate SHA1 hash";
   static String addServerCertificateIssuer = "Issuer";
-  static String addServerSaveCertificate = "Save certificate details";
+  static String addServerSaveCertificate = "Save certificate details (Optional)";
   static String addServerSaveCertificateInfo = "Connect only with this certificate, if the certificate changes on the server, connection will be refused";
 
   static String homeTitle = "Deluge";
