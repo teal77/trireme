@@ -9,7 +9,9 @@ dependencies:
   intl: "^0.15.6"
 
   trireme_client:
-    git: git@github.com:teal77/trireme_client.git
+    git:
+      url: git@github.com:teal77/trireme_client.git
+      ref: "v1.0.0"
 
   rxdart: "^0.18.1"
 
