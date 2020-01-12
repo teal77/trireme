@@ -130,7 +130,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
                 LabelButton(
                     repository, Strings.detailLabelTorrentTooltip, setLabel),
                 IconButton(
-                  icon: const Icon(Icons.refresh),
+                  icon: const Icon(Icons.search),
                   tooltip: Strings.detailRecheckStorageTooltip,
                   onPressed: () {
                     recheckTorrent();
