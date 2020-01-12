@@ -11,7 +11,7 @@ dependencies:
   trireme_client:
     git:
       url: git@github.com:teal77/trireme_client.git
-      ref: "v1.0.0"
+      ref: "01b4c2fc5f055e12ce76c1e7d7520322d261fa51"
 
   rxdart: "^0.18.1"
 
@@ -28,6 +28,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: "^1.8.0"
 
 environment:
   flutter: "1.9.1+hotfix.6"

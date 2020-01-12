@@ -58,7 +58,7 @@ class TorrentOptionsPageState extends State<TorrentOptionsPage>
             hideProgressBar();
 
             if (snapshot.hasData) {
-              return _TorrentOptionsContent(widget.torrentId, snapshot.data);
+              return _TorrentOptionsContent(widget.torrentId, snapshot.data as TorrentOptions);
             } else if (snapshot.hasError) {
               return ErrorPage(snapshot.error);
             }

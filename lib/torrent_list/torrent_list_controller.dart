@@ -133,7 +133,7 @@ class TorrentListController {
   }
 
   Future updateTorrentsWithIds(List<String> ids) async {
-    List updates = await repository.getTorrentList({'id': ids});
+    var updates = await repository.getTorrentList({'id': ids});
     _updateTorrentList(updates);
   }
 

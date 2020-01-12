@@ -215,7 +215,7 @@ class _AddServerState extends State<_AddServerPageContent>
         Navigator.of(context).pop(true);
       }
     } catch (e) {
-      showSnackBar(e);
+      showSnackBar(e.toString());
     } finally {
       setState(() {
         loading = false;

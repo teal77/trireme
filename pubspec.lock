@@ -166,7 +166,7 @@ packages:
     source: hosted
     version: "1.4.5"
   pedantic:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
@@ -279,11 +279,18 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.0"
-      resolved-ref: b4aa9dcf4beaf73564e3f24d70c5a1abc105dc9c
+      ref: "01b4c2fc5f055e12ce76c1e7d7520322d261fa51"
+      resolved-ref: "01b4c2fc5f055e12ce76c1e7d7520322d261fa51"
       url: "git@github.com:teal77/trireme_client.git"
     source: git
     version: "0.0.1"
+  type_helper:
+    dependency: transitive
+    description:
+      name: type_helper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   typed_data:
     dependency: transitive
     description:

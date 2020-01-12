@@ -68,8 +68,9 @@ class ServerDBModel {
   }
 
   factory ServerDBModel.fromMap(Map<String, Object> map) {
-    return ServerDBModel._(map[_columnId], map[_columnHost], map[_columnPort],
-        map[_columnUsername], map[_columnPassword], map[_columnCertificate]);
+    return ServerDBModel._(map[_columnId] as int, map[_columnHost] as String,
+        map[_columnPort] as int, map[_columnUsername] as String,
+        map[_columnPassword] as String, map[_columnCertificate] as String);
   }
 
   factory ServerDBModel(String host, int port, String username, String password,

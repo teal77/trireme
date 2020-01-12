@@ -27,7 +27,7 @@ class LoadingContainer extends StatefulWidget {
     var state =
     context.ancestorStateOfType(const TypeMatcher<LoadingContainerState>());
     if (state != null) {
-      return state;
+      return state as LoadingContainerState;
     }
 
     throw "Could not find a LoadingContainer in this widget tree";
