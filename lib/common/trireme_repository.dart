@@ -313,39 +313,50 @@ class TriremeRepository {
         .map(_unpackResponse);
   }
 
+  void _invalidateOldResponses() {
+    _invalidateEverythingBefore(client.latestRequestId);
+  }
+
   Future pauseTorrents(List<String> torrentIds) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
+    _invalidateOldResponses();
     return client.pauseTorrents(torrentIds);
   }
 
   Future resumeTorrents(List<String> torrentIds) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
+    _invalidateOldResponses();
     return client.resumeTorrents(torrentIds);
   }
 
   Future recheckTorrents(List<String> torrentIds) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
+    _invalidateOldResponses();
     return client.forceRecheck(torrentIds);
   }
 
   Future reAnnounceTorrents(List<String> torrentIds) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
+    _invalidateOldResponses();
     return client.forceReAnnounce(torrentIds);
   }
 
   Future<bool> removeTorrent(String torrentId, bool removeData) {
     if (client == null || client.isDisposed || torrentId.isEmpty) return null;
+    _invalidateOldResponses();
     return client.removeTorrent(torrentId, removeData);
   }
 
   Future<List<Object>> removeTorrents(
       List<String> torrentIds, bool removeData) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
+    _invalidateOldResponses();
     return client.removeTorrents(torrentIds, removeData);
   }
 
   Future<bool> moveStorage(String torrentId, String path) {
     if (client == null || client.isDisposed || torrentId.isEmpty) return null;
+    _invalidateOldResponses();
     return client.moveStorage([torrentId], path);
   }
 
@@ -356,6 +367,7 @@ class TriremeRepository {
 
   Future setTorrentLabel(String torrentId, String label) {
     if (client == null || client.isDisposed || torrentId.isEmpty) return null;
+    _invalidateOldResponses();
     return client.setTorrentLabel(torrentId, label);
   }
 
@@ -377,6 +389,7 @@ class TriremeRepository {
 
   Future renameFile(String torrentId, int index, String newName) {
     if (client == null || torrentId == null || torrentId.isEmpty) return null;
+    _invalidateOldResponses();
     return client.renameTorrentFiles(torrentId, [
       [index, newName]
     ]);
@@ -384,6 +397,7 @@ class TriremeRepository {
 
   Future renameFolder(String torrentId, String oldName, String newName) {
     if (client == null || torrentId == null || torrentId.isEmpty) return null;
+    _invalidateOldResponses();
     return client.renameTorrentFolder(torrentId, oldName, newName);
   }
 
@@ -400,6 +414,7 @@ class TriremeRepository {
 
   Future setTorrentFilePriorities(String torrentId, List<int> priorities) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {'file_priorities': priorities});
   }
@@ -423,6 +438,7 @@ class TriremeRepository {
   Future setTorrentPrioritiseFirstLast(
       String torrentId, bool prioritiseFirstLast) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client.setTorrentOptions(
         [torrentId], {"prioritize_first_last_pieces": prioritiseFirstLast});
   }
@@ -430,58 +446,68 @@ class TriremeRepository {
   Future setTorrentMoveCompletedPath(
       String torrentId, String moveCompletedPath) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client.setTorrentOptions(
         [torrentId], {"move_completed_path": moveCompletedPath});
   }
 
   Future setTorrentMoveCompleted(String torrentId, bool moveCompleted) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"move_completed": moveCompleted});
   }
 
   Future setTorrentRemoveAtRatio(String torrentId, bool removeAtRatio) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"remove_at_ratio": removeAtRatio});
   }
 
   Future setTorrentStopRatio(String torrentId, double stopRatio) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client.setTorrentOptions([torrentId], {"stop_ratio": stopRatio});
   }
 
   Future setTorrentStopAtRatio(String torrentId, bool stopAtRatio) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"stop_at_ratio": stopAtRatio});
   }
 
   Future setTorrentAutoManaged(String torrentId, bool autoManaged) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client.setTorrentOptions([torrentId], {"auto_managed": autoManaged});
   }
 
   Future setTorrentMaxUploadSlots(String torrentId, int maxUploadSlots) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"max_upload_slots": maxUploadSlots});
   }
 
   Future setTorrentMaxConnections(String torrentId, int maxConnections) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"max_connections": maxConnections});
   }
 
   Future setTorrentMaxUploadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"max_upload_speed": maxSpeed});
   }
 
   Future setTorrentMaxDownloadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
     return client
         .setTorrentOptions([torrentId], {"max_download_speed": maxSpeed});
   }
