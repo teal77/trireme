@@ -202,7 +202,7 @@ class TriremeRepository {
   List<T> _leftpadNull<T>(List<T> input, int totalLength) {
     if (input.length >= totalLength) return input;
     var padding =
-    List<T>.filled(totalLength - input.length, null, growable: true);
+        List<T>.filled(totalLength - input.length, null, growable: true);
     return padding..addAll(input);
   }
 
@@ -242,8 +242,8 @@ class TriremeRepository {
     }
   }
 
-  Future addTorrentFile(String fileName, String fileDump,
-      Map<String, Object> options) {
+  Future addTorrentFile(
+      String fileName, String fileDump, Map<String, Object> options) {
     if (client == null) return null;
     return client.addTorrentFile(fileName, fileDump, options);
   }
@@ -257,7 +257,8 @@ class TriremeRepository {
       Map<String, Object> filterDict) async {
     if (client == null) return null;
     var torrentList = await _getTorrentList(filterDict);
-    return torrentList.response.entries.map((e) => TorrentItem(e.key, e.value))
+    return torrentList.response.entries
+        .map((e) => TorrentItem(e.key, e.value))
         .toList();
   }
 
@@ -275,11 +276,14 @@ class TriremeRepository {
     _torrentsWhichNeedUpdates.remove(item);
   }
 
-  Future<List<TorrentItem>> _getTorrentUpdate() {
-    if (_torrentsWhichNeedUpdates.isEmpty) return Future.value([]);
+  Future<Response<List<TorrentItem>>> _getTorrentUpdate() async {
+    if (_torrentsWhichNeedUpdates.isEmpty)
+      return Future.value(Response("", 0, []));
     var torrentIdsForUpdate =
-    _torrentsWhichNeedUpdates.map((t) => t.id).toList();
-    return getTorrentList({"id": torrentIdsForUpdate});
+        _torrentsWhichNeedUpdates.map((t) => t.id).toList();
+    var r = await _getTorrentList({"id": torrentIdsForUpdate});
+    return Response(r.apiName, r.requestId,
+        r.response.entries.map((e) => TorrentItem(e.key, e.value)).toList());
   }
 
   Stream<List<TorrentItem>> getTorrentListUpdates() {
@@ -288,7 +292,9 @@ class TriremeRepository {
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentUpdate())])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer());
+        .transform(_RetryTransformer())
+        .where(_isResponseValid)
+        .map(_unpackResponse);
   }
 
   void unsubscribeFromAllTorrentUpdates() {
@@ -332,8 +338,8 @@ class TriremeRepository {
     return client.removeTorrent(torrentId, removeData);
   }
 
-  Future<List<Object>> removeTorrents(List<String> torrentIds,
-      bool removeData) {
+  Future<List<Object>> removeTorrents(
+      List<String> torrentIds, bool removeData) {
     if (client == null || client.isDisposed || torrentIds.isEmpty) return null;
     return client.removeTorrents(torrentIds, removeData);
   }
@@ -360,8 +366,7 @@ class TriremeRepository {
 
   Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId) {
     return _clockStream
-        .flatMap(
-            (_) => Stream.fromFuture(_getTorrentFiles(torrentId)))
+        .flatMap((_) => Stream.fromFuture(_getTorrentFiles(torrentId)))
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentFiles(torrentId))])
         .doOnError((e) => _errorStream.add(e))
@@ -415,15 +420,15 @@ class TriremeRepository {
         .map(_unpackResponse);
   }
 
-  Future setTorrentPrioritiseFirstLast(String torrentId,
-      bool prioritiseFirstLast) {
+  Future setTorrentPrioritiseFirstLast(
+      String torrentId, bool prioritiseFirstLast) {
     if (client == null || client.isDisposed) return null;
     return client.setTorrentOptions(
         [torrentId], {"prioritize_first_last_pieces": prioritiseFirstLast});
   }
 
-  Future setTorrentMoveCompletedPath(String torrentId,
-      String moveCompletedPath) {
+  Future setTorrentMoveCompletedPath(
+      String torrentId, String moveCompletedPath) {
     if (client == null || client.isDisposed) return null;
     return client.setTorrentOptions(
         [torrentId], {"move_completed_path": moveCompletedPath});
@@ -512,44 +517,43 @@ class _BootlegTakeLastTransformer<T> extends StreamTransformerBase<T, List<T>> {
 
   static StreamTransformer<T, List<T>> _buildTransformer<T>(int count) {
     return new StreamTransformer<T, List<T>>(
-            (Stream<T> input, bool cancelOnError) {
-          StreamController<List<T>> controller;
-          StreamSubscription<T> subscription;
-          ListQueue<T> buffer = new ListQueue();
+        (Stream<T> input, bool cancelOnError) {
+      StreamController<List<T>> controller;
+      StreamSubscription<T> subscription;
+      ListQueue<T> buffer = new ListQueue();
 
-          void onDone() {
-            if (controller.isClosed) return;
+      void onDone() {
+        if (controller.isClosed) return;
 
-            if (buffer.isNotEmpty) controller.add(
-                new List<T>.unmodifiable(buffer));
+        if (buffer.isNotEmpty) controller.add(new List<T>.unmodifiable(buffer));
 
-            controller.close();
-          }
+        controller.close();
+      }
 
-          controller = new StreamController<List<T>>(
-              sync: true,
-              onListen: () {
-                try {
-                  subscription = input.listen((data) {
-                    if (buffer.length == count) {
-                      buffer.removeFirst();
-                    }
-                    buffer.add(data);
-                    controller.add(buffer.toList());
-                  },
-                      onError: controller.addError,
-                      onDone: onDone,
-                      cancelOnError: cancelOnError);
-                } catch (e, s) {
-                  controller.addError(e, s);
+      controller = new StreamController<List<T>>(
+          sync: true,
+          onListen: () {
+            try {
+              subscription = input.listen((data) {
+                if (buffer.length == count) {
+                  buffer.removeFirst();
                 }
+                buffer.add(data);
+                controller.add(buffer.toList());
               },
-              onPause: ([Future<dynamic> resumeSignal]) =>
-                  subscription.pause(resumeSignal),
-              onResume: () => subscription.resume(),
-              onCancel: () => subscription.cancel());
+                  onError: controller.addError,
+                  onDone: onDone,
+                  cancelOnError: cancelOnError);
+            } catch (e, s) {
+              controller.addError(e, s);
+            }
+          },
+          onPause: ([Future<dynamic> resumeSignal]) =>
+              subscription.pause(resumeSignal),
+          onResume: () => subscription.resume(),
+          onCancel: () => subscription.cancel());
 
-          return controller.stream.listen(null);
-        });
+      return controller.stream.listen(null);
+    });
   }
 }
