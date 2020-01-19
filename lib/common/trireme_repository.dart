@@ -147,9 +147,9 @@ class TriremeRepository {
     if (_sessionStatusStream == null) {
       _sessionStatusStream = _clockStream
           .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
+          .transform(_RetryTransformer())
           .transform(_SyncWithClockStream(_clockStream))
           .doOnError((e) => _errorStream.add(e))
-          .transform(_RetryTransformer())
           .asBroadcastStream()
           .where(_isResponseValid)
           .map(_unpackResponse);
@@ -278,7 +278,7 @@ class TriremeRepository {
 
   Future<Response<List<TorrentItem>>> _getTorrentUpdate() async {
     if (_torrentsWhichNeedUpdates.isEmpty)
-      return Future.value(Response("", 0, []));
+      return Future.value(Response("", 0, <TorrentItem>[]));
     var torrentIdsForUpdate =
         _torrentsWhichNeedUpdates.map((t) => t.id).toList();
     var r = await _getTorrentList({"id": torrentIdsForUpdate});
@@ -289,10 +289,10 @@ class TriremeRepository {
   Stream<List<TorrentItem>> getTorrentListUpdates() {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentUpdate()))
+        .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentUpdate())])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer())
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -305,10 +305,10 @@ class TriremeRepository {
     if (client == null || client.isDisposed || torrentId.isEmpty) return null;
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_client.getTorrentDetails(torrentId)))
+        .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_client.getTorrentDetails(torrentId))])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer())
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -379,10 +379,10 @@ class TriremeRepository {
   Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentFiles(torrentId)))
+        .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentFiles(torrentId))])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer())
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -404,10 +404,10 @@ class TriremeRepository {
   Stream<Peers> getTorrentPeers(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_client.getTorrentPeers(torrentId)))
+        .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_client.getTorrentPeers(torrentId))])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer())
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -427,10 +427,10 @@ class TriremeRepository {
   Stream<TorrentOptions> getTorrentOptionsUpdates(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentOptions(torrentId)))
+        .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentOptions(torrentId))])
         .doOnError((e) => _errorStream.add(e))
-        .transform(_RetryTransformer())
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
