@@ -38,7 +38,7 @@ class TriremeRepository {
   StreamController<bool> _readinessStream = StreamController.broadcast();
   StreamController<Object> _errorStream = StreamController.broadcast();
 
-  Observable<void> _clockStream;
+  Stream<void> _clockStream;
 
   bool _isPaused = false;
   bool _isResumed = false;
@@ -80,7 +80,7 @@ class TriremeRepository {
     _readinessStream = StreamController.broadcast();
     _errorStream = StreamController.broadcast();
 
-    _clockStream = Observable<void>.periodic(_refreshInterval)
+    _clockStream = Stream<void>.periodic(_refreshInterval)
         .takeWhile((_) => !_isDisposed)
         .where((_) => _isResumed)
         .asBroadcastStream();
@@ -517,7 +517,7 @@ class TriremeRepository {
 class _RetryTransformer<T> extends StreamTransformerBase<T, T> {
   @override
   Stream<T> bind(Stream<T> stream) {
-    return Observable.retry(() => stream);
+    return Rx.retry(() => stream);
   }
 }
 
@@ -528,8 +528,7 @@ class _SyncWithClockStream<T> extends StreamTransformerBase<T, T> {
 
   @override
   Stream<T> bind(Stream<T> stream) {
-    return clockStream
-        .transform(WithLatestFromStreamTransformer(stream, (_, T e) => e));
+    return clockStream.withLatestFrom(stream, (_, T e) => e);
   }
 }
 

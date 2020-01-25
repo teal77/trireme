@@ -102,8 +102,8 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
     });
   }
 
-  Stream<Object> errorStreamDebounced() =>
-      Observable(repository.errorStream()).debounce(const Duration(seconds: 1));
+  Stream<Object> errorStreamDebounced() => repository.errorStream()
+      .debounceTime(const Duration(seconds: 1));
 
   var checking = false;
 

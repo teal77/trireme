@@ -117,7 +117,7 @@ class TorrentListController {
   }
 
   Stream<List<DelugeRpcEvent>> _listEventsStream() {
-    return Observable(repository.getDelugeRpcEvents())
+    return repository.getDelugeRpcEvents()
         .where((e) => isListAlteringEvent(e))
         .bufferTime(const Duration(seconds: 1))
         .where((l) => l.isNotEmpty);
