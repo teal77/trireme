@@ -233,7 +233,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
         onTap: onParentClicked,
       ));
     }
-    currentDirectory.children.sort(_reverse ? _reverseComparators[_sortBy] : _comparators[_sortBy]);
+    currentDirectory.children.sort(_reverse ? _comparators[_sortBy].reversed() : _comparators[_sortBy]);
     for (var file in currentDirectory.children) {
       var isSelected = selectedFiles.contains(file);
       var isSelectionMode = selectedFiles.isNotEmpty;
@@ -248,13 +248,6 @@ class _TorrentFileListState extends State<_TorrentFileList>
     SortBy.size: (f1, f2) => f1.size.compareTo(f2.size),
     SortBy.priority: (f1, f2) => f1.priority.index.compareTo(f2.priority.index),
     SortBy.progress: (f1, f2) => f1.progress.compareTo(f2.progress)
-  };
-
-  Map<SortBy, Comparator<File>> _reverseComparators = {
-    SortBy.name: (f1, f2) => f2.name.compareTo(f1.name),
-    SortBy.size: (f1, f2) => f2.size.compareTo(f1.size),
-    SortBy.priority: (f1, f2) => f2.priority.index.compareTo(f1.priority.index),
-    SortBy.progress: (f1, f2) => f2.progress.compareTo(f1.progress)
   };
 
   void _onSortByChanged(SortBy newSortBy) {

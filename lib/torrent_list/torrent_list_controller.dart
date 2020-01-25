@@ -168,15 +168,8 @@ class TorrentListController {
     _reverseSort = reverse;
 
     if (_torrentItems != null && _torrentItems.isNotEmpty) {
-      _torrentItems.sort(_getComparator(criterion));
-      if (reverse) {
-        _torrentItems = _torrentItems.reversed.toList();
-      }
+      _torrentItems.sort(reverse ? _comparators[criterion].reversed() : _comparators[criterion]);
     }
-  }
-
-  Comparator<TorrentItem> _getComparator(SortCriteria criterion) {
-    return _comparators[criterion];
   }
 
   void filter(FilterSpec filterSpec) {

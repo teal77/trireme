@@ -53,3 +53,9 @@ String prettifyError(Object error) {
   }
   throw error;
 }
+
+extension ReversibleComparator<T> on Comparator<T> {
+  Comparator<T> reversed() {
+    return (a, b) => this(b, a);
+  }
+}
