@@ -8,6 +8,7 @@ build/
 ios/.generated/
 packages
 .flutter-plugins
+.flutter-plugins-dependencies
 
 *.iml
 
