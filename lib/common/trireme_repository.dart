@@ -159,7 +159,7 @@ class TriremeRepository {
 
   void startRecordingSpeedHistory() {
     _localSessionStatusSubscription = _getSessionStatusStream()
-        .transform(new _BootlegTakeLastTransformer(_speedHistorySize))
+        .transform(_BootlegTakeLastTransformer(_speedHistorySize))
         .listen((s) => _sessionStatusHistory.add(s));
   }
 
@@ -277,8 +277,9 @@ class TriremeRepository {
   }
 
   Future<Response<List<TorrentItem>>> _getTorrentUpdate() async {
-    if (_torrentsWhichNeedUpdates.isEmpty)
+    if (_torrentsWhichNeedUpdates.isEmpty) {
       return Future.value(Response("", 0, <TorrentItem>[]));
+    }
     var torrentIdsForUpdate =
         _torrentsWhichNeedUpdates.map((t) => t.id).toList();
     var r = await _getTorrentList({"id": torrentIdsForUpdate});
@@ -542,21 +543,21 @@ class _BootlegTakeLastTransformer<T> extends StreamTransformerBase<T, List<T>> {
       _buildTransformer<T>(count).bind(stream);
 
   static StreamTransformer<T, List<T>> _buildTransformer<T>(int count) {
-    return new StreamTransformer<T, List<T>>(
+    return StreamTransformer<T, List<T>>(
         (Stream<T> input, bool cancelOnError) {
       StreamController<List<T>> controller;
       StreamSubscription<T> subscription;
-      ListQueue<T> buffer = new ListQueue();
+      ListQueue<T> buffer = ListQueue();
 
       void onDone() {
         if (controller.isClosed) return;
 
-        if (buffer.isNotEmpty) controller.add(new List<T>.unmodifiable(buffer));
+        if (buffer.isNotEmpty) controller.add(List<T>.unmodifiable(buffer));
 
         controller.close();
       }
 
-      controller = new StreamController<List<T>>(
+      controller = StreamController<List<T>>(
           sync: true,
           onListen: () {
             try {

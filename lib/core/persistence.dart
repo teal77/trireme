@@ -142,7 +142,7 @@ const _sortModeKey = "sortMode";
 
 Future saveSortMode(SortCriteria sortMode) async {
   var s = await SharedPreferences.getInstance();
-  s.setString(_sortModeKey, sortMode.toString());
+  await s.setString(_sortModeKey, sortMode.toString());
 }
 
 Future<SortCriteria> getSavedSortMode() async {
@@ -156,7 +156,7 @@ const _reverseKey = "reverseSort";
 
 Future saveSortReverse(bool reverse) async {
   var s = await SharedPreferences.getInstance();
-  s.setBool(_reverseKey, reverse);
+  await s.setBool(_reverseKey, reverse);
 }
 
 Future<bool> getSavedSortReverseMode() async {
@@ -168,7 +168,7 @@ const _filterSpecKey = "filterSpec";
 
 Future saveFilter(FilterSpec f) async {
   var s = await SharedPreferences.getInstance();
-  s.setString(_filterSpecKey, json.encode(f.toFilterDict()));
+  await s.setString(_filterSpecKey, json.encode(f.toFilterDict()));
 }
 
 Future<FilterSpec> getSavedFilterSpec() async {
@@ -212,7 +212,7 @@ const colorList = <MaterialColor>[
 Future saveAppColor(MaterialColor color) async {
   if (!colorList.contains(color)) throw "Unknown material color";
   var s = await SharedPreferences.getInstance();
-  s.setInt(_appColorKey, color.shade500.value);
+  await s.setInt(_appColorKey, color.shade500.value);
 }
 
 Future<MaterialColor> getSavedAppColor() async {
@@ -226,7 +226,7 @@ const _appBrightnessKey = "isDark";
 
 Future saveBrightness(bool isDark) async {
   var s = await SharedPreferences.getInstance();
-  s.setBool(_appBrightnessKey, isDark);
+  await s.setBool(_appBrightnessKey, isDark);
 }
 
 Future<Brightness> getSavedBrightness() async {
@@ -239,7 +239,7 @@ const _isIecUnits = "isIec";
 
 Future saveByteSizeStyle(ByteSizeStyle b) async {
   var s = await SharedPreferences.getInstance();
-  s.setBool(_isIecUnits, b == ByteSizeStyle.iec);
+  await s.setBool(_isIecUnits, b == ByteSizeStyle.iec);
 }
 
 Future<ByteSizeStyle> getSavedByteSizeStyle() async {
@@ -252,7 +252,7 @@ const _fileSortModeKey = "fileSortMode";
 
 Future saveFileSortMode(SortBy sortMode) async {
   var s = await SharedPreferences.getInstance();
-  s.setString(_fileSortModeKey, sortMode.toString());
+  await s.setString(_fileSortModeKey, sortMode.toString());
 }
 
 Future<SortBy> getSavedFileSortMode() async {
@@ -266,7 +266,7 @@ const _fileSortReverseKey = "fileReverseSort";
 
 Future saveFileSortReverse(bool reverse) async {
   var s = await SharedPreferences.getInstance();
-  s.setBool(_fileSortReverseKey, reverse);
+  await s.setBool(_fileSortReverseKey, reverse);
 }
 
 Future<bool> getSavedFileSortReverseMode() async {

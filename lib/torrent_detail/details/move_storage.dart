@@ -33,7 +33,7 @@ class MoveStorageDialog extends StatefulWidget {
 }
 
 class MoveStorageDialogState extends State<MoveStorageDialog> {
-  final GlobalKey<_MoveStorageState> key = new GlobalKey<_MoveStorageState>();
+  final GlobalKey<_MoveStorageState> key = GlobalKey<_MoveStorageState>();
 
   @override
   Widget build(BuildContext context) {

@@ -268,7 +268,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
             ));
   }
 
-  void showMoveStorageDialog() async {
+  void showMoveStorageDialog() {
     Navigator.of(context).push<void>(MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) =>

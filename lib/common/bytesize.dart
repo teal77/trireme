@@ -30,8 +30,11 @@ class ByteSizeFormatter {
   static final kibiByte = ByteSizeFormatter(ByteSizeStyle.iec);
 
   static ByteSizeFormatter of(ByteSizeStyle style) {
-    if (style == ByteSizeStyle.si) return kiloByte;
-    else return kibiByte;
+    if (style == ByteSizeStyle.si) {
+      return kiloByte;
+    } else {
+      return kibiByte;
+    }
   }
 
   final ByteSizeStyle style;

@@ -21,7 +21,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class PlatformChannel {
-  static const platform = const MethodChannel('org.deluge.trireme');
+  static const platform = MethodChannel('org.deluge.trireme');
 
   static Future<String> getOpenedFile() async {
     return await platform.invokeMethod<String>('getOpenedFile');

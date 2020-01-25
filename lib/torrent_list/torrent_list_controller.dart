@@ -101,7 +101,7 @@ class TorrentListController {
     stateUpdateCallback();
   }
 
-  void listenForTorrentListUpdates() async {
+  void listenForTorrentListUpdates() {
     _torrentListUpdateStreamSubscription?.cancel();
     _torrentListUpdateStreamSubscription =
         repository.getTorrentListUpdates().listen((data) {
@@ -109,7 +109,7 @@ class TorrentListController {
     });
   }
 
-  void listenForRpcEvents() async {
+  void listenForRpcEvents() {
     _eventsStreamSubscription?.cancel();
     _eventsStreamSubscription = _listEventsStream().listen((_) {
       getFilteredTorrentList();
@@ -211,7 +211,7 @@ class TorrentListController {
     await repository.pauseTorrents(_getSelectedTorrentIds());
     var ids = _getSelectedTorrentIds();
     clearSelection();
-    updateTorrentsWithIds(ids);
+    await updateTorrentsWithIds(ids);
   }
 
   List<String> _getSelectedTorrentIds() {
@@ -222,7 +222,7 @@ class TorrentListController {
     await repository.resumeTorrents(_getSelectedTorrentIds());
     var ids = _getSelectedTorrentIds();
     clearSelection();
-    updateTorrentsWithIds(ids);
+    await updateTorrentsWithIds(ids);
   }
 
   Future deleteTorrents() {
@@ -246,7 +246,7 @@ class TorrentListController {
         .map((t) => repository.setTorrentLabel(t, label)));
     var ids = _getSelectedTorrentIds();
     clearSelection();
-    updateTorrentsWithIds(ids);
+    await updateTorrentsWithIds(ids);
   }
 
   void selectAll() {
@@ -302,7 +302,7 @@ class FilterSpec {
   final String labelFilter;
   final String trackerFilter;
 
-  static const all = const FilterSpec(strAll, strAll, strAll);
+  static const all = FilterSpec(strAll, strAll, strAll);
 
   const FilterSpec(this.statusFilter, this.labelFilter, this.trackerFilter);
 

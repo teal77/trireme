@@ -103,7 +103,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
           children: <Widget>[
             Expanded(
               child: TextField(
-                keyboardType: new TextInputType.numberWithOptions(
+                keyboardType: TextInputType.numberWithOptions(
                     signed: true, decimal: true),
                 controller: textEditingController,
               ),

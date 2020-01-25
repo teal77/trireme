@@ -51,7 +51,7 @@ class TorrentOptionsPageState extends State<TorrentOptionsPage>
 
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder(
+    return StreamBuilder(
         stream: repository.getTorrentOptionsUpdates(widget.torrentId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {

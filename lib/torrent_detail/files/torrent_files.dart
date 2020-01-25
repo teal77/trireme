@@ -387,7 +387,7 @@ class _TorrentFileListTile extends StatelessWidget {
   final _TorrentFileClickedCallback fileClickedCallback;
   final _TorrentFileSelectedCallback fileSelectedCallback;
 
-  final TorrentFileListController controller = new TorrentFileListController();
+  final TorrentFileListController controller = TorrentFileListController();
 
   _TorrentFileListTile(this.file, this.isSelected, this.isSelectionMode,
       this.fileClickedCallback, this.fileSelectedCallback);

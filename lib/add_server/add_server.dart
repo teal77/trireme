@@ -155,9 +155,11 @@ class _AddServerState extends State<_AddServerPageContent>
   }
 
   StepState getStepState(int step) {
-    if (step == currentStep)
+    if (step == currentStep) {
       return StepState.editing;
-    else if (step < currentStep) return StepState.complete;
+    } else if (step < currentStep) {
+      return StepState.complete;
+    }
     return StepState.indexed;
   }
 

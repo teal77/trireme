@@ -135,7 +135,7 @@ enum TorrentState {
   inactive,
 }
 
-const torrentStatusMap = const {
+const torrentStatusMap = {
   "Checking": TorrentState.checking,
   "Downloading": TorrentState.downloading,
   "Seeding": TorrentState.seeding,

@@ -238,7 +238,7 @@ class _HomePageState extends State<_HomePageContent> {
     if (didAddServer == null || didAddServer == false) return;
 
     if (servers.isEmpty) {
-      initStateAsync();
+      await initStateAsync();
     } else {
       var servers = await controller.getSavedServers();
       setState(() {
@@ -256,7 +256,7 @@ class _HomePageState extends State<_HomePageContent> {
     await persistSortMode();
     repository.dispose(); //discard everything about the previous session
     repository.client.dispose();
-    RepositoryProvider.of(context).setRepository(new TriremeRepository());
+    RepositoryProvider.of(context).setRepository(TriremeRepository());
     await initStateAsync();
   }
 
@@ -332,7 +332,7 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   Widget getOverflowButton() {
-    return new PopupMenuButton<OverflowButtons>(
+    return PopupMenuButton<OverflowButtons>(
       icon: const Icon(Icons.more_vert),
       itemBuilder: (context) => [
             PopupMenuItem<OverflowButtons>(
@@ -384,7 +384,7 @@ class _HomePageState extends State<_HomePageContent> {
         });
   }
 
-  void onAddTorrentClicked() async {
+  void onAddTorrentClicked() {
     Navigator.push<void>(
         context,
         MaterialPageRoute(
