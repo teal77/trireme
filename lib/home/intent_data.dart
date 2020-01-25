@@ -24,10 +24,10 @@ class PlatformChannel {
   static const platform = const MethodChannel('org.deluge.trireme');
 
   static Future<String> getOpenedFile() async {
-    return await platform.invokeMethod('getOpenedFile') as String;
+    return await platform.invokeMethod<String>('getOpenedFile');
   }
 
   static Future<String> getOpenedUrl() async {
-    return await platform.invokeMethod('getOpenedUrl') as String;
+    return await platform.invokeMethod<String>('getOpenedUrl');
   }
 }

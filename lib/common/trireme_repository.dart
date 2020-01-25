@@ -80,7 +80,7 @@ class TriremeRepository {
     _readinessStream = StreamController.broadcast();
     _errorStream = StreamController.broadcast();
 
-    _clockStream = Observable.periodic(_refreshInterval)
+    _clockStream = Observable<void>.periodic(_refreshInterval)
         .takeWhile((_) => !_isDisposed)
         .where((_) => _isResumed)
         .asBroadcastStream();
@@ -149,7 +149,7 @@ class TriremeRepository {
           .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
           .transform(_RetryTransformer())
           .transform(_SyncWithClockStream(_clockStream))
-          .doOnError((e) => _errorStream.add(e))
+          .doOnError((Object e) => _errorStream.add(e))
           .asBroadcastStream()
           .where(_isResponseValid)
           .map(_unpackResponse);
@@ -292,7 +292,7 @@ class TriremeRepository {
         .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentUpdate())])
-        .doOnError((e) => _errorStream.add(e))
+        .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -308,7 +308,7 @@ class TriremeRepository {
         .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_client.getTorrentDetails(torrentId))])
-        .doOnError((e) => _errorStream.add(e))
+        .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -382,7 +382,7 @@ class TriremeRepository {
         .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentFiles(torrentId))])
-        .doOnError((e) => _errorStream.add(e))
+        .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -391,7 +391,7 @@ class TriremeRepository {
     if (client == null || torrentId == null || torrentId.isEmpty) return null;
     _invalidateOldResponses();
     return client.renameTorrentFiles(torrentId, [
-      [index, newName]
+      <Object>[index, newName]
     ]);
   }
 
@@ -407,7 +407,7 @@ class TriremeRepository {
         .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_client.getTorrentPeers(torrentId))])
-        .doOnError((e) => _errorStream.add(e))
+        .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -416,7 +416,7 @@ class TriremeRepository {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {'file_priorities': priorities});
+        .setTorrentOptions([torrentId], <String, Object>{'file_priorities': priorities});
   }
 
   Future<Response<TorrentOptions>> _getTorrentOptions(String torrentId) {
@@ -430,7 +430,7 @@ class TriremeRepository {
         .transform(_RetryTransformer())
         .transform(_SyncWithClockStream(_clockStream))
         .mergeWith([Stream.fromFuture(_getTorrentOptions(torrentId))])
-        .doOnError((e) => _errorStream.add(e))
+        .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -440,7 +440,7 @@ class TriremeRepository {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client.setTorrentOptions(
-        [torrentId], {"prioritize_first_last_pieces": prioritiseFirstLast});
+        [torrentId], <String, Object>{"prioritize_first_last_pieces": prioritiseFirstLast});
   }
 
   Future setTorrentMoveCompletedPath(
@@ -448,68 +448,68 @@ class TriremeRepository {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client.setTorrentOptions(
-        [torrentId], {"move_completed_path": moveCompletedPath});
+        [torrentId], <String, Object>{"move_completed_path": moveCompletedPath});
   }
 
   Future setTorrentMoveCompleted(String torrentId, bool moveCompleted) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"move_completed": moveCompleted});
+        .setTorrentOptions([torrentId], <String, Object>{"move_completed": moveCompleted});
   }
 
   Future setTorrentRemoveAtRatio(String torrentId, bool removeAtRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"remove_at_ratio": removeAtRatio});
+        .setTorrentOptions([torrentId], <String, Object>{"remove_at_ratio": removeAtRatio});
   }
 
   Future setTorrentStopRatio(String torrentId, double stopRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId], {"stop_ratio": stopRatio});
+    return client.setTorrentOptions([torrentId], <String, Object>{"stop_ratio": stopRatio});
   }
 
   Future setTorrentStopAtRatio(String torrentId, bool stopAtRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"stop_at_ratio": stopAtRatio});
+        .setTorrentOptions([torrentId], <String, Object>{"stop_at_ratio": stopAtRatio});
   }
 
   Future setTorrentAutoManaged(String torrentId, bool autoManaged) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId], {"auto_managed": autoManaged});
+    return client.setTorrentOptions([torrentId], <String, Object>{"auto_managed": autoManaged});
   }
 
   Future setTorrentMaxUploadSlots(String torrentId, int maxUploadSlots) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"max_upload_slots": maxUploadSlots});
+        .setTorrentOptions([torrentId], <String, Object>{"max_upload_slots": maxUploadSlots});
   }
 
   Future setTorrentMaxConnections(String torrentId, int maxConnections) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"max_connections": maxConnections});
+        .setTorrentOptions([torrentId], <String, Object>{"max_connections": maxConnections});
   }
 
   Future setTorrentMaxUploadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"max_upload_speed": maxSpeed});
+        .setTorrentOptions([torrentId], <String, Object>{"max_upload_speed": maxSpeed});
   }
 
   Future setTorrentMaxDownloadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
     return client
-        .setTorrentOptions([torrentId], {"max_download_speed": maxSpeed});
+        .setTorrentOptions([torrentId], <String, Object>{"max_download_speed": maxSpeed});
   }
 }
 

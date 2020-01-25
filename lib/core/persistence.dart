@@ -109,7 +109,7 @@ class ServerDetailsDatabase {
 
   Future deleteServer(ServerDBModel server) async {
     await _database
-        .delete(_tableName, where: "$_columnId = ?", whereArgs: [server.id]);
+        .delete(_tableName, where: "$_columnId = ?", whereArgs: <Object>[server.id]);
   }
 
   Future close() async {
@@ -147,7 +147,7 @@ Future saveSortMode(SortCriteria sortMode) async {
 
 Future<SortCriteria> getSavedSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_sortModeKey);
+  var sortStr = s.get(_sortModeKey) as String;
   return SortCriteria.values.firstWhere((s) => s.toString() == sortStr,
       orElse: () => SortCriteria.name);
 }
@@ -257,7 +257,7 @@ Future saveFileSortMode(SortBy sortMode) async {
 
 Future<SortBy> getSavedFileSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_fileSortModeKey);
+  var sortStr = s.get(_fileSortModeKey) as String;
   return SortBy.values.firstWhere((s) => s.toString() == sortStr,
       orElse: () => SortBy.name);
 }

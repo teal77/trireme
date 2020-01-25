@@ -76,36 +76,35 @@ class AddServerController {
   }
 
   Future<bool> validateServerCredentials(
-      String username, String password, String host, String port) {
+      String username, String password, String host, String port) async {
     int portInt = int.parse(port);
     TriremeClient client =
         TriremeClient(username, password, host, port: portInt);
 
-    return client
-        .init()
-        .then((_) => true)
-        .catchError((e) {
-          var se = e as SocketException;
-          if (se.osError != null) {
-            if (se.osError.errorCode == 111) {
-              throw "Connection refused. Is the deluge server running and configured to accept remote connections?";
-            } else if (se.osError.errorCode == 113) {
-              throw "No route to host";
-            }
-          }
-          throw "Network error. Could not connect to server.";
-        }, test: (e) => e is SocketException)
-        .catchError((e) => throw e.toString(), test: (e) => e is DelugeRpcError)
-        .whenComplete(() {
-          client.dispose();
-        });
+    try {
+      await client.init();
+      return true;
+    } on SocketException catch (e) {
+      if (e.osError != null) {
+        if (e.osError.errorCode == 111) {
+          throw "Connection refused. Is the deluge server running and configured to accept remote connections?";
+        } else if (e.osError.errorCode == 113) {
+          throw "No route to host";
+        }
+      }
+      throw "Network error. Could not connect to server.";
+    } on DelugeRpcError catch (e) {
+      throw e.toString();
+    } finally {
+      client.dispose();
+    }
   }
 
   Future addServer(String username, String password, String host, String port,
       String pemCertificate) async {
-
     var portInt = int.parse(port);
-    var dbModel = ServerDBModel(host, portInt, username, password, pemCertificate);
+    var dbModel =
+        ServerDBModel(host, portInt, username, password, pemCertificate);
     var database = ServerDetailsDatabase();
     await database.open();
     await database.addServer(dbModel);

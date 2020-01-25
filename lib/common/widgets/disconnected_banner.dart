@@ -57,7 +57,7 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
       if (!isBannerShowing) {
         await checkConnectionAndShowBanner();
         while (mounted && isBannerShowing) {
-          await Future.delayed(const Duration(seconds: 2));
+          await Future<void>.delayed(const Duration(seconds: 2));
           await checkConnectionAndShowBanner();
         }
       }

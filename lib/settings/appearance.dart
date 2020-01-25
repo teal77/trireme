@@ -73,13 +73,13 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
             groupValue: byteSizeStyle,
             title: Text(Strings.settingsKibibytes),
             subtitle: Text(Strings.settingsKibibytesInfo),
-            onChanged: ((value) => {setByteSizeStyle(value as ByteSizeStyle)})),
+            onChanged: ((ByteSizeStyle value) => {setByteSizeStyle(value)})),
         RadioListTile(
             value: ByteSizeStyle.si,
             groupValue: byteSizeStyle,
             title: Text(Strings.settingsKilobytes),
             subtitle: Text(Strings.settingsKilobytesInfo),
-            onChanged: ((value) => {setByteSizeStyle(value as ByteSizeStyle)})),
+            onChanged: ((ByteSizeStyle value) => {setByteSizeStyle(value)})),
       ],
     );
   }

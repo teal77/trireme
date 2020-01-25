@@ -211,7 +211,7 @@ class _AddServerState extends State<_AddServerPageContent>
         var pemCert =
             saveCertificate ? daemonDetails.daemonCertificate.pem : null;
         await controller.addServer(username, password, host, port, pemCert);
-        await Future.delayed(const Duration(seconds: 1));
+        await Future<void>.delayed(const Duration(seconds: 1));
         Navigator.of(context).pop(true);
       }
     } catch (e) {

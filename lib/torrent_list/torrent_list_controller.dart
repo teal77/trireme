@@ -82,11 +82,12 @@ class TorrentListController {
       await repository.readiness();
     }
     try {
-      _torrentItems = await repository.getTorrentList(_filterSpec.toFilterDict());
+      _torrentItems =
+          await repository.getTorrentList(_filterSpec.toFilterDict());
     } catch (e) {
       if (e is DelugeRpcError || e is SocketException) {
         Log.e(_tag, e.toString());
-        await Future.delayed(const Duration(seconds: 1));
+        await Future<void>.delayed(const Duration(seconds: 1));
         getFilteredTorrentList();
       } else {
         rethrow;
@@ -110,10 +111,9 @@ class TorrentListController {
 
   void listenForRpcEvents() async {
     _eventsStreamSubscription?.cancel();
-    _eventsStreamSubscription =
-        _listEventsStream().listen((_) {
-            getFilteredTorrentList();
-        });
+    _eventsStreamSubscription = _listEventsStream().listen((_) {
+      getFilteredTorrentList();
+    });
   }
 
   Stream<List<DelugeRpcEvent>> _listEventsStream() {
@@ -207,24 +207,22 @@ class TorrentListController {
     stateUpdateCallback();
   }
 
-  Future pauseTorrents() {
-    return repository.pauseTorrents(_getSelectedTorrentIds()).then((_) {
-      var ids = _getSelectedTorrentIds();
-      clearSelection();
-      updateTorrentsWithIds(ids);
-    });
+  Future<void> pauseTorrents() async {
+    await repository.pauseTorrents(_getSelectedTorrentIds());
+    var ids = _getSelectedTorrentIds();
+    clearSelection();
+    updateTorrentsWithIds(ids);
   }
 
   List<String> _getSelectedTorrentIds() {
     return _selectedTorrentItems.map((t) => t.id).toList();
   }
 
-  Future resumeTorrents() {
-    return repository.resumeTorrents(_getSelectedTorrentIds()).then((_) {
-      var ids = _getSelectedTorrentIds();
-      clearSelection();
-      updateTorrentsWithIds(ids);
-    });
+  Future<void> resumeTorrents() async {
+    await repository.resumeTorrents(_getSelectedTorrentIds());
+    var ids = _getSelectedTorrentIds();
+    clearSelection();
+    updateTorrentsWithIds(ids);
   }
 
   Future deleteTorrents() {
@@ -236,24 +234,19 @@ class TorrentListController {
   }
 
   Future _deleteTorrents(bool removeData) {
-    return Future
-        .wait(_getSelectedTorrentIds()
-            .map((t) => repository.removeTorrent(t, removeData)))
-        .whenComplete(() {
+    return Future.wait(_getSelectedTorrentIds()
+        .map((t) => repository.removeTorrent(t, removeData))).whenComplete(() {
       clearSelection();
       getFilteredTorrentList();
     });
   }
 
-  Future setTorrentsLabel(String label) {
-    return Future
-        .wait(_getSelectedTorrentIds()
-            .map((t) => repository.setTorrentLabel(t, label)))
-        .whenComplete(() {
-      var ids = _getSelectedTorrentIds();
-      clearSelection();
-      updateTorrentsWithIds(ids);
-    });
+  Future<void> setTorrentsLabel(String label) async {
+    await Future.wait<void>(_getSelectedTorrentIds()
+        .map((t) => repository.setTorrentLabel(t, label)));
+    var ids = _getSelectedTorrentIds();
+    clearSelection();
+    updateTorrentsWithIds(ids);
   }
 
   void selectAll() {

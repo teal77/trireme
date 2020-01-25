@@ -24,6 +24,6 @@ class FilePicker {
   static const platform = const MethodChannel('org.deluge.trireme');
 
   static Future<String> pickFile() async {
-    return await platform.invokeMethod('pickFile') as String;
+    return await platform.invokeMethod<String>('pickFile');
   }
 }

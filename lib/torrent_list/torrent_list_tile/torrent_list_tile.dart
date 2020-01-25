@@ -318,7 +318,7 @@ class TorrentStateProperties {
 }
 
 void launchTorrentDetailScreen(BuildContext context, TorrentItem t) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+  Navigator.of(context).push<void>(MaterialPageRoute(builder: (context) {
     return TorrentDetailPage(t);
   }));
 }

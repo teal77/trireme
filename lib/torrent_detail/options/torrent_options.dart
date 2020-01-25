@@ -119,7 +119,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
           title: Text(Strings.detailMaxDownloadSpeed),
           subtitle: Text(controller.getCurrentDownloadSpeedLimit(formatter)),
           onTap: () {
-            Navigator.push(
+            Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MaxSpeedSettingScreen(
@@ -133,7 +133,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
           title: Text(Strings.detailMaxUploadSpeed),
           subtitle: Text(controller.getCurrentUploadSpeedLimit(formatter)),
           onTap: () {
-            Navigator.push(
+            Navigator.push<void>(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MaxSpeedSettingScreen(
@@ -258,7 +258,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
     );
   }
 
-  showErrorSnackbar(Object error) {
+  void showErrorSnackbar(Object error) {
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Text(prettifyError(error)),
     ));

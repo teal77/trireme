@@ -29,7 +29,7 @@ typedef void FilterSelectedCallback(FilterSpec f);
 
 Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
     FilterSpec lastSelected, FilterSelectedCallback onFilterSelected) {
-  return showModalBottomSheet(
+  return showModalBottomSheet<void>(
       context: context,
       builder: (context) {
         return FutureBuilder<FilterTree>(
@@ -37,13 +37,13 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<String> stateFilters = List<String>.from(
-                    snapshot.data.statusFilters.map((o) => (o as List).first));
+                    snapshot.data.statusFilters.map<String>((o) => (o as List).first as String));
                 List<String> trackerFilters = List<String>.from(
-                    snapshot.data.trackerFilters.map((o) => (o as List).first));
+                    snapshot.data.trackerFilters.map<String>((o) => (o as List).first as String));
                 List<String> labelFilters = [];
                 if (snapshot.data.labelFilters != null) {
                   labelFilters = List<String>.from(
-                      snapshot.data.labelFilters.map((o) => (o as List).first));
+                      snapshot.data.labelFilters.map<String>((o) => (o as List).first as String));
 
                   labelFilters.remove("");
                   labelFilters.add(Strings.homeFilterNoLabel);

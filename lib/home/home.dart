@@ -262,7 +262,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void launchSettingsScreen() async {
     Navigator.pop(context);
-    await Navigator.push(
+    await Navigator.push<void>(
         context, MaterialPageRoute(builder: (context) => SettingsList()));
     var servers = await controller.getSavedServers();
     setState(() {
@@ -360,7 +360,7 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void showConfirmationDialog(String text, VoidCallback onAccept) {
-    showDialog(
+    showDialog<void>(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -385,7 +385,7 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddTorrentClicked() async {
-    Navigator.push(
+    Navigator.push<void>(
         context,
         MaterialPageRoute(
             fullscreenDialog: true,
@@ -461,7 +461,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void _showNetworkSpeedBottomSheet(BuildContext context,
       bool isDownloadSpeedGraph, TriremeRepository repository) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
         context: context,
         builder: (context) =>
             NetworkSpeedBottomSheet(isDownloadSpeedGraph, repository));

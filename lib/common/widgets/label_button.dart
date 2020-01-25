@@ -51,7 +51,7 @@ class LabelButton extends StatelessWidget {
               icon: const Icon(Icons.label_outline),
               tooltip: tooltip,
               itemBuilder: (context) => List<PopupMenuEntry<String>>.from(
-                  snapshot.data.map((s) => PopupMenuItem<String>(
+                  snapshot.data.map<PopupMenuEntry<String>>((s) => PopupMenuItem<String>(
                         value: s,
                         child: Text(s),
                       )))
@@ -63,7 +63,7 @@ class LabelButton extends StatelessWidget {
               onSelected: labelSelectedCallback,
             );
           }
-        } else if (snapshot.hasError) {
+        } else {
           return getNoLabelButton();
         }
       },

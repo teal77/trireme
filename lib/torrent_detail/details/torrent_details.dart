@@ -246,7 +246,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
   }
 
   void showConfirmationDialog(String text, VoidCallback onConfirm) {
-    showDialog(
+    showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
               content: Text(text),
@@ -269,7 +269,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
   }
 
   void showMoveStorageDialog() async {
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).push<void>(MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) =>
             MoveStorageDialog(widget.torrentId, widget.torrentDetail.path)));
