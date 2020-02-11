@@ -147,8 +147,8 @@ class TriremeRepository {
     if (_sessionStatusStream == null) {
       _sessionStatusStream = _clockStream
           .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
-          .transform(_RetryTransformer())
-          .transform(_SyncWithClockStream(_clockStream))
+          .retry()
+          .syncWithClockStream(_clockStream)
           .doOnError((Object e) => _errorStream.add(e))
           .asBroadcastStream()
           .where(_isResponseValid)
@@ -290,8 +290,8 @@ class TriremeRepository {
   Stream<List<TorrentItem>> getTorrentListUpdates() {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentUpdate()))
-        .transform(_RetryTransformer())
-        .transform(_SyncWithClockStream(_clockStream))
+        .retry()
+        .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentUpdate())])
         .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
@@ -306,8 +306,8 @@ class TriremeRepository {
     if (client == null || client.isDisposed || torrentId.isEmpty) return null;
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_client.getTorrentDetails(torrentId)))
-        .transform(_RetryTransformer())
-        .transform(_SyncWithClockStream(_clockStream))
+        .retry()
+        .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_client.getTorrentDetails(torrentId))])
         .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
@@ -380,8 +380,8 @@ class TriremeRepository {
   Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentFiles(torrentId)))
-        .transform(_RetryTransformer())
-        .transform(_SyncWithClockStream(_clockStream))
+        .retry()
+        .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentFiles(torrentId))])
         .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
@@ -405,8 +405,8 @@ class TriremeRepository {
   Stream<Peers> getTorrentPeers(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_client.getTorrentPeers(torrentId)))
-        .transform(_RetryTransformer())
-        .transform(_SyncWithClockStream(_clockStream))
+        .retry()
+        .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_client.getTorrentPeers(torrentId))])
         .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
@@ -416,8 +416,8 @@ class TriremeRepository {
   Future setTorrentFilePriorities(String torrentId, List<int> priorities) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{'file_priorities': priorities});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{'file_priorities': priorities});
   }
 
   Future<Response<TorrentOptions>> _getTorrentOptions(String torrentId) {
@@ -428,8 +428,8 @@ class TriremeRepository {
   Stream<TorrentOptions> getTorrentOptionsUpdates(String torrentId) {
     return _clockStream
         .flatMap((_) => Stream.fromFuture(_getTorrentOptions(torrentId)))
-        .transform(_RetryTransformer())
-        .transform(_SyncWithClockStream(_clockStream))
+        .retry()
+        .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentOptions(torrentId))])
         .doOnError((Object e) => _errorStream.add(e))
         .where(_isResponseValid)
@@ -440,95 +440,89 @@ class TriremeRepository {
       String torrentId, bool prioritiseFirstLast) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions(
-        [torrentId], <String, Object>{"prioritize_first_last_pieces": prioritiseFirstLast});
+    return client.setTorrentOptions([torrentId],
+        <String, Object>{"prioritize_first_last_pieces": prioritiseFirstLast});
   }
 
   Future setTorrentMoveCompletedPath(
       String torrentId, String moveCompletedPath) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions(
-        [torrentId], <String, Object>{"move_completed_path": moveCompletedPath});
+    return client.setTorrentOptions([torrentId],
+        <String, Object>{"move_completed_path": moveCompletedPath});
   }
 
   Future setTorrentMoveCompleted(String torrentId, bool moveCompleted) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"move_completed": moveCompleted});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"move_completed": moveCompleted});
   }
 
   Future setTorrentRemoveAtRatio(String torrentId, bool removeAtRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"remove_at_ratio": removeAtRatio});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"remove_at_ratio": removeAtRatio});
   }
 
   Future setTorrentStopRatio(String torrentId, double stopRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId], <String, Object>{"stop_ratio": stopRatio});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"stop_ratio": stopRatio});
   }
 
   Future setTorrentStopAtRatio(String torrentId, bool stopAtRatio) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"stop_at_ratio": stopAtRatio});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"stop_at_ratio": stopAtRatio});
   }
 
   Future setTorrentAutoManaged(String torrentId, bool autoManaged) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId], <String, Object>{"auto_managed": autoManaged});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"auto_managed": autoManaged});
   }
 
   Future setTorrentMaxUploadSlots(String torrentId, int maxUploadSlots) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"max_upload_slots": maxUploadSlots});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"max_upload_slots": maxUploadSlots});
   }
 
   Future setTorrentMaxConnections(String torrentId, int maxConnections) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"max_connections": maxConnections});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"max_connections": maxConnections});
   }
 
   Future setTorrentMaxUploadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"max_upload_speed": maxSpeed});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"max_upload_speed": maxSpeed});
   }
 
   Future setTorrentMaxDownloadSpeed(String torrentId, int maxSpeed) {
     if (client == null || client.isDisposed) return null;
     _invalidateOldResponses();
-    return client
-        .setTorrentOptions([torrentId], <String, Object>{"max_download_speed": maxSpeed});
+    return client.setTorrentOptions(
+        [torrentId], <String, Object>{"max_download_speed": maxSpeed});
   }
 }
 
-class _RetryTransformer<T> extends StreamTransformerBase<T, T> {
-  @override
-  Stream<T> bind(Stream<T> stream) {
-    return Rx.retry(() => stream);
+extension _StreamExtensions<T> on Stream<T> {
+  Stream<T> retry() {
+    return Rx.retry(() => this);
   }
-}
 
-class _SyncWithClockStream<T> extends StreamTransformerBase<T, T> {
-  Stream<void> clockStream;
-
-  _SyncWithClockStream(this.clockStream);
-
-  @override
-  Stream<T> bind(Stream<T> stream) {
-    return clockStream.withLatestFrom(stream, (_, T e) => e);
+  Stream<T> syncWithClockStream(Stream<void> clockStream) {
+    return clockStream.withLatestFrom(this, (_, T e) => e);
   }
 }
 
@@ -542,8 +536,7 @@ class _BootlegTakeLastTransformer<T> extends StreamTransformerBase<T, List<T>> {
       _buildTransformer<T>(count).bind(stream);
 
   static StreamTransformer<T, List<T>> _buildTransformer<T>(int count) {
-    return StreamTransformer<T, List<T>>(
-        (Stream<T> input, bool cancelOnError) {
+    return StreamTransformer<T, List<T>>((Stream<T> input, bool cancelOnError) {
       StreamController<List<T>> controller;
       StreamSubscription<T> subscription;
       ListQueue<T> buffer = ListQueue();
