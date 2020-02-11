@@ -35,6 +35,7 @@ import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 import 'package:trireme/settings/settings.dart';
+import 'package:unicorndial/unicorndial.dart';
 
 import 'filter.dart';
 import 'home_app_bar.dart';
@@ -202,7 +203,6 @@ class _HomePageState extends State<_HomePageContent> {
         changeServer(s);
       }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
@@ -223,9 +223,34 @@ class _HomePageState extends State<_HomePageContent> {
               ],
             ),
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: onAddTorrentClicked,
-        child: Icon(Icons.add),
+      floatingActionButton: UnicornDialer(
+        hasNotch: true,
+        parentButton: Icon(Icons.add),
+        orientation: UnicornOrientation.VERTICAL,
+        childButtons: [
+          UnicornButton(
+            currentButton: FloatingActionButton(
+              child: Icon(Icons.insert_drive_file),
+              heroTag: null,
+              mini: true,
+              tooltip: Strings.homeAddTorrentByFile,
+              onPressed: () => onAddTorrentClicked(AddTorrentKind.file),
+            ),
+            labelText: Strings.homeAddTorrentByFile,
+            hasLabel: true,
+          ),
+          UnicornButton(
+            currentButton: FloatingActionButton(
+              child: Icon(Icons.link),
+              heroTag: null,
+              mini: true,
+              tooltip: Strings.homeAddTorrentByUrl,
+              onPressed: () => onAddTorrentClicked(AddTorrentKind.url),
+            ),
+            labelText: Strings.homeAddTorrentByUrl,
+            hasLabel: true,
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
@@ -384,12 +409,12 @@ class _HomePageState extends State<_HomePageContent> {
         });
   }
 
-  void onAddTorrentClicked() {
+  void onAddTorrentClicked(AddTorrentKind kind) {
     Navigator.push<void>(
         context,
         MaterialPageRoute(
             fullscreenDialog: true,
-            builder: (context) => AddTorrentPage(AddTorrentKind.url, null)));
+            builder: (context) => AddTorrentPage(kind)));
   }
 
   void checkIntentDataAndAddTorrent() async {

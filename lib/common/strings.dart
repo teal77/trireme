@@ -73,6 +73,9 @@ class Strings {
   static String strcRetry = "RETRY";
   static String homeSettings = "Settings";
   static String homeErrorCouldNotOpenFile = "Error trying to open the file";
+  static String homeAddTorrentByFile = "File";
+  static String homeAddTorrentByUrl = "Link";
+  static String homeAddTorrentByInfoHash = "Infohash";
 
   static String addTorrentTitle = "Add Torrent";
   static String addTorrentUrlHint = "Enter torrent URL";
@@ -96,7 +99,7 @@ class Strings {
   static String addTorrentSelectUploadSpeedTitle = "Set upload speed limit";
   static String addTorrentUploadSpeedHint = "Upload speed in kB/s";
   static String strOr = "Or";
-  static String addTorrentFile = "Add torrent file";
+  static String addTorrentFile = "Select torrent file";
 
   static String detailTabDetails = "DETAILS";
   static String detailTabFiles = "FILES";

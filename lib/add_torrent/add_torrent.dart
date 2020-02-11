@@ -30,9 +30,8 @@ import 'file_picker.dart';
 
 class AddTorrentPage extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
-  final String data;
 
-  AddTorrentPage(this.addTorrentKind, this.data);
+  AddTorrentPage(this.addTorrentKind);
 
   @override
   State createState() => AddTorrentState();
@@ -58,7 +57,7 @@ class AddTorrentState extends State<AddTorrentPage> {
         ],
       ),
       body: LoadingContainer(
-        child: _AddTorrent(key, widget.addTorrentKind, widget.data),
+        child: _AddTorrent(key, widget.addTorrentKind),
       ),
     );
   }
@@ -66,9 +65,8 @@ class AddTorrentState extends State<AddTorrentPage> {
 
 class _AddTorrent extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
-  final String data;
 
-  _AddTorrent(Key key, this.addTorrentKind, this.data) : super(key: key);
+  _AddTorrent(Key key, this.addTorrentKind) : super(key: key);
 
   @override
   State createState() => _AddTorrentState();
@@ -97,17 +95,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   @override
   void initState() {
     super.initState();
-    if (widget.data != null) {
-      if (widget.addTorrentKind == AddTorrentKind.url) {
-        torrentUrl = widget.data;
-        urlEditController = TextEditingController(text: torrentUrl);
-      } else if (widget.addTorrentKind == AddTorrentKind.file) {
-        selectedFilePath = widget.data;
-        torrentFileName = getTorrentFileNameFromPath();
-      }
-    } else {
-      urlEditController = TextEditingController();
-    }
+    urlEditController = TextEditingController();
   }
 
   @override
@@ -159,26 +147,29 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       children: <Widget>[
-        ListTile(
-          title: TextField(
-            enabled: selectedFilePath == null,
-            decoration: InputDecoration(
-              hintText: Strings.addTorrentUrlHint,
+        Offstage(
+          offstage: widget.addTorrentKind != AddTorrentKind.url,
+          child: ListTile(
+            title: TextField(
+              enabled: selectedFilePath == null,
+              decoration: InputDecoration(
+                hintText: Strings.addTorrentUrlHint,
+              ),
+              keyboardType: TextInputType.url,
+              maxLines: 1,
+              controller: urlEditController,
             ),
-            keyboardType: TextInputType.url,
-            maxLines: 1,
-            controller: urlEditController,
           ),
         ),
-        Align(
-          child: Text(Strings.strOr),
-        ),
-        ListTile(
-          title: Text(Strings.addTorrentFile),
-          subtitle: Text(torrentFileName),
-          onTap: () {
-            showFilePicker();
-          },
+        Offstage(
+          offstage: widget.addTorrentKind != AddTorrentKind.file,
+          child: ListTile(
+            title: Text(Strings.addTorrentFile),
+            subtitle: Text(torrentFileName),
+            onTap: () {
+              showFilePicker();
+            },
+          ),
         ),
         getDivider(),
         getSubHeader(Strings.addTorrentLocationSubHeader),

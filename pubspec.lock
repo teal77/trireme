@@ -345,6 +345,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  unicorndial:
+    dependency: "direct main"
+    description:
+      name: unicorndial
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.5"
   uuid:
     dependency: transitive
     description:
