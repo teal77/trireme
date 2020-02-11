@@ -79,6 +79,9 @@ class Strings {
 
   static String addTorrentTitle = "Add Torrent";
   static String addTorrentUrlHint = "Enter torrent URL";
+  static String addTorrentInfohashHint = "Enter torrent infohash";
+  static String addTorrentMagnet = "Magnet";
+  static String addTorrentInfohash = "infohash";
   static String addTorrentLocationSubHeader = "Location";
   static String addTorrentDownloadPath = "Download path";
   static String addTorrentMoveCompleted = "Move after completion";

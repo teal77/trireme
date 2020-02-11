@@ -241,6 +241,17 @@ class _HomePageState extends State<_HomePageContent> {
           ),
           UnicornButton(
             currentButton: FloatingActionButton(
+              child: Icon(Icons.info_outline),
+              heroTag: null,
+              mini: true,
+              tooltip: Strings.homeAddTorrentByInfoHash,
+              onPressed: () => onAddTorrentClicked(AddTorrentKind.infohash),
+            ),
+            labelText: Strings.homeAddTorrentByInfoHash,
+            hasLabel: true,
+          ),
+          UnicornButton(
+            currentButton: FloatingActionButton(
               child: Icon(Icons.link),
               heroTag: null,
               mini: true,

@@ -37,7 +37,7 @@ class AddTorrentPage extends StatefulWidget {
   State createState() => AddTorrentState();
 }
 
-enum AddTorrentKind { url, file }
+enum AddTorrentKind { url, file, infohash }
 
 class AddTorrentState extends State<AddTorrentPage> {
   var key = GlobalKey<_AddTorrentState>();
@@ -79,6 +79,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
 
   String torrentUrl = "";
   String torrentFileName = "";
+  String torrentInfoHash = "";
   String downloadPath = "";
   bool moveCompleted = false;
   String moveCompletedPath = "";
@@ -151,7 +152,6 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
           offstage: widget.addTorrentKind != AddTorrentKind.url,
           child: ListTile(
             title: TextField(
-              enabled: selectedFilePath == null,
               decoration: InputDecoration(
                 hintText: Strings.addTorrentUrlHint,
               ),
@@ -169,6 +169,31 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
             onTap: () {
               showFilePicker();
             },
+          ),
+        ),
+        Offstage(
+          offstage: widget.addTorrentKind != AddTorrentKind.infohash,
+          child: ListTile(
+            title: TextField(
+              decoration: InputDecoration(
+                hintText: Strings.addTorrentInfohashHint,
+              ),
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+              onChanged: (s) {
+                torrentInfoHash = s;
+                setState(() {
+
+                });
+              },
+            ),
+          ),
+        ),
+        Offstage(
+          offstage: widget.addTorrentKind != AddTorrentKind.infohash,
+          child: ListTile(
+            title: Text(Strings.addTorrentMagnet),
+            subtitle: Text(getMagnetForDisplay()),
           ),
         ),
         getDivider(),
@@ -432,10 +457,12 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   void addTorrent() async {
     try {
       showProgressBar();
-      if (selectedFilePath == null || selectedFilePath.isEmpty) {
-        addTorrentUrl();
-      } else {
-        addTorrentFile();
+      if (widget.addTorrentKind == AddTorrentKind.url) {
+        await addTorrentUrl();
+      } else if (widget.addTorrentKind == AddTorrentKind.file) {
+        await addTorrentFile();
+      } else if (widget.addTorrentKind == AddTorrentKind.infohash) {
+        await addTorrentHash();
       }
       Navigator.pop(context);
     } catch (e) {
@@ -447,10 +474,16 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
 
   void addTorrentUrl() async {
     var torrentUrl = urlEditController.text;
+    if (torrentUrl.isEmpty) {
+      return;
+    }
     await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
   }
 
   void addTorrentFile() async {
+    if (selectedFilePath.isEmpty) {
+      return;
+    }
     var fileName = torrentFileName;
     var torrentFile = File(selectedFilePath);
     if (await torrentFile.exists()) {
@@ -459,6 +492,31 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       await repository.addTorrentFile(fileName, fileDump, getTorrentOptions());
     } else {
       throw "Torrent file $fileName does not exist";
+    }
+  }
+
+  void addTorrentHash() async {
+    var torrentUrl = formMagnetUrlFromHash();
+    if (torrentUrl.isEmpty) {
+      return;
+    }
+    await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
+  }
+
+  String getMagnetForDisplay() {
+    String defaultIfEmpty(String s, String defaultStr) {
+      return s.isEmpty ? defaultStr : s;
+    }
+
+    var hash = defaultIfEmpty(torrentInfoHash, Strings.addTorrentInfohash);
+    return "magnet:?xt=urn:btih:$hash";
+  }
+
+  String formMagnetUrlFromHash() {
+    if (torrentInfoHash.isNotEmpty) {
+      return "magnet:?xt=urn:btih:$torrentInfoHash";
+    } else {
+      return "";
     }
   }
 
