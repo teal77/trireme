@@ -21,7 +21,7 @@ dependencies:
   sqflite: "^1.2.0"
 
   cached_network_image: "^2.0.0"
-  flutter_svg: "^0.16.0"
+  flutter_svg: "^0.17.4"
   unicorndial: "^1.1.5"
 
   duration: "^2.0.0"
@@ -32,7 +32,7 @@ dev_dependencies:
   pedantic: "^1.8.0"
 
 environment:
-  flutter: "1.12.13+hotfix.5"
+  flutter: "1.17.5"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
