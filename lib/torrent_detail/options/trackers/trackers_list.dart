@@ -109,6 +109,7 @@ class _TrackersListPageState extends State<TrackerListPage>
     with TriremeProgressBarMixin {
   final _key = GlobalKey<_TrackerListContentState>();
   TriremeRepository repository;
+  var selectedTrackers = <String>[];
 
   @override
   void didChangeDependencies() {
@@ -125,8 +126,13 @@ class _TrackersListPageState extends State<TrackerListPage>
             hideProgressBar();
 
             if (snapshot.hasData) {
-              return _TrackerListContent(_key, widget.torrentId,
-                  (snapshot.data as TorrentOptions).trackers, widget.callback);
+              return _TrackerListContent(
+                  _key,
+                  widget.torrentId,
+                  (snapshot.data as TorrentOptions).trackers,
+                  selectedTrackers,
+                  widget.callback,
+                  toggleSelection);
             } else if (snapshot.hasError) {
               return ErrorPage(snapshot.error);
             }
@@ -137,12 +143,29 @@ class _TrackersListPageState extends State<TrackerListPage>
         });
   }
 
+  void toggleSelection(Tracker t) {
+    if (selectedTrackers.contains(t.url)) {
+      setState(() {
+        selectedTrackers.removeWhere((e) => e == t.url);
+      });
+    } else {
+      setState(() {
+        selectedTrackers.add(t.url);
+      });
+    }
+    widget.callback(selectedTrackers.length);
+  }
+
   void clearSelection() {
-    _key.currentState.clearSelection();
+    setState(() {
+      selectedTrackers.clear();
+      widget.callback(0);
+    });
   }
 
   void delete() {
     _key.currentState.delete();
+    clearSelection();
   }
 
   void add() {
@@ -150,13 +173,17 @@ class _TrackersListPageState extends State<TrackerListPage>
   }
 }
 
+typedef _ToggleTrackerCallback = void Function(Tracker t);
+
 class _TrackerListContent extends StatefulWidget {
   final String torrentId;
   final List<Tracker> trackers;
+  final List<String> selectedTrackers;
   final ValueChanged<int> selectedCallback;
+  final _ToggleTrackerCallback toggleCallback;
 
-  _TrackerListContent(
-      Key key, this.torrentId, this.trackers, this.selectedCallback)
+  _TrackerListContent(Key key, this.torrentId, this.trackers,
+      this.selectedTrackers, this.selectedCallback, this.toggleCallback)
       : super(key: key);
 
   @override
@@ -167,7 +194,6 @@ class _TrackerListContent extends StatefulWidget {
 
 class _TrackerListContentState extends State<_TrackerListContent> {
   TriremeRepository repository;
-  var selectedTrackers = <String>[];
 
   @override
   void didChangeDependencies() {
@@ -191,7 +217,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
                         toggleSelection(e);
                       },
                 child: Selectable(
-                  selected: selectedTrackers.contains(e),
+                  selected: widget.selectedTrackers.contains(e.url),
                   child: ListTile(
                     title: Text(e.url),
                   ),
@@ -202,34 +228,17 @@ class _TrackerListContentState extends State<_TrackerListContent> {
   }
 
   bool isSelectMode() {
-    return selectedTrackers.isNotEmpty;
+    return widget.selectedTrackers.isNotEmpty;
   }
 
   void toggleSelection(Tracker tracker) {
-    if (selectedTrackers.contains(tracker.url)) {
-      setState(() {
-        selectedTrackers.add(tracker.url);
-      });
-    } else {
-      setState(() {
-        selectedTrackers.removeWhere((element) => element == tracker.url);
-      });
-    }
-    widget.selectedCallback(selectedTrackers.length);
-  }
-
-  void clearSelection() {
-    setState(() {
-      selectedTrackers.clear();
-      widget.selectedCallback(0);
-    });
+    widget.toggleCallback(tracker);
   }
 
   void delete() {
-    final trackers =
-        widget.trackers.where((element) => !selectedTrackers.contains(element.url));
+    final trackers = widget.trackers
+        .where((element) => !widget.selectedTrackers.contains(element.url));
     setTracker(getApiFormatTrackers(trackers.toList()));
-    clearSelection();
   }
 
   void add() async {
@@ -268,10 +277,12 @@ class _TrackerListContentState extends State<_TrackerListContent> {
   }
 
   List<Map<String, dynamic>> getApiFormatTrackers(List<Tracker> trackers) {
+    final unique = trackers.map((e) => e.url).toSet().toList();
     return trackers
         .asMap()
         .map((key, value) => MapEntry(key, {'url': value.url, 'tier': key}))
         .values
+        .where((e) => unique.contains(e['url']))
         .toList();
   }
 
