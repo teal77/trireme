@@ -40,15 +40,15 @@ class RepositoryProvider extends StatelessWidget {
   }
 
   static TriremeRepository repositoryOf(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_RepositoryProviderInherited)
-            as _RepositoryProviderInherited)
+    return context
+        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
         .state
         .repository;
   }
 
   static RepositoryProviderState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_RepositoryProviderInherited)
-            as _RepositoryProviderInherited)
+    return context
+        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
         .state;
   }
 }

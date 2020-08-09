@@ -12,7 +12,7 @@ dependencies:
       url: git@github.com:teal77/trireme_client.git
       ref: "v1.1.0"
 
-  rxdart: "^0.24.1"
+  rxdart: "0.23.0"
 
   path: "^1.5.1"
   path_provider: "^1.5.1"
