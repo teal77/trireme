@@ -117,7 +117,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   }
 
   Widget _getTorrentDetails() {
-    List<Widget> torrentDetails = [
+    var torrentDetails = <Widget>[
       Text(
         data.name,
         overflow: TextOverflow.ellipsis,

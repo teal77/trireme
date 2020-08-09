@@ -32,15 +32,15 @@ AppBar getHomeAppBar(
     Widget labelTorrentsButton,
     Widget overflowButton) {
 
-  bool isSelectionMode = selectedItemCount > 0;
+  var isSelectionMode = selectedItemCount > 0;
   if (!isSelectionMode) {
     return AppBar(
       title: Text(Strings.homeTitle),
       actions: <Widget>[filterButton, sortButton],
     );
   } else {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    ThemeData theme = isDark ? ThemeData.light() : ThemeData.dark();
+    var isDark = Theme.of(context).brightness == Brightness.dark;
+    var theme = isDark ? ThemeData.light() : ThemeData.dark();
     return AppBar(
       leading: clearSelectionButton,
       title: Text(selectedItemCount.toString()),

@@ -192,6 +192,9 @@ class Strings {
   static String detailStopRatioTitle = "Set stop ratio";
   static String detailMoveCompletedPath = "Move completed path";
 
+  static String trackerTitle = "Trackers";
+  static String trackerUrlDialogTitle = "Add tracker";
+
   static String settingsTitle = "Settings";
   static String settingsServers = "Servers";
   static String settingsServersInfo = "View, Remove servers";

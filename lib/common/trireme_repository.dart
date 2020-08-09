@@ -144,8 +144,7 @@ class TriremeRepository {
   }
 
   Stream<SessionStatus> _getSessionStatusStream() {
-    if (_sessionStatusStream == null) {
-      _sessionStatusStream = _clockStream
+    _sessionStatusStream ??= _clockStream
           .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
           .retry()
           .syncWithClockStream(_clockStream)
@@ -153,7 +152,6 @@ class TriremeRepository {
           .asBroadcastStream()
           .where(_isResponseValid)
           .map(_unpackResponse);
-    }
     return _sessionStatusStream;
   }
 
@@ -513,6 +511,12 @@ class TriremeRepository {
     _invalidateOldResponses();
     return client.setTorrentOptions(
         [torrentId], <String, Object>{"max_download_speed": maxSpeed});
+  }
+
+  Future setTorrentTrackers(String torrentId, List<Map> trackers) {
+    if (client == null || client.isDisposed) return null;
+    _invalidateOldResponses();
+    return client.setTorrentTrackers(torrentId, trackers);
   }
 }
 

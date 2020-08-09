@@ -19,6 +19,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:trireme/torrent_detail/options/trackers/trackers_list.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -233,7 +234,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
         ListTile(
           title: Text(Strings.detailOptionsTrackers),
           subtitle: Text("${torrentOptions.trackers.length} trackers"),
-          onTap: () {},
+          onTap: () => showTrackerListPage(),
         )
       ],
     );
@@ -288,7 +289,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
 
   Future<num> showNumberInputDialog(String title) async {
     String userInput;
-    num n = await showDialog(
+    var n = await showDialog<num>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
@@ -327,7 +328,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
   }
 
   void showMaxConnectionDialog() async {
-    int i = (await showNumberInputDialog(Strings.detailMaxConnectionTitle))
+    var i = (await showNumberInputDialog(Strings.detailMaxConnectionTitle))
         ?.toInt();
     if (i != null) {
       setMaxConnection(i);
@@ -335,7 +336,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
   }
 
   void showMaxUploadSlotsDialog() async {
-    int i = (await showNumberInputDialog(Strings.detailMaxUploadSlotsTitle))
+    var i = (await showNumberInputDialog(Strings.detailMaxUploadSlotsTitle))
         ?.toInt();
     if (i != null) {
       setMaxUploadSlots(i);
@@ -343,7 +344,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
   }
 
   void showStopRatioDialog() async {
-    double stopRatio =
+    var stopRatio =
         (await showNumberInputDialog(Strings.detailStopRatioTitle))?.toDouble();
     if (stopRatio != null) {
       setStopRatio(stopRatio);
@@ -351,10 +352,16 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
   }
 
   void showMoveCompletedPathDialog() async {
-    String path = await showPathInputDialog(Strings.detailMoveCompletedPath);
+    var path = await showPathInputDialog(Strings.detailMoveCompletedPath);
     if (path != null && path.isNotEmpty) {
       setMoveCompletedPath(path);
     }
+  }
+
+  void showTrackerListPage() {
+    Navigator.of(context).push<void>(MaterialPageRoute(builder: (context) {
+      return TrackerList(widget.torrentId);
+    }));
   }
 
   void setOption(Future optionApiCall) async {
