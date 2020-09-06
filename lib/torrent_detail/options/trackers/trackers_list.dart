@@ -16,12 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
 
 import 'package:trireme_client/deserialization.dart';
+import 'package:trireme_client/events.dart';
 
 class TrackerList extends StatefulWidget {
   final String torrentId;
@@ -34,9 +37,27 @@ class TrackerList extends StatefulWidget {
   }
 }
 
-class _TrackerListState extends State<TrackerList> {
+class _TrackerListState extends State<TrackerList>
+    with TriremeProgressBarMixin {
   final _key = GlobalKey<_TrackersListPageState>();
   var selectedItemCount = 0;
+  TriremeRepository repository;
+  StreamSubscription<DelugeRpcEvent> eventsStreamSubscription;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    repository = RepositoryProvider.repositoryOf(context);
+    eventsStreamSubscription?.cancel();
+    eventsStreamSubscription = repository
+        .getDelugeRpcEvents()
+        .where((event) => event is TorrentTrackerStatusEvent)
+        .map((event) => event as TorrentTrackerStatusEvent)
+        .where((event) => event.torrentId == widget.torrentId)
+        .listen((event) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +91,33 @@ class _TrackerListState extends State<TrackerList> {
               iconTheme: theme.iconTheme,
               brightness: theme.brightness,
             ),
-      body: LoadingContainer(
-        child: TrackerListPage(_key, widget.torrentId, (s) {
-          setState(() {
-            selectedItemCount = s;
-          });
-        }),
+      body: FutureBuilder(
+        future: repository.getTorrentOptionsUpdates(widget.torrentId).first,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            hideProgressBar();
+            return TrackerListPage(_key, widget.torrentId,
+                (snapshot.data as TorrentOptions).trackers, (s) {
+              setState(() {
+                selectedItemCount = s;
+              });
+            });
+          } else if (snapshot.hasError) {
+            hideProgressBar();
+            return ErrorPage(snapshot.error);
+          } else {
+            showProgressBar();
+            return Container();
+          }
+        },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    eventsStreamSubscription?.cancel();
+    super.dispose();
   }
 
   void clearSelection() {
@@ -95,9 +135,11 @@ class _TrackerListState extends State<TrackerList> {
 
 class TrackerListPage extends StatefulWidget {
   final String torrentId;
+  final List<Tracker> trackers;
   final ValueChanged<int> callback;
 
-  TrackerListPage(Key key, this.torrentId, this.callback) : super(key: key);
+  TrackerListPage(Key key, this.torrentId, this.trackers, this.callback)
+      : super(key: key);
 
   @override
   State createState() {
@@ -105,11 +147,10 @@ class TrackerListPage extends StatefulWidget {
   }
 }
 
-class _TrackersListPageState extends State<TrackerListPage>
-    with TriremeProgressBarMixin {
+class _TrackersListPageState extends State<TrackerListPage> {
   final _key = GlobalKey<_TrackerListContentState>();
   TriremeRepository repository;
-  var selectedTrackers = <String>[];
+  final selectedTrackers = <int>[];
 
   @override
   void didChangeDependencies() {
@@ -119,38 +160,18 @@ class _TrackersListPageState extends State<TrackerListPage>
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: repository.getTorrentOptionsUpdates(widget.torrentId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            hideProgressBar();
-
-            if (snapshot.hasData) {
-              return _TrackerListContent(
-                  _key,
-                  widget.torrentId,
-                  (snapshot.data as TorrentOptions).trackers,
-                  selectedTrackers,
-                  widget.callback,
-                  toggleSelection);
-            } else if (snapshot.hasError) {
-              return ErrorPage(snapshot.error);
-            }
-          } else {
-            showProgressBar();
-          }
-          return Container();
-        });
+    return _TrackerListContent(_key, widget.torrentId, widget.trackers,
+        selectedTrackers, widget.callback, toggleSelection);
   }
 
   void toggleSelection(Tracker t) {
-    if (selectedTrackers.contains(t.url)) {
+    if (selectedTrackers.contains(t.tier)) {
       setState(() {
-        selectedTrackers.removeWhere((e) => e == t.url);
+        selectedTrackers.removeWhere((e) => e == t.tier);
       });
     } else {
       setState(() {
-        selectedTrackers.add(t.url);
+        selectedTrackers.add(t.tier);
       });
     }
     widget.callback(selectedTrackers.length);
@@ -178,7 +199,7 @@ typedef _ToggleTrackerCallback = void Function(Tracker t);
 class _TrackerListContent extends StatefulWidget {
   final String torrentId;
   final List<Tracker> trackers;
-  final List<String> selectedTrackers;
+  final List<int> selectedTrackers;
   final ValueChanged<int> selectedCallback;
   final _ToggleTrackerCallback toggleCallback;
 
@@ -217,7 +238,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
                         toggleSelection(e);
                       },
                 child: Selectable(
-                  selected: widget.selectedTrackers.contains(e.url),
+                  selected: widget.selectedTrackers.contains(e.tier),
                   child: ListTile(
                     title: Text(e.url),
                   ),
@@ -237,7 +258,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
 
   void delete() {
     final trackers = widget.trackers
-        .where((element) => !widget.selectedTrackers.contains(element.url));
+        .where((element) => !widget.selectedTrackers.contains(element.tier));
     setTracker(getApiFormatTrackers(trackers.toList()));
   }
 

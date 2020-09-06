@@ -50,7 +50,7 @@ class TriremeRepository {
   BehaviorSubject<List<SessionStatus>> _sessionStatusHistory;
   StreamSubscription<List<SessionStatus>> _localSessionStatusSubscription;
 
-  List<TorrentItem> _torrentsWhichNeedUpdates = [];
+  final List<TorrentItem> _torrentsWhichNeedUpdates = [];
 
   TriremeRepository() {
     init();

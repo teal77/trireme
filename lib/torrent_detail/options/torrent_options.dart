@@ -360,7 +360,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
 
   void showTrackerListPage() {
     Navigator.of(context).push<void>(MaterialPageRoute(builder: (context) {
-      return TrackerList(widget.torrentId);
+      return LoadingContainer(child: TrackerList(widget.torrentId));
     }));
   }
 
