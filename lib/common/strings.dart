@@ -140,6 +140,7 @@ class Strings {
   static String detailDeleteTorrentWithDataLabel = "Remove with data";
   static String detailDeleteTorrentLabel = "Remove torrent";
   static String detailDeleteConfirmationText = "Are you sure you want to remove this torrent?";
+  static String detailDeleteDeleteData = "Delete data";
   static String detailDeleteDataConfirmationText = "Are you sure you want to remove this torrent and delete its files?";
   static String detailDeleteTorrentFailedText = "Could not remove torrent";
   static String detailMoveStorageFailedText = "Could not move storage";

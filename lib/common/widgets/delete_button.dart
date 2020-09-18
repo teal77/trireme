@@ -20,40 +20,96 @@ import 'package:flutter/material.dart';
 
 import '../common.dart';
 
+typedef DeleteCallback = void Function(bool b);
+
 class DeleteButton extends StatelessWidget {
   final String toolTip;
-  final VoidCallback deleteCallback;
-  final VoidCallback deleteWithDataCallback;
+  final DeleteCallback deleteCallback;
 
-  DeleteButton(this.toolTip, this.deleteCallback, this.deleteWithDataCallback);
+  DeleteButton(this.toolTip, this.deleteCallback);
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<DeleteOptions>(
-      itemBuilder: (context) => [
-            PopupMenuItem<DeleteOptions>(
-              value: DeleteOptions.deleteWithData,
-              child: Text(Strings.detailDeleteTorrentWithDataLabel),
-            ),
-            PopupMenuItem<DeleteOptions>(
-              value: DeleteOptions.delete,
-              child: Text(Strings.detailDeleteTorrentLabel),
-            )
-          ],
-      onSelected: (option) {
-        switch (option) {
-          case DeleteOptions.delete:
-            deleteCallback();
-            return;
-          case DeleteOptions.deleteWithData:
-            deleteWithDataCallback();
-            return;
-        }
-      },
-      icon: const Icon(Icons.delete),
+    return IconButton(
+      icon: Icon(Icons.delete),
       tooltip: toolTip,
+      onPressed: () => _showConfirmationDialog(context),
     );
+  }
+
+  void _showConfirmationDialog(BuildContext context) async {
+    final deleteOption = await showConfirmationDialog(context);
+    switch (deleteOption) {
+      case DeleteOptions.delete:
+        deleteCallback(false);
+        break;
+      case DeleteOptions.deleteWithData:
+        deleteCallback(true);
+        break;
+      case DeleteOptions.dontDelete:
+        break;
+    }
   }
 }
 
-enum DeleteOptions { delete, deleteWithData }
+enum DeleteOptions { delete, deleteWithData, dontDelete }
+
+Future<DeleteOptions> showConfirmationDialog(BuildContext context) {
+  final _key = GlobalKey<_DeleteConfirmationDialogContentState>();
+  return showDialog<DeleteOptions>(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: _DeleteConfirmationDialogContent(_key),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(Strings.strcNo),
+                onPressed: () {
+                  Navigator.pop(context, DeleteOptions.dontDelete);
+                },
+              ),
+              FlatButton(
+                child: Text(Strings.strcYes),
+                onPressed: () {
+                  Navigator.pop(
+                      context,
+                      _key.currentState.deleteData
+                          ? DeleteOptions.deleteWithData
+                          : DeleteOptions.delete);
+                },
+              )
+            ],
+          ));
+}
+
+class _DeleteConfirmationDialogContent extends StatefulWidget {
+  _DeleteConfirmationDialogContent(Key key) : super(key: key);
+
+  @override
+  State createState() {
+    return _DeleteConfirmationDialogContentState();
+  }
+}
+
+class _DeleteConfirmationDialogContentState
+    extends State<_DeleteConfirmationDialogContent> {
+  var deleteData = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(Strings.detailDeleteConfirmationText),
+        CheckboxListTile(
+            title: Text(Strings.detailDeleteDeleteData),
+            value: deleteData,
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (b) {
+              setState(() {
+                deleteData = b;
+              });
+            })
+      ],
+      mainAxisSize: MainAxisSize.min,
+    );
+  }
+}

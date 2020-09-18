@@ -171,8 +171,11 @@ class _HomePageState extends State<_HomePageContent> {
             tooltip: Strings.homeResumeTooltip,
             onPressed: resumeTorrents,
           ),
-          DeleteButton(Strings.homeDeleteTooltip, deleteTorrents,
-              deleteTorrentsWithData),
+          DeleteButton(Strings.homeDeleteTooltip, (deleteData) {
+            deleteData
+                ? torrentListKey.currentState.deleteTorrentsWithData()
+                : torrentListKey.currentState.deleteTorrents();
+          }),
           LabelButton(repository, Strings.homeLabelTooltip, setLabel),
           getOverflowButton()),
       body: LoadingContainer(
@@ -204,25 +207,25 @@ class _HomePageState extends State<_HomePageContent> {
       }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SpeedIndicator(
-                    Icons.arrow_downward,
-                    repository.getSessionDownloadSpeed(
-                        PreferenceProvider.of(context).byteSizeStyle), () {
-                  _showNetworkSpeedBottomSheet(context, true, repository);
-                }),
-                SpeedIndicator(
-                    Icons.arrow_upward,
-                    repository.getSessionUploadSpeed(
-                        PreferenceProvider.of(context).byteSizeStyle), () {
-                  _showNetworkSpeedBottomSheet(context, false, repository);
-                })
-              ],
-            ),
-          )),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            SpeedIndicator(
+                Icons.arrow_downward,
+                repository.getSessionDownloadSpeed(
+                    PreferenceProvider.of(context).byteSizeStyle), () {
+              _showNetworkSpeedBottomSheet(context, true, repository);
+            }),
+            SpeedIndicator(
+                Icons.arrow_upward,
+                repository.getSessionUploadSpeed(
+                    PreferenceProvider.of(context).byteSizeStyle), () {
+              _showNetworkSpeedBottomSheet(context, false, repository);
+            })
+          ],
+        ),
+      )),
       floatingActionButton: UnicornDialer(
         hasNotch: true,
         parentButton: Icon(Icons.add),
@@ -350,19 +353,6 @@ class _HomePageState extends State<_HomePageContent> {
     torrentListKey.currentState.resumeTorrents();
   }
 
-  void deleteTorrents() {
-    showConfirmationDialog(Strings.homeDeleteTorrentConfirmationText, () {
-      torrentListKey.currentState.deleteTorrents();
-    });
-  }
-
-  void deleteTorrentsWithData() {
-    showConfirmationDialog(Strings.homeDeleteTorrentAndDataConfirmationText,
-        () {
-      torrentListKey.currentState.deleteTorrentsWithData();
-    });
-  }
-
   void setLabel(String label) {
     torrentListKey.currentState.setTorrentsLabel(label);
   }
@@ -371,15 +361,15 @@ class _HomePageState extends State<_HomePageContent> {
     return PopupMenuButton<OverflowButtons>(
       icon: const Icon(Icons.more_vert),
       itemBuilder: (context) => [
-            PopupMenuItem<OverflowButtons>(
-              value: OverflowButtons.selectAll,
-              child: Text(Strings.homeSelectAll),
-            ),
-            PopupMenuItem<OverflowButtons>(
-              value: OverflowButtons.invertSelection,
-              child: Text(Strings.homeInvertSelection),
-            )
-          ],
+        PopupMenuItem<OverflowButtons>(
+          value: OverflowButtons.selectAll,
+          child: Text(Strings.homeSelectAll),
+        ),
+        PopupMenuItem<OverflowButtons>(
+          value: OverflowButtons.invertSelection,
+          child: Text(Strings.homeInvertSelection),
+        )
+      ],
       onSelected: onOverflowMenuClick,
     );
   }
@@ -393,31 +383,6 @@ class _HomePageState extends State<_HomePageContent> {
         torrentListKey.currentState.invertSelection();
         return;
     }
-  }
-
-  void showConfirmationDialog(String text, VoidCallback onAccept) {
-    showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(text),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  onAccept();
-                },
-                child: Text(Strings.strcYes),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(Strings.strcNo),
-              )
-            ],
-          );
-        });
   }
 
   void onAddTorrentClicked(AddTorrentKind kind) {
