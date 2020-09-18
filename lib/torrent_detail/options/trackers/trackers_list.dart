@@ -17,6 +17,7 @@
  */
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -80,6 +81,18 @@ class _TrackerListState extends State<TrackerList>
                 onPressed: clearSelection,
               ),
               actions: <Widget>[
+                if (selectedItemCount == 1) ...[
+                  IconButton(
+                      icon: const Icon(Icons.arrow_upward), onPressed: moveUp),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_downward),
+                    onPressed: moveDn,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: edit,
+                  ),
+                ],
                 IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: delete,
@@ -126,6 +139,18 @@ class _TrackerListState extends State<TrackerList>
 
   void delete() {
     _key.currentState.delete();
+  }
+
+  void edit() {
+    _key.currentState.edit();
+  }
+
+  void moveUp() {
+    _key.currentState.moveUp();
+  }
+
+  void moveDn() {
+    _key.currentState.moveDn();
   }
 
   void add() {
@@ -186,6 +211,22 @@ class _TrackersListPageState extends State<TrackerListPage> {
 
   void delete() {
     _key.currentState.delete();
+    clearSelection();
+  }
+
+  void edit() {
+    _key.currentState.edit(
+        widget.trackers.firstWhere((e) => e.tier == selectedTrackers.first));
+    clearSelection();
+  }
+
+  void moveUp() {
+    _key.currentState.moveUp();
+    clearSelection();
+  }
+
+  void moveDn() {
+    _key.currentState.moveDn();
     clearSelection();
   }
 
@@ -259,7 +300,32 @@ class _TrackerListContentState extends State<_TrackerListContent> {
   void delete() {
     final trackers = widget.trackers
         .where((element) => !widget.selectedTrackers.contains(element.tier));
-    setTracker(getApiFormatTrackers(trackers.toList()));
+    setTracker(formTrackersApiRequest(trackers.toList()));
+  }
+
+  void edit(Tracker tracker) async {
+    var url = await showUrlInputDialog(Strings.trackerEditUrlDialogTitle,
+        initial: tracker.url);
+
+    if (url != null && url.isNotEmpty) {
+      editTracker(url, tracker);
+    }
+  }
+
+  void moveUp() {
+    final selected = widget.trackers
+        .firstWhere((e) => e.tier == widget.selectedTrackers.first);
+    final trackers = widget.trackers.where((e) => e != selected).toList()
+      ..insert(max(selected.tier - 1, 0), selected);
+    setTracker(formTrackersApiRequest(trackers));
+  }
+
+  void moveDn() {
+    final selected = widget.trackers
+        .firstWhere((e) => e.tier == widget.selectedTrackers.first);
+    final trackers = widget.trackers.where((e) => e != selected).toList()
+      ..insert(selected.tier + 1, selected);
+    setTracker(formTrackersApiRequest(trackers));
   }
 
   void add() async {
@@ -269,8 +335,8 @@ class _TrackerListContentState extends State<_TrackerListContent> {
     }
   }
 
-  Future<String> showUrlInputDialog(String title) async {
-    String userInput;
+  Future<String> showUrlInputDialog(String title, {String initial = ''}) async {
+    final textController = TextEditingController(text: initial);
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -278,13 +344,13 @@ class _TrackerListContentState extends State<_TrackerListContent> {
               content: TextField(
                 keyboardType: TextInputType.url,
                 autocorrect: false,
-                onChanged: (s) => userInput = s,
+                controller: textController,
               ),
               actions: <Widget>[
                 FlatButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
-                    Navigator.pop(context, userInput);
+                    Navigator.pop(context, textController.text);
                   },
                 )
               ],
@@ -294,10 +360,19 @@ class _TrackerListContentState extends State<_TrackerListContent> {
   void addTracker(String url) {
     final newTracker = Tracker();
     newTracker.url = url;
-    setTracker(getApiFormatTrackers([...widget.trackers, newTracker]));
+    setTracker(formTrackersApiRequest([...widget.trackers, newTracker]));
   }
 
-  List<Map<String, dynamic>> getApiFormatTrackers(List<Tracker> trackers) {
+  void editTracker(String url, Tracker tracker) {
+    final t = widget.trackers
+        .firstWhere((e) => e.url == tracker.url, orElse: () => null);
+    if (t != null) {
+      t.url = url;
+      setTracker(formTrackersApiRequest(widget.trackers));
+    }
+  }
+
+  List<Map<String, dynamic>> formTrackersApiRequest(List<Tracker> trackers) {
     final unique = trackers.map((e) => e.url).toSet().toList();
     return trackers
         .asMap()

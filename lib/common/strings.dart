@@ -194,6 +194,7 @@ class Strings {
 
   static String trackerTitle = "Trackers";
   static String trackerUrlDialogTitle = "Add tracker";
+  static String trackerEditUrlDialogTitle = "Edit tracker";
 
   static String settingsTitle = "Settings";
   static String settingsServers = "Servers";
