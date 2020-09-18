@@ -25,7 +25,14 @@ import 'package:trireme_client/deserialization.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 
-typedef void FilterSelectedCallback(FilterSpec f);
+typedef FilterSelectedCallback = void Function(FilterSpec f);
+
+class _Filter {
+  String displayName;
+  String filter;
+
+  _Filter(this.displayName, this.filter);
+}
 
 Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
     FilterSpec lastSelected, FilterSelectedCallback onFilterSelected) {
@@ -36,17 +43,22 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
             future: future,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<String> stateFilters = List<String>.from(
-                    snapshot.data.statusFilters.map<String>((o) => (o as List).first as String));
-                List<String> trackerFilters = List<String>.from(
-                    snapshot.data.trackerFilters.map<String>((o) => (o as List).first as String));
-                List<String> labelFilters = [];
-                if (snapshot.data.labelFilters != null) {
-                  labelFilters = List<String>.from(
-                      snapshot.data.labelFilters.map<String>((o) => (o as List).first as String));
+                final stateFilters = List<_Filter>.from(snapshot
+                    .data.statusFilters
+                    .map((o) => (o as List).first as String)
+                    .map<_Filter>((e) => _Filter(e, e)));
+                final trackerFilters = List<_Filter>.from(snapshot
+                    .data.trackerFilters
+                    .map((o) => (o as List).first as String)
+                    .map<_Filter>((e) => _Filter(e, e)));
 
-                  labelFilters.remove("");
-                  labelFilters.add(Strings.homeFilterNoLabel);
+                var labelFilters = <_Filter>[];
+                if (snapshot.data.labelFilters != null) {
+                  labelFilters = List<_Filter>.from(snapshot.data.labelFilters
+                      .map((o) => (o as List).first as String)
+                      .where((e) => e.isNotEmpty)
+                      .map<_Filter>((e) => _Filter(e, e)));
+                  labelFilters.add(_Filter(Strings.homeFilterNoLabel, ''));
                 }
 
                 return FilterSelector(stateFilters, labelFilters,
@@ -64,9 +76,9 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
 }
 
 class FilterSelector extends StatefulWidget {
-  final List<String> stateFilters;
-  final List<String> labelFilters;
-  final List<String> trackerFilters;
+  final List<_Filter> stateFilters;
+  final List<_Filter> labelFilters;
+  final List<_Filter> trackerFilters;
   final FilterSpec lastSelected;
   final FilterSelectedCallback callback;
 
@@ -88,20 +100,17 @@ class _FilterSelectorState extends State<FilterSelector> {
   void initState() {
     super.initState();
     statusFilter = widget.lastSelected.statusFilter;
-    if (!widget.stateFilters.contains(statusFilter)) {
+    if (!widget.stateFilters.any((e) => e.filter == statusFilter)) {
       statusFilter = FilterSpec.strAll;
     }
 
     labelFilter = widget.lastSelected.labelFilter;
-    if (labelFilter.isEmpty) {
-      labelFilter = Strings.homeFilterNoLabel;
-    }
-    if (!widget.labelFilters.contains(labelFilter)) {
+    if (!widget.labelFilters.any((e) => e.filter == labelFilter)) {
       labelFilter = FilterSpec.strAll;
     }
 
     trackerFilter = widget.lastSelected.trackerFilter;
-    if (!widget.trackerFilters.contains(trackerFilter)) {
+    if (!widget.trackerFilters.any((e) => e.filter == trackerFilter)) {
       trackerFilter = FilterSpec.strAll;
     }
 
@@ -144,11 +153,7 @@ class _FilterSelectorState extends State<FilterSelector> {
   }
 
   void onLabelFilterChanged(String s) {
-    if (s == Strings.homeFilterNoLabel) {
-      labelFilter = "";
-    } else {
-      labelFilter = s;
-    }
+    labelFilter = s;
     dispatchCallbackWithFilterSpec();
   }
 
@@ -163,7 +168,7 @@ class _FilterSelectorState extends State<FilterSelector> {
 }
 
 class FilterChipContainer extends StatefulWidget {
-  final List<String> choices;
+  final List<_Filter> choices;
   final String lastSelected;
   final ValueChanged<String> selectionChanged;
 
@@ -186,8 +191,9 @@ class _FilterChipContainerState extends State<FilterChipContainer> {
 
   @override
   Widget build(BuildContext context) {
-    var chipSelectedColor = Theme.of(context).brightness == Brightness.dark ?
-        ChipTheme.of(context).selectedColor : ChipTheme.of(context).secondarySelectedColor;
+    var chipSelectedColor = Theme.of(context).brightness == Brightness.dark
+        ? ChipTheme.of(context).selectedColor
+        : ChipTheme.of(context).secondarySelectedColor;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Wrap(
@@ -195,15 +201,15 @@ class _FilterChipContainerState extends State<FilterChipContainer> {
         runSpacing: 8.0,
         children: widget.choices
             .map((s) => ChoiceChip(
-                  label: Text(s),
+                  label: Text(s.displayName),
                   selectedColor: chipSelectedColor,
-                  selected: selectedChoice == s,
+                  selected: selectedChoice == s.filter,
                   onSelected: (selected) {
                     if (selected) {
                       setState(() {
-                        selectedChoice = s;
+                        selectedChoice = s.filter;
                       });
-                      widget.selectionChanged(s);
+                      widget.selectionChanged(s.filter);
                     }
                   },
                 ))
@@ -236,7 +242,7 @@ class FilterSpecContainer extends StatelessWidget {
   }
 
   List<Widget> _getChildren() {
-    List<Widget> children = [];
+    var children = <Widget>[];
 
     if (filterSpec.statusFilter != FilterSpec.strAll) {
       children.add(_getFilterChip(filterSpec.statusFilter, () {
@@ -246,7 +252,7 @@ class FilterSpecContainer extends StatelessWidget {
     }
 
     if (filterSpec.labelFilter != FilterSpec.strAll) {
-      String filter = filterSpec.labelFilter;
+      var filter = filterSpec.labelFilter;
       if (filter.isEmpty) filter = Strings.homeFilterNoLabel;
       children.add(_getFilterChip(filter, () {
         filterChangedCallback(FilterSpec(filterSpec.statusFilter,
