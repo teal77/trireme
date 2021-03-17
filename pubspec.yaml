@@ -9,7 +9,7 @@ dependencies:
 
   trireme_client:
     git:
-      url: git@github.com:teal77/trireme_client.git
+      url: https://github.com/teal77/trireme_client.git
       ref: "v1.1.0"
 
   rxdart: "0.23.0"
