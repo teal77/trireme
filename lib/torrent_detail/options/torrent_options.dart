@@ -42,7 +42,7 @@ class TorrentOptionsPage extends StatefulWidget {
 
 class TorrentOptionsPageState extends State<TorrentOptionsPage>
     with TriremeProgressBarMixin {
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -61,7 +61,7 @@ class TorrentOptionsPageState extends State<TorrentOptionsPage>
             if (snapshot.hasData) {
               return _TorrentOptionsContent(widget.torrentId, snapshot.data as TorrentOptions);
             } else if (snapshot.hasError) {
-              return ErrorPage(snapshot.error);
+              return ErrorPage(snapshot.error!);
             }
           } else {
             showProgressBar();
@@ -85,9 +85,9 @@ class _TorrentOptionsContent extends StatefulWidget {
 
 class _TorrentsOptionsState extends State<_TorrentOptionsContent>
     with TriremeProgressBarMixin {
-  TorrentOptions torrentOptions;
+  late TorrentOptions torrentOptions;
   TorrentOptionsController controller = TorrentOptionsController();
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void initState() {
@@ -265,8 +265,8 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
     ));
   }
 
-  Future<String> showPathInputDialog(String title) async {
-    String userInput;
+  Future<String?> showPathInputDialog(String title) async {
+    String? userInput;
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -287,9 +287,9 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
             ));
   }
 
-  Future<num> showNumberInputDialog(String title) async {
-    String userInput;
-    var n = await showDialog<num>(
+  Future<num?> showNumberInputDialog(String title) async {
+    String? userInput;
+    return await showDialog<num>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
@@ -307,10 +307,10 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
                 FlatButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
-                    num n;
+                    num? n;
                     try {
-                      if (userInput != null && userInput.isNotEmpty) {
-                        n = num.parse(userInput);
+                      if (userInput != null && userInput!.isNotEmpty) {
+                        n = num.parse(userInput!);
                       }
                     } on FormatException {
                       //nop
@@ -324,7 +324,6 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
                 )
               ],
             ));
-    return n;
   }
 
   void showMaxConnectionDialog() async {

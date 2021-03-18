@@ -54,7 +54,7 @@ class DeleteButton extends StatelessWidget {
 
 enum DeleteOptions { delete, deleteWithData, dontDelete }
 
-Future<DeleteOptions> showConfirmationDialog(BuildContext context) {
+Future<DeleteOptions?> showConfirmationDialog(BuildContext context) {
   final _key = GlobalKey<_DeleteConfirmationDialogContentState>();
   return showDialog<DeleteOptions>(
       context: context,
@@ -72,7 +72,7 @@ Future<DeleteOptions> showConfirmationDialog(BuildContext context) {
                 onPressed: () {
                   Navigator.pop(
                       context,
-                      _key.currentState.deleteData
+                      _key.currentState?.deleteData ?? false
                           ? DeleteOptions.deleteWithData
                           : DeleteOptions.delete);
                 },
@@ -97,6 +97,7 @@ class _DeleteConfirmationDialogContentState
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text(Strings.detailDeleteConfirmationText),
         CheckboxListTile(
@@ -105,11 +106,10 @@ class _DeleteConfirmationDialogContentState
             controlAffinity: ListTileControlAffinity.leading,
             onChanged: (b) {
               setState(() {
-                deleteData = b;
+                deleteData = b ?? false;
               });
             })
       ],
-      mainAxisSize: MainAxisSize.min,
     );
   }
 }

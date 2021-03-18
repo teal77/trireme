@@ -34,9 +34,9 @@ class Preferences {
   Preferences(this.byteSizeStyle, this.appThemeColor, this.brightness);
 
   Preferences apply(
-      {ByteSizeStyle byteSizeStyle,
-      MaterialColor appThemeColor,
-      Brightness brightness}) {
+      {ByteSizeStyle? byteSizeStyle,
+      MaterialColor? appThemeColor,
+      Brightness? brightness}) {
 
     return Preferences(
       byteSizeStyle ?? this.byteSizeStyle,

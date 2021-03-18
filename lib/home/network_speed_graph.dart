@@ -39,7 +39,7 @@ class NetworkSpeedGraph extends StatelessWidget {
           return Container(
             height: 200.0,
             child: snapshot.hasData
-                ? _NetworkSpeedGraph(snapshot.data)
+                ? _NetworkSpeedGraph(snapshot.data!)
                 : Container(),
           );
         });

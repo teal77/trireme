@@ -36,7 +36,7 @@ class NetworkSpeedBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Stream<NetworkSpeedData> dataStream =
+    var dataStream =
         repository.getSessionStatusHistory().map((l) => getSpeedData(l));
 
     var title = isDownload
@@ -53,7 +53,7 @@ class NetworkSpeedBottomSheet extends StatelessWidget {
     );
   }
 
-  NetworkSpeedData getSpeedData(List<SessionStatus> statusHistory) {
+  NetworkSpeedData getSpeedData(List<SessionStatus?> statusHistory) {
     List<int> getSpeeds() {
       if (isDownload) {
         return statusHistory
@@ -117,7 +117,7 @@ class _NetworkSpeed extends StatelessWidget {
                 stream: currentSpeed,
                 builder: (context, snapshot) {
                   return Text(
-                    snapshot.hasData ? snapshot.data : "0",
+                    snapshot.hasData ? snapshot.data! : "0",
                     style: const TextStyle(fontSize: 24.0),
                   );
                 },
@@ -127,7 +127,7 @@ class _NetworkSpeed extends StatelessWidget {
               child: StreamBuilder<String>(
                 stream: currentProtocolSpeed,
                 builder: (context, snapshot) {
-                  return Text(snapshot.hasData ? snapshot.data : "0");
+                  return Text(snapshot.hasData ? snapshot.data! : "0");
                 },
               ),
             ),
@@ -150,9 +150,9 @@ class _SpeedLimitSliderState extends State<SpeedLimitSetter> {
   static const keyDownloadSpeedLimit = "max_download_speed";
   static const keyUploadSpeedLimit = "max_upload_speed";
 
-  SpeedLimitStep currentSpeedLimitSetting;
+  late SpeedLimitStep currentSpeedLimitSetting;
   String speedLimitLabel = "";
-  StreamSubscription<DelugeRpcEvent> eventsStreamSubscription;
+  late StreamSubscription<DelugeRpcEvent> eventsStreamSubscription;
 
   @override
   void initState() {

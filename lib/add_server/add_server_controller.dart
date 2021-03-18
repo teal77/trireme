@@ -26,73 +26,70 @@ import 'package:trireme_client/trireme_client.dart';
 import 'package:trireme/core/persistence.dart';
 
 class AddServerController {
-  String validateHost(String host) {
+  String? validateHost(String? host) {
     if (host == null || host.trim().isEmpty) {
-      return "Host must not be empty";
+      return 'Host must not be empty';
     }
     return null;
   }
 
-  String validatePort(String port) {
+  String? validatePort(String? port) {
     if (port == null || port.trim().isEmpty) {
-      return "Port must not be empty";
+      return 'Port must not be empty';
     } else {
       try {
         var portInt = int.parse(port);
         if (portInt < 0 || portInt > 65535) {
-          return "Port not in range [0, 65535]";
+          return 'Port not in range [0, 65535]';
         }
       } on FormatException {
-        return "Port must be valid";
+        return 'Port must be valid';
       }
     }
     return null;
   }
 
-  String validateUsername(String username) {
+  String? validateUsername(String? username) {
     if (username == null || username.trim().isEmpty) {
-      return "Username must not be empty";
+      return 'Username must not be empty';
     }
     return null;
   }
 
-  String validatePassword(String password) {
+  String? validatePassword(String? password) {
     if (password == null || password.trim().isEmpty) {
-      return "Password must not be empty";
+      return 'Password must not be empty';
     }
     return null;
   }
 
-  String getDaemonCertificatePubKey(DaemonDetails daemonDetails) {
-    if (daemonDetails == null) return "";
-    if (daemonDetails.daemonCertificate == null) return "";
+  String getDaemonCertificatePubKey(DaemonDetails? daemonDetails) {
+    if (daemonDetails == null) return '';
     return hex.encode(daemonDetails.daemonCertificate.sha1);
   }
 
-  String getDaemonCertificateIssuer(DaemonDetails daemonDetails) {
-    if (daemonDetails == null) return "";
-    if (daemonDetails.daemonCertificate == null) return "";
+  String getDaemonCertificateIssuer(DaemonDetails? daemonDetails) {
+    if (daemonDetails == null) return '';
     return daemonDetails.daemonCertificate.issuer;
   }
 
   Future<bool> validateServerCredentials(
       String username, String password, String host, String port) async {
-    int portInt = int.parse(port);
-    TriremeClient client =
-        TriremeClient(username, password, host, port: portInt);
+    var portInt = int.parse(port);
+    var client = TriremeClient(username, password, host, port: portInt);
 
     try {
       await client.init();
       return true;
     } on SocketException catch (e) {
       if (e.osError != null) {
-        if (e.osError.errorCode == 111) {
-          throw "Connection refused. Is the deluge server running and configured to accept remote connections?";
-        } else if (e.osError.errorCode == 113) {
-          throw "No route to host";
+        if (e.osError!.errorCode == 111) {
+          throw 'Connection refused. Is the deluge server running and configured to accept remote connections?';
+        } else if (e.osError!.errorCode == 113) {
+          throw 'No route to host';
         }
       }
-      throw "Network error. Could not connect to server.";
+      throw 'Network error. Could not connect to server.';
     } on DelugeRpcError catch (e) {
       throw e.toString();
     } finally {
@@ -101,7 +98,7 @@ class AddServerController {
   }
 
   Future addServer(String username, String password, String host, String port,
-      String pemCertificate) async {
+      String? pemCertificate) async {
     var portInt = int.parse(port);
     var dbModel =
         ServerDBModel(host, portInt, username, password, pemCertificate);

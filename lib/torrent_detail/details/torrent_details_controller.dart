@@ -30,8 +30,8 @@ import 'package:trireme/torrent_list/torrent_item.dart';
 class TorrentDetailsController {
   final ratioFormatter = NumberFormat("####.###");
 
-  TorrentItem torrentItem;
-  TorrentDetail torrentDetail;
+  late TorrentItem torrentItem;
+  late TorrentDetail torrentDetail;
 
   String getAddedDate() {
     var addedDate = DateTime.fromMillisecondsSinceEpoch(

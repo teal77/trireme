@@ -39,7 +39,7 @@ class TorrentList extends StatefulWidget {
 }
 
 class TorrentListState extends State<TorrentList> with TriremeProgressBarMixin {
-  TorrentListController controller;
+  late TorrentListController controller;
 
   TorrentListState() {
     controller = TorrentListController(update, onSelectedItemsChanged);

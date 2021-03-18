@@ -44,17 +44,17 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final stateFilters = List<_Filter>.from(snapshot
-                    .data.statusFilters
+                    .data!.statusFilters
                     .map((o) => (o as List).first as String)
                     .map<_Filter>((e) => _Filter(e, e)));
                 final trackerFilters = List<_Filter>.from(snapshot
-                    .data.trackerFilters
+                    .data!.trackerFilters
                     .map((o) => (o as List).first as String)
                     .map<_Filter>((e) => _Filter(e, e)));
 
                 var labelFilters = <_Filter>[];
-                if (snapshot.data.labelFilters != null) {
-                  labelFilters = List<_Filter>.from(snapshot.data.labelFilters
+                if (snapshot.data!.labelFilters != null) {
+                  labelFilters = List<_Filter>.from(snapshot.data!.labelFilters
                       .map((o) => (o as List).first as String)
                       .where((e) => e.isNotEmpty)
                       .map<_Filter>((e) => _Filter(e, e)));
@@ -64,7 +64,7 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
                 return FilterSelector(stateFilters, labelFilters,
                     trackerFilters, lastSelected, onFilterSelected);
               } else if (snapshot.hasError) {
-                return ErrorPage(snapshot.error);
+                return ErrorPage(snapshot.error!);
               } else {
                 return Align(
                   alignment: Alignment.center,
@@ -92,9 +92,9 @@ class FilterSelector extends StatefulWidget {
 }
 
 class _FilterSelectorState extends State<FilterSelector> {
-  String statusFilter;
-  String labelFilter;
-  String trackerFilter;
+  late String statusFilter;
+  late String labelFilter;
+  late String trackerFilter;
 
   @override
   void initState() {
@@ -181,7 +181,7 @@ class FilterChipContainer extends StatefulWidget {
 }
 
 class _FilterChipContainerState extends State<FilterChipContainer> {
-  String selectedChoice;
+  late String selectedChoice;
 
   @override
   void initState() {

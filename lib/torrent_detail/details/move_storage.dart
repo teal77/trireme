@@ -44,7 +44,7 @@ class MoveStorageDialogState extends State<MoveStorageDialog> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              key.currentState.savePath();
+              key.currentState!.savePath();
             },
           )
         ],
@@ -66,7 +66,7 @@ class _MoveStorage extends StatefulWidget {
   final String torrentId;
   final String currentPath;
 
-  _MoveStorage({Key key, this.torrentId, this.currentPath}) : super(key: key);
+  _MoveStorage({Key? key, required this.torrentId, required this.currentPath}) : super(key: key);
 
   @override
   State createState() => _MoveStorageState();
@@ -75,8 +75,8 @@ class _MoveStorage extends StatefulWidget {
 class _MoveStorageState extends State<_MoveStorage>
     with TriremeProgressBarMixin {
 
-  TriremeRepository repository;
-  TextEditingController controller;
+  late TriremeRepository repository;
+  late TextEditingController controller;
 
   @override
   void initState() {

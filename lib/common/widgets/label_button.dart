@@ -44,14 +44,14 @@ class LabelButton extends StatelessWidget {
       initialData: [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.isEmpty) {
+          if (snapshot.data!.isEmpty) {
             return getNoLabelButton();
           } else {
             return PopupMenuButton<String>(
               icon: const Icon(Icons.label_outline),
               tooltip: tooltip,
               itemBuilder: (context) => List<PopupMenuEntry<String>>.from(
-                  snapshot.data.map<PopupMenuEntry<String>>((s) => PopupMenuItem<String>(
+                  snapshot.data!.map<PopupMenuEntry<String>>((s) => PopupMenuItem<String>(
                         value: s,
                         child: Text(s),
                       )))

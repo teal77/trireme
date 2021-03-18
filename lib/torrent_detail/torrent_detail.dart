@@ -50,7 +50,7 @@ class TorrentDetailState extends State<TorrentDetailPage> {
     Tab(text: Strings.detailTabOptions),
   ];
 
-  StreamSubscription<DelugeRpcEvent> _eventSubscription;
+  late StreamSubscription<DelugeRpcEvent> _eventSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -94,18 +94,18 @@ class TorrentDetailState extends State<TorrentDetailPage> {
 
 mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
     implements SingleTickerProviderStateMixin<T> {
-  Animation<double> tabControllerAnimation;
+  Animation<double>? tabControllerAnimation;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     tabControllerAnimation?.removeListener(_onAnimationChanged);
-    tabControllerAnimation = DefaultTabController.of(context).animation;
-    tabControllerAnimation.addListener(_onAnimationChanged);
+    tabControllerAnimation = DefaultTabController.of(context)!.animation;
+    tabControllerAnimation?.addListener(_onAnimationChanged);
   }
 
   void _onAnimationChanged() {
-    onTabControllerValueChanged(tabControllerAnimation.value);
+    onTabControllerValueChanged(tabControllerAnimation!.value);
   }
 
   void onTabControllerValueChanged(double value) {
@@ -113,7 +113,7 @@ mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
   }
 
   Animation<Offset> getOffsetAnimationOfTab(int tab) {
-    return _CustomTween(tab).animate(tabControllerAnimation);
+    return _CustomTween(tab).animate(tabControllerAnimation!);
   }
 
   @override

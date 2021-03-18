@@ -22,7 +22,7 @@ import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/strings.dart';
 
 class TorrentOptionsController {
-  TorrentOptions torrentOptions;
+  late TorrentOptions torrentOptions;
 
   String getCurrentDownloadSpeedLimit(ByteSizeFormatter formatter) {
     if (torrentOptions.maxDownloadSpeed < 0) {

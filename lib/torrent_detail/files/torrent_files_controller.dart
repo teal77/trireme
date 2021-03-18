@@ -31,10 +31,10 @@ class TorrentFileListController {
     Priority.mixed: Strings.detailFileMixed,
   };
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   String getFilePriority(File file) {
-    return priorities[file.priority];
+    return priorities[file.priority]!;
   }
 
   Future setPriorityForFiles(List<File> files, List<int> currentPriorities,

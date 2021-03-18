@@ -46,7 +46,7 @@ class TorrentFileListPage extends StatefulWidget {
 
 class TorrentFileListPageState extends State<TorrentFileListPage>
     with TriremeProgressBarMixin {
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -71,11 +71,11 @@ class TorrentFileListPageState extends State<TorrentFileListPage>
           if (snapshot.hasData) {
             return _TorrentFileList(
               torrentId: widget.torrentId,
-              torrentFiles: snapshot.data.torrentFiles,
-              root: snapshot.data.root,
+              torrentFiles: snapshot.data!.torrentFiles,
+              root: snapshot.data!.root,
             );
           } else if (snapshot.hasError) {
-            return ErrorPage(snapshot.error);
+            return ErrorPage(snapshot.error!);
           }
         } else {
           showProgressBar();
@@ -91,7 +91,11 @@ class _TorrentFileList extends StatefulWidget {
   final TorrentFiles torrentFiles;
   final File root;
 
-  _TorrentFileList({Key key, this.torrentId, this.torrentFiles, this.root})
+  _TorrentFileList(
+      {Key? key,
+      required this.torrentId,
+      required this.torrentFiles,
+      required this.root})
       : super(key: key);
 
   @override
@@ -101,14 +105,17 @@ class _TorrentFileList extends StatefulWidget {
 }
 
 class _TorrentFileListState extends State<_TorrentFileList>
-    with TriremeProgressBarMixin, TabControllerAnimationProviderMixin, SingleTickerProviderStateMixin {
-  File currentDirectory;
+    with
+        TriremeProgressBarMixin,
+        TabControllerAnimationProviderMixin,
+        SingleTickerProviderStateMixin {
+  late File currentDirectory;
   List<File> selectedFiles = [];
   bool disableButtons = false;
   var _sortBy = SortBy.name;
   var _reverse = false;
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
   TorrentFileListController controller = TorrentFileListController();
 
   @override
@@ -162,65 +169,66 @@ class _TorrentFileListState extends State<_TorrentFileList>
         children: getListChildren(),
       )),
       SlideTransition(
-        position: getOffsetAnimationOfTab(1),
-        child: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: selectedFiles.isEmpty ?
-              <Widget> [
-                Expanded(child: SizedBox(),),
-                _getSortingButton(_onSortByChanged),
-              ] :
-              <Widget>[
-              IconButton(
-                icon: Icon(Icons.select_all),
-                tooltip: Strings.detailFileSelectAllTooltip,
-                onPressed: disableButtons ? null : selectAll,
-              ),
-              IconButton(
-                icon: Icon(Icons.block),
-                tooltip: Strings.detailFileDoNotDownload,
-                onPressed: disableButtons
-                    ? null
-                    : () => setPrioritiesForSelectedFiles(0),
-              ),
-              IconButton(
-                icon: Icon(Icons.play_arrow),
-                tooltip: Strings.detailFileNormal,
-                onPressed: disableButtons
-                    ? null
-                    : () => setPrioritiesForSelectedFiles(1),
-              ),
-              IconButton(
-                icon: Icon(Icons.fast_forward),
-                tooltip: Strings.detailFileHigh,
-                onPressed: disableButtons
-                    ? null
-                    : () => setPrioritiesForSelectedFiles(5),
-              ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/highest.svg",
-                  width: 24.0,
-                  height: 24.0,
-                  color: IconTheme.of(context).color,
-                ),
-                tooltip: Strings.detailFileHighest,
-                onPressed: disableButtons
-                    ? null
-                    : () => setPrioritiesForSelectedFiles(7),
-              ),
-              /*Offstage(
+          position: getOffsetAnimationOfTab(1),
+          child: BottomAppBar(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: selectedFiles.isEmpty
+                  ? <Widget>[
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      _getSortingButton(_onSortByChanged),
+                    ]
+                  : <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.select_all),
+                        tooltip: Strings.detailFileSelectAllTooltip,
+                        onPressed: disableButtons ? null : selectAll,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.block),
+                        tooltip: Strings.detailFileDoNotDownload,
+                        onPressed: disableButtons
+                            ? null
+                            : () => setPrioritiesForSelectedFiles(0),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.play_arrow),
+                        tooltip: Strings.detailFileNormal,
+                        onPressed: disableButtons
+                            ? null
+                            : () => setPrioritiesForSelectedFiles(1),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.fast_forward),
+                        tooltip: Strings.detailFileHigh,
+                        onPressed: disableButtons
+                            ? null
+                            : () => setPrioritiesForSelectedFiles(5),
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/highest.svg",
+                          width: 24.0,
+                          height: 24.0,
+                          color: IconTheme.of(context).color,
+                        ),
+                        tooltip: Strings.detailFileHighest,
+                        onPressed: disableButtons
+                            ? null
+                            : () => setPrioritiesForSelectedFiles(7),
+                      ),
+                      /*Offstage(
                   offstage: selectedFiles.length != 1,
                   child: IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: disableButtons ? null : renameSelectedFile,
                   ),
                 )*/
-            ],
-          ),
-        )
-      )
+                    ],
+            ),
+          ))
     ]);
   }
 
@@ -233,7 +241,8 @@ class _TorrentFileListState extends State<_TorrentFileList>
         onTap: onParentClicked,
       ));
     }
-    currentDirectory.children.sort(_reverse ? _comparators[_sortBy].reversed() : _comparators[_sortBy]);
+    currentDirectory.children.sort(
+        _reverse ? _comparators[_sortBy]!.reversed() : _comparators[_sortBy]);
     for (var file in currentDirectory.children) {
       var isSelected = selectedFiles.contains(file);
       var isSelectionMode = selectedFiles.isNotEmpty;
@@ -346,7 +355,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     }
   }
 
-  Future<String> showRenameDialog(String oldFileName) {
+  Future<String?> showRenameDialog(String oldFileName) {
     return showDialog<String>(
         context: context,
         builder: (context) {
@@ -423,12 +432,7 @@ class _TorrentFileListTile extends StatelessWidget {
   }
 }
 
-enum SortBy {
-  name,
-  size,
-  priority,
-  progress
-}
+enum SortBy { name, size, priority, progress }
 
 typedef void OnSortModeSelected(SortBy newSortBy);
 
@@ -443,8 +447,10 @@ Widget _getSortingButton(OnSortModeSelected callback) {
             PopupMenuItem<SortBy>(
                 value: SortBy.size, child: Text(Strings.detailFileSortBySize)),
             PopupMenuItem<SortBy>(
-                value: SortBy.priority, child: Text(Strings.detailFileSortByPriority)),
+                value: SortBy.priority,
+                child: Text(Strings.detailFileSortByPriority)),
             PopupMenuItem<SortBy>(
-                value: SortBy.progress, child: Text(Strings.detailFileSortByProgress)),
+                value: SortBy.progress,
+                child: Text(Strings.detailFileSortByProgress)),
           ]);
 }

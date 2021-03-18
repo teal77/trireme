@@ -41,7 +41,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   static const dotSeparator = "•";
 
   TorrentListItemController controller = TorrentListItemController();
-  TorrentItem data;
+  late TorrentItem data;
 
   @override
   void initState() {

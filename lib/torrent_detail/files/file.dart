@@ -25,13 +25,13 @@ import 'package:trireme_client/deserialization.dart';
 class File {
   String name;
   String path = "";
-  int size;
-  int index;
-  int priorityInt;
-  Priority priority;
-  double progress;
-  File parent;
-  List<File> children = [];
+  late int size;
+  late int index;
+  late int priorityInt;
+  late Priority priority;
+  late double progress;
+  late File parent;
+  late List<File> children = [];
 
   File(this.name);
 
@@ -42,7 +42,7 @@ class File {
   bool get isRoot => parent == null;
 
   File getChild(String name) {
-    return children.firstWhere((f) => f.name == name, orElse: () => null);
+    return children.firstWhere((f) => f.name == name);
   }
 
   File findChild(String path) {
@@ -107,14 +107,14 @@ File convertToFileTree(TorrentFiles torrentFiles) {
 
     var file = File(fileName);
     file.priorityInt = priority;
-    file.priority = priorities[priority];
+    file.priority = priorities[priority]!;
     file.progress = progress;
     file.size = f.size;
     file.index = f.index;
     parent.addChild(file);
   }
 
-  for (int i = 0; i < torrentFiles.files.length; i++) {
+  for (var i = 0; i < torrentFiles.files.length; i++) {
     addFile(torrentFiles.files[i], torrentFiles.filePriorities[i],
         torrentFiles.fileProgress[i]);
   }

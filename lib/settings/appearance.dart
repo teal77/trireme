@@ -39,9 +39,9 @@ class AppearanceSettings extends StatefulWidget {
 }
 
 class _AppearanceSettingsState extends State<AppearanceSettings> {
-  MaterialColor appThemeColor;
+  late MaterialColor appThemeColor;
   bool isDark = false;
-  ByteSizeStyle byteSizeStyle;
+  late ByteSizeStyle byteSizeStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +73,13 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
             groupValue: byteSizeStyle,
             title: Text(Strings.settingsKibibytes),
             subtitle: Text(Strings.settingsKibibytesInfo),
-            onChanged: ((ByteSizeStyle value) => {setByteSizeStyle(value)})),
+            onChanged: ((ByteSizeStyle? value) => {setByteSizeStyle(value)})),
         RadioListTile(
             value: ByteSizeStyle.si,
             groupValue: byteSizeStyle,
             title: Text(Strings.settingsKilobytes),
             subtitle: Text(Strings.settingsKilobytesInfo),
-            onChanged: ((ByteSizeStyle value) => {setByteSizeStyle(value)})),
+            onChanged: ((ByteSizeStyle? value) => {setByteSizeStyle(value)})),
       ],
     );
   }
@@ -130,7 +130,8 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
     PreferenceProvider.updatePreference(context, newPreference);
   }
 
-  void setByteSizeStyle(ByteSizeStyle b) async {
+  void setByteSizeStyle(ByteSizeStyle? b) async {
+    if (b == null) return;
     await saveByteSizeStyle(b);
     var newPreference = PreferenceProvider.of(context).apply(byteSizeStyle: b);
     PreferenceProvider.updatePreference(context, newPreference);

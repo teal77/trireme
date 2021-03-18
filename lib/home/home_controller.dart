@@ -49,6 +49,6 @@ class HomePageController {
 
   Future setSelectedServer(ServerDBModel server) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_currentSelectedServerPrefKey, server.id);
+    await prefs.setInt(_currentSelectedServerPrefKey, server.id!);
   }
 }

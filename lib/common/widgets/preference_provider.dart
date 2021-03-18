@@ -30,22 +30,20 @@ class PreferenceProvider extends StatefulWidget {
   _PreferenceProviderState createState() => _PreferenceProviderState();
 
   static Preferences of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_PreferenceProviderInherited)
-            as _PreferenceProviderInherited)
-        .state
+    return context.dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()
+        !.state
         .preferences;
   }
 
   static void updatePreference(BuildContext context, Preferences preferences) {
-    (context.inheritFromWidgetOfExactType(_PreferenceProviderInherited)
-            as _PreferenceProviderInherited)
-        .state
+    context.dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()
+        !.state
         .setPreference(preferences);
   }
 }
 
 class _PreferenceProviderState extends State<PreferenceProvider> {
-  Preferences _preferences;
+  late Preferences _preferences;
 
   Preferences get preferences => _preferences;
 

@@ -37,17 +37,17 @@ class TorrentListController {
   final OnStateUpdated stateUpdateCallback;
   final OnSelectedItemsChanged selectedItemsChangedCallback;
 
-  TriremeRepository _repository;
+  late TriremeRepository _repository;
 
-  List<TorrentItem> _torrentItems;
-  List<TorrentItem> _selectedTorrentItems = [];
+  List<TorrentItem> _torrentItems = [];
+  final List<TorrentItem> _selectedTorrentItems = [];
 
   SortCriteria _sortCriterion = SortCriteria.name;
   bool _reverseSort = false;
   FilterSpec _filterSpec = FilterSpec.all;
 
-  StreamSubscription<List<TorrentItem>> _torrentListUpdateStreamSubscription;
-  StreamSubscription _eventsStreamSubscription;
+  StreamSubscription<List<TorrentItem>>? _torrentListUpdateStreamSubscription;
+  StreamSubscription? _eventsStreamSubscription;
 
   TorrentListController(
       this.stateUpdateCallback, this.selectedItemsChangedCallback);
@@ -62,7 +62,7 @@ class TorrentListController {
   TriremeRepository get repository => _repository;
 
   String getEmptyText() {
-    if (repository.client == null) {
+    if (!repository.isReady()) {
       return "Loading...";
     }
 
@@ -168,7 +168,7 @@ class TorrentListController {
     _reverseSort = reverse;
 
     if (_torrentItems != null && _torrentItems.isNotEmpty) {
-      _torrentItems.sort(reverse ? _comparators[criterion].reversed() : _comparators[criterion]);
+      _torrentItems.sort(reverse ? _comparators[criterion]!.reversed() : _comparators[criterion]);
     }
   }
 

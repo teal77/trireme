@@ -49,12 +49,12 @@ class _AddServerState extends State<_AddServerPageContent>
   var controller = AddServerController();
   var loading = false;
 
-  String host;
-  String port;
-  DaemonDetails daemonDetails;
+  String? host;
+  String? port;
+  DaemonDetails? daemonDetails;
   var saveCertificate = false;
-  String username;
-  String password;
+  String? username;
+  String? password;
 
   var currentStep = 0;
 
@@ -165,8 +165,8 @@ class _AddServerState extends State<_AddServerPageContent>
 
   void onStepContinue() async {
     if (currentStep == 0) {
-      if (hostDetailsFormKey.currentState.validate()) {
-        hostDetailsFormKey.currentState.save();
+      if (hostDetailsFormKey.currentState?.validate() ?? false) {
+        hostDetailsFormKey.currentState?.save();
         detectDaemonAndContinue();
       }
     } else if (currentStep == 1) {
@@ -174,8 +174,8 @@ class _AddServerState extends State<_AddServerPageContent>
         currentStep = 2;
       });
     } else if (currentStep == 2) {
-      if (userDetailsFormKey.currentState.validate()) {
-        userDetailsFormKey.currentState.save();
+      if (userDetailsFormKey.currentState?.validate() ?? false) {
+        userDetailsFormKey.currentState?.save();
         validateAndSaveServerCredentials();
       }
     }
@@ -187,7 +187,7 @@ class _AddServerState extends State<_AddServerPageContent>
     });
     try {
       var daemonDetails =
-          await TriremeClient.detectDaemon(host, int.parse(port));
+          await TriremeClient.detectDaemon(host!, int.parse(port!));
       setState(() {
         currentStep = 1;
         this.daemonDetails = daemonDetails;
@@ -207,12 +207,12 @@ class _AddServerState extends State<_AddServerPageContent>
     });
     try {
       var valid = await controller.validateServerCredentials(
-          username, password, host, port);
+          username!, password!, host!, port!);
       if (valid) {
         showSnackBar(Strings.strSuccess);
         var pemCert =
-            saveCertificate ? daemonDetails.daemonCertificate.pem : null;
-        await controller.addServer(username, password, host, port, pemCert);
+            saveCertificate ? daemonDetails?.daemonCertificate.pem : null;
+        await controller.addServer(username!, password!, host!, port!, pemCert);
         await Future<void>.delayed(const Duration(seconds: 1));
         Navigator.of(context).pop(true);
       }
@@ -246,12 +246,12 @@ class PasswordField extends StatefulWidget {
     this.onFieldSubmitted,
   });
 
-  final String hintText;
-  final String labelText;
-  final String helperText;
-  final FormFieldSetter<String> onSaved;
-  final FormFieldValidator<String> validator;
-  final ValueChanged<String> onFieldSubmitted;
+  final String? hintText;
+  final String? labelText;
+  final String? helperText;
+  final FormFieldSetter<String>? onSaved;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onFieldSubmitted;
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();

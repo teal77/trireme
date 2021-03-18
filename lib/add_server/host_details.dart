@@ -30,8 +30,8 @@ class HostDetails extends StatefulWidget {
 class _HostDetailsState extends State<HostDetails> {
   var controller = AddServerController();
 
-  String host;
-  String port;
+  String? host;
+  String? port;
 
   @override
   Widget build(BuildContext context) {

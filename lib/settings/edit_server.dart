@@ -43,7 +43,7 @@ class EditServerState extends State<EditServer> {
           IconButton(
             icon: Icon(Icons.delete),
             tooltip: Strings.settingsDeleteServerTooltip,
-            onPressed: () => key.currentState.deleteServer(),
+            onPressed: () => key.currentState!.deleteServer(),
           )
         ],
       ),

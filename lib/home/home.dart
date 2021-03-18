@@ -67,13 +67,13 @@ class _HomePageState extends State<_HomePageContent> {
 
   var loading = false;
   List<ServerDBModel> servers = [];
-  ServerDBModel selectedServer;
+  ServerDBModel? selectedServer;
   var sortCriterion = SortCriteria.name;
   var reverseSort = false;
   var filterSpec = FilterSpec.all;
   var selectedItemCount = 0;
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void initState() {
@@ -89,7 +89,7 @@ class _HomePageState extends State<_HomePageContent> {
     loadingContainerKey.currentState?.hideProgress();
 
     if (servers.isEmpty) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
+      scaffoldKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeAddServerSnackbarText),
           duration: Duration(days: 999),
           action: SnackBarAction(
@@ -97,10 +97,10 @@ class _HomePageState extends State<_HomePageContent> {
               onPressed: onAddServerClicked)));
       return;
     } else {
-      scaffoldKey.currentState.removeCurrentSnackBar();
+      scaffoldKey.currentState!.removeCurrentSnackBar();
     }
 
-    loadingContainerKey.currentState.showProgress();
+    loadingContainerKey.currentState!.showProgress();
 
     var selectedServer = await controller.getSelectedServer();
     var savedSortMode = await getSavedSortMode();
@@ -115,7 +115,7 @@ class _HomePageState extends State<_HomePageContent> {
       this.filterSpec = savedFilterSpec;
     });
 
-    List<int> certificate;
+    List<int>? certificate;
     if (selectedServer.certificate != null &&
         selectedServer.certificate.isNotEmpty) {
       certificate = selectedServer.certificate.codeUnits;
@@ -127,14 +127,14 @@ class _HomePageState extends State<_HomePageContent> {
     try {
       await client.init();
     } catch (e) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
+      scaffoldKey.currentState!.showSnackBar(SnackBar(
         content: Text(prettifyError(e)),
         duration: const Duration(seconds: 3),
       ));
     }
 
     ClientProvider.of(context).setClient(client);
-    loadingContainerKey.currentState.hideProgress();
+    loadingContainerKey.currentState!.hideProgress();
 
     checkIntentDataAndAddTorrent();
   }
@@ -173,8 +173,8 @@ class _HomePageState extends State<_HomePageContent> {
           ),
           DeleteButton(Strings.homeDeleteTooltip, (deleteData) {
             deleteData
-                ? torrentListKey.currentState.deleteTorrentsWithData()
-                : torrentListKey.currentState.deleteTorrents();
+                ? torrentListKey.currentState!.deleteTorrentsWithData()
+                : torrentListKey.currentState!.deleteTorrents();
           }),
           LabelButton(repository, Strings.homeLabelTooltip, setLabel),
           getOverflowButton()),
@@ -321,7 +321,7 @@ class _HomePageState extends State<_HomePageContent> {
     persistSortMode();
   }
 
-  FilterSpec _tempFilterSpec;
+  late FilterSpec _tempFilterSpec;
 
   void showFilters() async {
     _tempFilterSpec = filterSpec;
@@ -342,19 +342,19 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void clearSelection() {
-    torrentListKey.currentState.clearSelection();
+    torrentListKey.currentState!.clearSelection();
   }
 
   void pauseTorrents() {
-    torrentListKey.currentState.pauseTorrents();
+    torrentListKey.currentState!.pauseTorrents();
   }
 
   void resumeTorrents() {
-    torrentListKey.currentState.resumeTorrents();
+    torrentListKey.currentState!.resumeTorrents();
   }
 
   void setLabel(String label) {
-    torrentListKey.currentState.setTorrentsLabel(label);
+    torrentListKey.currentState!.setTorrentsLabel(label);
   }
 
   Widget getOverflowButton() {
@@ -377,10 +377,10 @@ class _HomePageState extends State<_HomePageContent> {
   void onOverflowMenuClick(OverflowButtons overflowButton) {
     switch (overflowButton) {
       case OverflowButtons.selectAll:
-        torrentListKey.currentState.selectAll();
+        torrentListKey.currentState!.selectAll();
         return;
       case OverflowButtons.invertSelection:
-        torrentListKey.currentState.invertSelection();
+        torrentListKey.currentState!.invertSelection();
         return;
     }
   }
@@ -396,7 +396,9 @@ class _HomePageState extends State<_HomePageContent> {
   void checkIntentDataAndAddTorrent() async {
     try {
       var intentUrl = await PlatformChannel.getOpenedUrl();
-      addTorrentUrl(intentUrl);
+      if (intentUrl != null) {
+        addTorrentUrl(intentUrl);
+      }
       return;
     } on PlatformException {
       //nop
@@ -404,10 +406,12 @@ class _HomePageState extends State<_HomePageContent> {
 
     try {
       var intentFilePath = await PlatformChannel.getOpenedFile();
-      addTorrentFile(intentFilePath);
+      if (intentFilePath != null) {
+        addTorrentFile(intentFilePath);
+      }
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
+        scaffoldKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeErrorCouldNotOpenFile),
           duration: const Duration(seconds: 3),
         ));
@@ -486,7 +490,7 @@ class SpeedIndicator extends StatelessWidget {
           return FlatButton.icon(
               onPressed: this.onPressed,
               icon: Icon(iconData),
-              label: Text(snapshot.hasData ? snapshot.data : "0"));
+              label: Text(snapshot.hasData ? snapshot.data! : "0"));
         });
   }
 }

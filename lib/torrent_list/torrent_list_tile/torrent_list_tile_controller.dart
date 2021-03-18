@@ -26,7 +26,7 @@ class TorrentListItemController {
   static var ratioFormatter = NumberFormat("###0.0#");
   static var ratioFormatterPrecise = NumberFormat("###0.0##");
 
-  TorrentItem torrentItem;
+  late TorrentItem torrentItem;
 
   String getTotalSize(ByteSizeFormatter formatter) {
     return formatter.format(torrentItem.totalSize);
