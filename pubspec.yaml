@@ -9,22 +9,22 @@ dependencies:
     git:
       url: https://github.com/google/charts.git
       path: charts_flutter
-  convert: "^3.0.0"
+  convert: "^3.0.1"
 
   trireme_client:
     git:
       url: https://github.com/teal77/trireme_client.git
       ref: "v1.3.0"
 
-  rxdart: "0.26.0"
+  rxdart: "0.27.2"
 
   path: "^1.8.0"
-  path_provider: "^2.0.1"
-  shared_preferences: "^2.0.5"
-  sqflite: "^2.0.0+3"
+  path_provider: "^2.0.5"
+  shared_preferences: "^2.0.8"
+  sqflite: "^2.0.0+4"
 
-  cached_network_image: "^3.0.0-nullsafety"
-  flutter_svg: "^0.21.0-nullsafety.0"
+  cached_network_image: "^3.1.0"
+  flutter_svg: "^0.22.0"
   unicorndial: "^1.1.5"
 
   duration: "^3.0.6"
