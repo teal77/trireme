@@ -207,26 +207,28 @@ class _HomePageState extends State<_HomePageContent> {
         changeServer(s);
       }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8.0,
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            SpeedIndicator(
-                Icons.arrow_downward,
-                repository.getSessionDownloadSpeed(
-                    PreferenceProvider.of(context).byteSizeStyle), () {
-              _showNetworkSpeedBottomSheet(context, true, repository);
-            }),
-            SpeedIndicator(
-                Icons.arrow_upward,
-                repository.getSessionUploadSpeed(
-                    PreferenceProvider.of(context).byteSizeStyle), () {
-              _showNetworkSpeedBottomSheet(context, false, repository);
-            })
-          ],
-        ),
-      )),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                SpeedIndicator(
+                    Icons.arrow_downward,
+                    repository.getSessionDownloadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
+                  _showNetworkSpeedBottomSheet(context, true, repository);
+                }),
+                SpeedIndicator(
+                    Icons.arrow_upward,
+                    repository.getSessionUploadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
+                  _showNetworkSpeedBottomSheet(context, false, repository);
+                })
+              ],
+            ),
+          )),
       floatingActionButton: SpeedDial(
         icon: Icons.add,
         activeIcon: Icons.close,
@@ -237,18 +239,15 @@ class _HomePageState extends State<_HomePageContent> {
           SpeedDialChild(
               child: Icon(Icons.insert_drive_file),
               onTap: () => onAddTorrentClicked(AddTorrentKind.file),
-            label: Strings.homeAddTorrentByFile
-          ),
+              label: Strings.homeAddTorrentByFile),
           SpeedDialChild(
               child: Icon(Icons.info_outline),
               onTap: () => onAddTorrentClicked(AddTorrentKind.infohash),
-              label: Strings.homeAddTorrentByInfoHash
-          ),
+              label: Strings.homeAddTorrentByInfoHash),
           SpeedDialChild(
               child: Icon(Icons.link),
               onTap: () => onAddTorrentClicked(AddTorrentKind.url),
-              label: Strings.homeAddTorrentByUrl
-          )
+              label: Strings.homeAddTorrentByUrl)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
