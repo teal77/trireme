@@ -33,15 +33,15 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     lintOptions {
         disable 'InvalidPackage'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -67,6 +67,11 @@ android {
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
+        unsigned {
+            keyAlias = ""
+            keyPassword = ""
+            storePassword = ""
+        }
     }
 
     flavorDimensions "deploy"
@@ -79,7 +84,7 @@ android {
 
         fdroid {
             dimension "deploy"
-            signingConfig null
+            signingConfig signingConfigs.unsigned
         }
     }
 
@@ -97,5 +102,5 @@ flutter {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.0.0'
+    implementation 'androidx.core:core:1.6.0'
 }

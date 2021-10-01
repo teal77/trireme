@@ -85,13 +85,13 @@ class _NetworkSpeedGraph extends StatelessWidget {
       Series<int, int>(
         id: speedData.speedLabel,
         data: speedData.speeds,
-        domainFn: (_, index) => index,
+        domainFn: (_, index) => index ?? 0,
         measureFn: (value, _) => value,
       ),
       Series<int, int>(
         id: speedData.protocolSpeedLabel,
         data: speedData.protocolSpeeds,
-        domainFn: (_, index) => index,
+        domainFn: (_, index) => index ?? 0,
         measureFn: (value, _) => value,
       )
     ];
