@@ -35,7 +35,8 @@ import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 import 'package:trireme/settings/settings.dart';
-import 'package:unicorndial/unicorndial.dart';
+
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'filter.dart';
 import 'home_app_bar.dart';
@@ -226,44 +227,28 @@ class _HomePageState extends State<_HomePageContent> {
           ],
         ),
       )),
-      floatingActionButton: UnicornDialer(
-        hasNotch: true,
-        parentButton: Icon(Icons.add),
-        orientation: UnicornOrientation.VERTICAL,
-        childButtons: [
-          UnicornButton(
-            currentButton: FloatingActionButton(
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 3,
+        childPadding: const EdgeInsets.all(5),
+        spaceBetweenChildren: 4,
+        children: [
+          SpeedDialChild(
               child: Icon(Icons.insert_drive_file),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByFile,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.file),
-            ),
-            labelText: Strings.homeAddTorrentByFile,
-            hasLabel: true,
+              onTap: () => onAddTorrentClicked(AddTorrentKind.file),
+            label: Strings.homeAddTorrentByFile
           ),
-          UnicornButton(
-            currentButton: FloatingActionButton(
+          SpeedDialChild(
               child: Icon(Icons.info_outline),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByInfoHash,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.infohash),
-            ),
-            labelText: Strings.homeAddTorrentByInfoHash,
-            hasLabel: true,
+              onTap: () => onAddTorrentClicked(AddTorrentKind.infohash),
+              label: Strings.homeAddTorrentByInfoHash
           ),
-          UnicornButton(
-            currentButton: FloatingActionButton(
+          SpeedDialChild(
               child: Icon(Icons.link),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByUrl,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.url),
-            ),
-            labelText: Strings.homeAddTorrentByUrl,
-            hasLabel: true,
-          ),
+              onTap: () => onAddTorrentClicked(AddTorrentKind.url),
+              label: Strings.homeAddTorrentByUrl
+          )
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

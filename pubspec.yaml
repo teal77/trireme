@@ -25,7 +25,7 @@ dependencies:
 
   cached_network_image: "^3.1.0"
   flutter_svg: "^0.22.0"
-  unicorndial: "^1.1.5"
+  flutter_speed_dial: "^4.4.0+1"
 
   duration: "^3.0.6"
 
