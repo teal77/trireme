@@ -38,8 +38,17 @@ class _MyApp extends StatelessWidget {
       color: PreferenceProvider.of(context).appThemeColor,
       theme: ThemeData(
         primarySwatch: PreferenceProvider.of(context).appThemeColor,
-        brightness: PreferenceProvider.of(context).brightness
       ),
+      darkTheme: ThemeData(
+        primarySwatch: PreferenceProvider.of(context).appThemeColor,
+        brightness: Brightness.dark,
+        accentColor: PreferenceProvider.of(context).appThemeColor.shade200,
+        textSelectionHandleColor: PreferenceProvider.of(context).appThemeColor.shade400,
+        toggleableActiveColor: PreferenceProvider.of(context).appThemeColor.shade200,
+      ),
+      themeMode: PreferenceProvider.of(context).brightness == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light,
       home: HomePage(),
     );
   }
