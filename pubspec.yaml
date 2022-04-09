@@ -4,11 +4,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-#  charts_flutter: "^0.11.0"
-  charts_flutter:
-    git:
-      url: https://github.com/google/charts.git
-      path: charts_flutter
+  charts_flutter: "^0.12.0"
   convert: "^3.0.1"
 
   trireme_client:
@@ -16,18 +12,18 @@ dependencies:
       url: https://github.com/teal77/trireme_client.git
       ref: "v1.3.0"
 
-  rxdart: "0.27.2"
+  rxdart: "0.27.3"
 
   path: "^1.8.0"
-  path_provider: "^2.0.5"
-  shared_preferences: "^2.0.8"
-  sqflite: "^2.0.0+4"
+  path_provider: "^2.0.9"
+  shared_preferences: "^2.0.13"
+  sqflite: "^2.0.2"
 
-  cached_network_image: "^3.1.0"
-  flutter_svg: "^0.22.0"
-  flutter_speed_dial: "^4.4.0+1"
+  cached_network_image: "^3.2.0"
+  flutter_svg: "^1.0.3"
+  flutter_speed_dial: "^5.1.0"
 
-  duration: "^3.0.6"
+  duration: "^3.0.11"
 
 dev_dependencies:
   flutter_test:
@@ -35,7 +31,7 @@ dev_dependencies:
   pedantic: "^1.11.0"
 
 environment:
-  flutter: "2.5.2"
+  flutter: "2.10.4"
   sdk: '>=2.12.1 <3.0.0'
 
 # For information on the generic Dart part of this file, see the
