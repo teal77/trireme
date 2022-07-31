@@ -136,14 +136,14 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            OutlineButton(
+            OutlinedButton(
               onPressed: resetSpeed,
               child: Text(Strings.detailOptionsResetLabel),
             ),
             Container(
               width: 16.0,
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: setSelectedSpeed,
               child: Text(Strings.strOk),
             )
