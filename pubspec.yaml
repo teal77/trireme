@@ -19,7 +19,6 @@ dependencies:
   shared_preferences: "^2.0.15"
   sqflite: "^2.0.3"
 
-  cached_network_image: "^3.2.0"
   flutter_svg: "^1.1.1+1"
   flutter_speed_dial: "^6.0.0"
 

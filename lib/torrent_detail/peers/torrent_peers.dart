@@ -18,7 +18,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -66,8 +66,6 @@ class TorrentPeersState extends State<TorrentPeersPage>
 }
 
 class _TorrentPeersList extends StatelessWidget {
-  static const flagUrl = "http://www.countryflags.io/XX/flat/32.png";
-
   final Peers peers;
 
   _TorrentPeersList(this.peers);
@@ -99,11 +97,9 @@ class _TorrentPeersList extends StatelessWidget {
       if (peer.country.trim().isEmpty) {
         return placeholder;
       } else {
-        return CachedNetworkImage(
-          placeholder: (_,__) => placeholder,
-          errorWidget: (_,__, dynamic ___) => placeholder,
-          imageUrl: flagUrl.replaceFirst("XX", peer.country),
-          height: 24.0,
+        return SvgPicture.network(
+          "https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/${peer.country.toLowerCase()}.svg",
+          height: 18.0,
           width: 24.0,
         );
       }
@@ -131,7 +127,7 @@ class _TorrentPeersList extends StatelessWidget {
                       ),
                       Offstage(
                         offstage: peer.seed == 0,
-                        child: Text("Seed"),
+                        child: const Text("Seed"),
                       )
                     ],
                   ),
