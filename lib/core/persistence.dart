@@ -151,7 +151,7 @@ Future saveSortMode(SortCriteria sortMode) async {
 
 Future<SortCriteria> getSavedSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_sortModeKey) as String;
+  var sortStr = s.get(_sortModeKey) as String?;
   return SortCriteria.values.firstWhere((s) => s.toString() == sortStr,
       orElse: () => SortCriteria.name);
 }
