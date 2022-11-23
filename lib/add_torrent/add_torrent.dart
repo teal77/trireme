@@ -335,7 +335,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
                 onChanged: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     Navigator.pop(context, userInput);
@@ -375,13 +375,13 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
                 onChanged: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.detailOptionsResetLabel),
                   onPressed: () {
                     Navigator.pop(context, -1);
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     var n;
@@ -534,6 +534,6 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }

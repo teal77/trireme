@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
 }
 
 class _MyApp extends StatelessWidget {
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,16 +42,21 @@ class _MyApp extends StatelessWidget {
         primarySwatch: PreferenceProvider.of(context).appThemeColor,
       ),
       darkTheme: ThemeData(
-        primarySwatch: PreferenceProvider.of(context).appThemeColor,
-        brightness: Brightness.dark,
-        accentColor: PreferenceProvider.of(context).appThemeColor.shade200,
-        textSelectionHandleColor: PreferenceProvider.of(context).appThemeColor.shade400,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: PreferenceProvider.of(context).appThemeColor,
+          accentColor: PreferenceProvider.of(context).appThemeColor.shade200,
+          brightness: Brightness.dark,
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionHandleColor: PreferenceProvider.of(context).appThemeColor.shade400,
+        ),
         toggleableActiveColor: PreferenceProvider.of(context).appThemeColor.shade200,
       ),
       themeMode: PreferenceProvider.of(context).brightness == Brightness.dark
           ? ThemeMode.dark
           : ThemeMode.light,
-      home: HomePage(),
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      home: HomePage(scaffoldMessengerKey),
     );
   }
 }

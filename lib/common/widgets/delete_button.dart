@@ -61,13 +61,13 @@ Future<DeleteOptions?> showConfirmationDialog(BuildContext context) {
       builder: (context) => AlertDialog(
             content: _DeleteConfirmationDialogContent(_key),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(Strings.strcNo),
                 onPressed: () {
                   Navigator.pop(context, DeleteOptions.dontDelete);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text(Strings.strcYes),
                 onPressed: () {
                   Navigator.pop(

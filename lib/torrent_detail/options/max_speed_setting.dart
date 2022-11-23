@@ -203,7 +203,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
   }
 
   void showErrorSnackbar(Object error) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(prettifyError(error)),
         ));
   }

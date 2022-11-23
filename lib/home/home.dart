@@ -46,13 +46,21 @@ import 'navigation_drawer.dart';
 import 'network_speed_bottomsheet_content.dart';
 
 class HomePage extends StatelessWidget {
+  final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey;
+
+  const HomePage(this.rootScaffoldMessengerKey, {super.key});
+
   @override
   Widget build(BuildContext context) {
-    return _HomePageContent();
+    return _HomePageContent(rootScaffoldMessengerKey);
   }
 }
 
 class _HomePageContent extends StatefulWidget {
+  final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey;
+
+  const _HomePageContent(this.rootScaffoldMessengerKey);
+
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -62,7 +70,6 @@ class _HomePageContent extends StatefulWidget {
 class _HomePageState extends State<_HomePageContent> {
   var controller = HomePageController();
 
-  var scaffoldKey = GlobalKey<ScaffoldState>();
   var loadingContainerKey = GlobalKey<LoadingContainerState>();
   var torrentListKey = GlobalKey<TorrentListState>();
 
@@ -90,7 +97,7 @@ class _HomePageState extends State<_HomePageContent> {
     loadingContainerKey.currentState?.hideProgress();
 
     if (servers.isEmpty) {
-      scaffoldKey.currentState!.showSnackBar(SnackBar(
+      widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeAddServerSnackbarText),
           duration: Duration(days: 999),
           action: SnackBarAction(
@@ -98,7 +105,7 @@ class _HomePageState extends State<_HomePageContent> {
               onPressed: onAddServerClicked)));
       return;
     } else {
-      scaffoldKey.currentState!.removeCurrentSnackBar();
+      widget.rootScaffoldMessengerKey.currentState!.removeCurrentSnackBar();
     }
 
     loadingContainerKey.currentState!.showProgress();
@@ -128,7 +135,7 @@ class _HomePageState extends State<_HomePageContent> {
     try {
       await client.init();
     } catch (e) {
-      scaffoldKey.currentState!.showSnackBar(SnackBar(
+      widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(prettifyError(e)),
         duration: const Duration(seconds: 3),
       ));
@@ -149,7 +156,6 @@ class _HomePageState extends State<_HomePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       appBar: getHomeAppBar(
           context,
           selectedItemCount,
@@ -378,6 +384,8 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void checkIntentDataAndAddTorrent() async {
+    var messenger = ScaffoldMessenger.of(context);
+
     try {
       var intentUrl = await PlatformChannel.getOpenedUrl();
       if (intentUrl != null) {
@@ -395,7 +403,7 @@ class _HomePageState extends State<_HomePageContent> {
       }
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {
-        scaffoldKey.currentState!.showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(Strings.homeErrorCouldNotOpenFile),
           duration: const Duration(seconds: 3),
         ));
@@ -471,7 +479,7 @@ class SpeedIndicator extends StatelessWidget {
     return StreamBuilder<String>(
         stream: dataStream,
         builder: (context, snapshot) {
-          return FlatButton.icon(
+          return TextButton.icon(
               onPressed: this.onPressed,
               icon: Icon(iconData),
               label: Text(snapshot.hasData ? snapshot.data! : "0"));

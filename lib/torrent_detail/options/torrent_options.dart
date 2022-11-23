@@ -260,7 +260,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
   }
 
   void showErrorSnackbar(Object error) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(prettifyError(error)),
     ));
   }
@@ -277,7 +277,7 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
                 onChanged: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     Navigator.pop(context, userInput);
@@ -298,13 +298,13 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
                 onChanged: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.detailOptionsResetLabel),
                   onPressed: () {
                     Navigator.pop(context, -1);
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     num? n;

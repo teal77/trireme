@@ -76,7 +76,7 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
             child: child,
           )),
       child: TriremeBanner(Strings.homeDisconnectedInfo, [
-        FlatButton(
+        TextButton(
           onPressed: enableRetry ? onRetryPressed : null,
           child: Text(Strings.strcRetry),
         )

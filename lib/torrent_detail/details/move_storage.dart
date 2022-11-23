@@ -136,7 +136,7 @@ class _MoveStorageState extends State<_MoveStorage>
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(text),
         ));
   }

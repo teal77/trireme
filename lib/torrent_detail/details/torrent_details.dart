@@ -243,7 +243,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
     ));
   }

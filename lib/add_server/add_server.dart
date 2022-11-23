@@ -226,7 +226,7 @@ class _AddServerState extends State<_AddServerPageContent>
   }
 
   void showSnackBar(String message) {
-    Scaffold.of(context)
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text(message),

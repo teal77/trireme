@@ -60,7 +60,7 @@ class _ServerListState extends State<_ServerList> {
       await database.close();
       setState(() {});
     } catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(prettifyError(e)))
       );
     } finally {

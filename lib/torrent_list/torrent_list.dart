@@ -171,7 +171,7 @@ class TorrentListState extends State<TorrentList> with TriremeProgressBarMixin {
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(text),
         ));
   }

@@ -319,7 +319,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
         selectedFiles.clear();
       });
     } catch (e) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(
           content: Text(prettifyError(e)),
@@ -345,7 +345,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     try {
       await controller.renameFile(widget.torrentId, fileForRename, newName);
     } catch (e) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(
           content: Text(prettifyError(e)),
@@ -367,7 +367,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
               onChanged: (s) => text = s,
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(Strings.strOk),
                 onPressed: () {
                   Navigator.pop(context, text);

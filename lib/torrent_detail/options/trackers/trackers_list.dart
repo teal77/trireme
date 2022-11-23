@@ -347,7 +347,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
                 controller: textController,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     Navigator.pop(context, textController.text);
