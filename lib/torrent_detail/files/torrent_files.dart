@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -146,7 +147,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     super.didUpdateWidget(oldWidget);
     currentDirectory = currentDirectory.isRoot
         ? widget.root
-        : widget.root.findChild(currentDirectory.path);
+        : widget.root.findChild(currentDirectory.path)!;
   }
 
   @override
@@ -277,7 +278,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
   }
 
   void onParentClicked() {
-    onFileClicked(currentDirectory.parent);
+    onFileClicked(currentDirectory.parent!);
     setState(() {
       selectedFiles.clear();
     });

@@ -262,7 +262,7 @@ Future saveFileSortMode(SortBy sortMode) async {
 
 Future<SortBy> getSavedFileSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_fileSortModeKey) as String;
+  var sortStr = s.get(_fileSortModeKey) as String?;
   return SortBy.values
       .firstWhere((s) => s.toString() == sortStr, orElse: () => SortBy.name);
 }

@@ -17,6 +17,7 @@
  */
 
 import 'dart:async';
+import 'package:collection/collection.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -30,22 +31,22 @@ class File {
   late int priorityInt;
   late Priority priority;
   late double progress;
-  late File parent;
+  late File? parent = null;
   late List<File> children = [];
 
   File(this.name);
 
-  bool get isFolder => children != null && children.isNotEmpty;
+  bool get isFolder => children.isNotEmpty;
 
-  bool get isFile => children == null || children.isEmpty;
+  bool get isFile => children.isEmpty;
 
   bool get isRoot => parent == null;
 
-  File getChild(String name) {
-    return children.firstWhere((f) => f.name == name);
+  File? getChild(String name) {
+    return children.firstWhereOrNull((f) => f.name == name);
   }
 
-  File findChild(String path) {
+  File? findChild(String path) {
     var pathSegments = path.split("/");
     if (path.startsWith("/")) pathSegments = pathSegments.skip(1).toList();
 
@@ -54,7 +55,7 @@ class File {
     } else {
       var immediateChild = pathSegments.first;
       var restOfPath = pathSegments.skip(1).join("/");
-      return getChild(immediateChild).findChild(restOfPath);
+      return getChild(immediateChild)?.findChild(restOfPath);
     }
   }
 
@@ -102,7 +103,7 @@ File convertToFileTree(TorrentFiles torrentFiles) {
         parent.addChild(File(segment));
         child = parent.getChild(segment);
       }
-      parent = child;
+      parent = child!;
     }
 
     var file = File(fileName);

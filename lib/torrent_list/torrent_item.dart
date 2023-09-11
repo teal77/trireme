@@ -85,7 +85,7 @@ class TorrentItem {
         torrentListItem.isFinished,
         dateAdded,
         seedingTime,
-        torrentListItem.label,
+        torrentListItem.label ?? "",
         torrentListItem.trackerHost);
   }
 
