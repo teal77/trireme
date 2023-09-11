@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:trireme/common/common.dart';
 
@@ -52,9 +53,9 @@ AppBar getHomeAppBar(
         overflowButton,
       ],
       backgroundColor: theme.primaryColor,
-      brightness: theme.primaryColorBrightness,
       iconTheme: theme.iconTheme,
-      textTheme: theme.textTheme,
+      toolbarTextStyle: theme.textTheme.bodyMedium,
+      titleTextStyle: theme.textTheme.titleLarge,
     );
   }
 }

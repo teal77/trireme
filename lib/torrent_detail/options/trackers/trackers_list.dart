@@ -100,9 +100,9 @@ class _TrackerListState extends State<TrackerList>
               ],
               title: Text(selectedItemCount.toString()),
               backgroundColor: theme.backgroundColor,
-              textTheme: theme.textTheme,
+              toolbarTextStyle: theme.textTheme.bodyMedium,
+              titleTextStyle: theme.textTheme.titleLarge,
               iconTheme: theme.iconTheme,
-              brightness: theme.brightness,
             ),
       body: FutureBuilder(
         future: repository.getTorrentOptionsUpdates(widget.torrentId).first,
