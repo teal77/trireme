@@ -87,22 +87,25 @@ class _TorrentPeersList extends StatelessWidget {
   }
 
   Widget getListTileForPeer(BuildContext context, Peer peer) {
-    Widget placeholder = Container(
-      color: Colors.transparent,
-      height: 24.0,
-      width: 24.0,
-    );
-
     Widget getCountryFlag() {
-      if (peer.country.trim().isEmpty) {
-        return placeholder;
-      } else {
-        return SvgPicture.network(
-          "https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/${peer.country.toLowerCase()}.svg",
-          height: 18.0,
+      return Container(
+          color: Colors.transparent,
+          height: 24.0,
           width: 24.0,
-        );
-      }
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Text(
+                peer.country
+                    .toUpperCase()
+                    .split('')
+                    .map((char) => 127397 + char.codeUnitAt(0))
+                    .map((code) => String.fromCharCode(code))
+                    .join(),
+                style: TextStyle(fontSize: 18)
+              )
+            ],
+          ));
     }
 
     return Padding(
