@@ -19,6 +19,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_detail/options/trackers/trackers_list.dart';
 
 import 'package:trireme_client/deserialization.dart';
@@ -271,10 +272,22 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
-              content: TextField(
-                keyboardType: TextInputType.url,
-                autocorrect: false,
-                onChanged: (s) => userInput = s,
+              content: Autocomplete<String>(
+                optionsBuilder: (_) => getSavedTorrentDestList(),
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController controller,
+                    FocusNode focusNode,
+                    VoidCallback onFieldSubmitted) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    keyboardType: TextInputType.url,
+                    autocorrect: false,
+                    onChanged: (s) => userInput = s,
+                    onSubmitted: (_) => onFieldSubmitted,
+                  );
+                },
+                onSelected: (s) => userInput = s,
               ),
               actions: <Widget>[
                 TextButton(
@@ -354,6 +367,9 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
     var path = await showPathInputDialog(Strings.detailMoveCompletedPath);
     if (path != null && path.isNotEmpty) {
       setMoveCompletedPath(path);
+      var torrentDests = await getSavedTorrentDestList();
+      var newTorrentDests = controller.makeUpdatedTorrentDestList(path, torrentDests);
+      await saveTorrentDestList(newTorrentDests);
     }
   }
 

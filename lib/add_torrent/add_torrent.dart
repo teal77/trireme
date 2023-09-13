@@ -26,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
+import '../core/persistence.dart';
 import 'file_picker.dart';
 
 class AddTorrentPage extends StatefulWidget {
@@ -182,9 +183,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
               maxLines: 1,
               onChanged: (s) {
                 torrentInfoHash = s;
-                setState(() {
-
-                });
+                setState(() {});
               },
             ),
           ),
@@ -329,10 +328,22 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
-              content: TextField(
-                keyboardType: TextInputType.url,
-                autocorrect: false,
-                onChanged: (s) => userInput = s,
+              content: Autocomplete<String>(
+                optionsBuilder: (_) => getSavedTorrentDestList(),
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController controller,
+                    FocusNode focusNode,
+                    VoidCallback onFieldSubmitted) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    keyboardType: TextInputType.url,
+                    autocorrect: false,
+                    onChanged: (s) => userInput = s,
+                    onSubmitted: (_) => onFieldSubmitted,
+                  );
+                },
+                onSelected: (s) => userInput = s,
               ),
               actions: <Widget>[
                 TextButton(
@@ -351,15 +362,22 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       setState(() {
         downloadPath = path;
       });
+      var torrentDests = await getSavedTorrentDestList();
+      var newTorrentDests = makeUpdatedTorrentDestList(path, torrentDests);
+      await saveTorrentDestList(newTorrentDests);
     }
   }
 
   void showMoveCompletedPathDialog() async {
-    var path = await showPathInputDialog(Strings.addTorrentMoveCompletedPathTitle);
+    var path =
+        await showPathInputDialog(Strings.addTorrentMoveCompletedPathTitle);
     if (path != null) {
       setState(() {
         moveCompletedPath = path;
       });
+      var torrentDests = await getSavedTorrentDestList();
+      var newTorrentDests = makeUpdatedTorrentDestList(path, torrentDests);
+      await saveTorrentDestList(newTorrentDests);
     }
   }
 
@@ -535,5 +553,13 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
 
   void showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  List<String> makeUpdatedTorrentDestList(
+      String latestDest, List<String> oldList) {
+    var newList = oldList.toList();
+    newList.removeWhere((e) => e == latestDest);
+    newList.insert(0, latestDest);
+    return newList.take(10).toList();
   }
 }

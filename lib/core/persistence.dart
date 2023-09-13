@@ -278,3 +278,17 @@ Future<bool> getSavedFileSortReverseMode() async {
   var s = await SharedPreferences.getInstance();
   return s.getBool(_fileSortReverseKey) ?? false;
 }
+
+const _torrentDestinationsKey = "torrentDestinations";
+
+Future saveTorrentDestList(List<String> dests) async {
+  var s = await SharedPreferences.getInstance();
+  await s.setStringList(_torrentDestinationsKey, dests);
+}
+
+Future<List<String>> getSavedTorrentDestList() async {
+  var s = await SharedPreferences.getInstance();
+  return (s.getStringList(_torrentDestinationsKey) ?? List.empty())
+      .where((s) => s.isNotEmpty)
+      .toList();
+}
