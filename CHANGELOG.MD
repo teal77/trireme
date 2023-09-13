@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0-beta] - 2023-09-13
+### Added
+- Remember entries in torrent path dialogs and display them in an auto complete list
+
+### Fixed
+- White window background color before theme loads in
+- Missing notch near bottom app bar add icon
+- Dark mode not using accent colors
+- Flags not displaying because countryflags.io went down (F)
+
 ## [1.3.0] - 2020-09-25
 ### Added
 - Add torrents by infohash
