@@ -480,9 +480,13 @@ class SpeedIndicator extends StatelessWidget {
         stream: dataStream,
         builder: (context, snapshot) {
           return TextButton.icon(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
               onPressed: this.onPressed,
               icon: Icon(iconData),
-              label: Text(snapshot.hasData ? snapshot.data! : "0"));
+              label: Text(snapshot.hasData ? snapshot.data ?? "0" : "0"));
         });
   }
 }
