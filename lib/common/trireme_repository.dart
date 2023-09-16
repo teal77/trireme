@@ -122,9 +122,9 @@ class TriremeRepository {
     _errorStream.close();
   }
 
-  Future<Response<SessionStatus>>? _getSessionStatus() {
+  Future<Response<SessionStatus>> _getSessionStatus() {
     if (_client == null || _client!.isDisposed) {
-      return null;
+      return Future.error("Client not initialized");
     } else {
       return _client!.getSessionStatus();
     }
@@ -145,9 +145,8 @@ class TriremeRepository {
   }
 
   Stream<SessionStatus> _getSessionStatusStream() {
-    var sessionStatus = _getSessionStatus();
     _sessionStatusStream ??= _clockStream
-          .flatMap((_) => Stream.fromFutures([ if (sessionStatus != null) sessionStatus]))
+          .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
           .retry()
           .syncWithClockStream(_clockStream)
           .doOnError((e, _) => _errorStream.add(e))
