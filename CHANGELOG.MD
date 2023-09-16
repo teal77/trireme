@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0-beta.1] - 2023-09-16
+### Fixed
+- Fix broken session speed indicator
+- Fix wrong text color for session speed indicator
+- Fix home app bar theme color in selection mode
+
 ## [1.4.0-beta] - 2023-09-13
 ### Added
 - Remember entries in torrent path dialogs and display them in an auto complete list
