@@ -32,7 +32,6 @@ AppBar getHomeAppBar(
     Widget deleteTorrentsButton,
     Widget labelTorrentsButton,
     Widget overflowButton) {
-
   var isSelectionMode = selectedItemCount > 0;
   if (!isSelectionMode) {
     return AppBar(
@@ -41,7 +40,9 @@ AppBar getHomeAppBar(
     );
   } else {
     var isDark = Theme.of(context).brightness == Brightness.dark;
-    var theme = isDark ? ThemeData.light() : ThemeData.dark();
+    var theme = isDark
+        ? ThemeData(primarySwatch: PreferenceProvider.of(context).appThemeColor)
+        : ThemeData.dark();
     return AppBar(
       leading: clearSelectionButton,
       title: Text(selectedItemCount.toString()),
