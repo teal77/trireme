@@ -67,12 +67,13 @@ class _PreferenceProviderState extends State<PreferenceProvider> {
 
   void readSavedPreferences() async {
     var savedColor = await getSavedAppColor();
-    var savedBrightness = await getSavedBrightness();
     var savedByteSizeStyle = await getSavedByteSizeStyle();
+    var savedThemeMode = await getSavedThemeMode();
     setPreference(_preferences.apply(
         byteSizeStyle: savedByteSizeStyle,
         appThemeColor: savedColor,
-        brightness: savedBrightness));
+        themeMode: savedThemeMode,
+    ));
   }
 }
 

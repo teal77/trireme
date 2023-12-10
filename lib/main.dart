@@ -52,9 +52,7 @@ class _MyApp extends StatelessWidget {
         ),
         toggleableActiveColor: PreferenceProvider.of(context).appThemeColor.shade200,
       ),
-      themeMode: PreferenceProvider.of(context).brightness == Brightness.dark
-          ? ThemeMode.dark
-          : ThemeMode.light,
+      themeMode: PreferenceProvider.of(context).themeMode,
       scaffoldMessengerKey: scaffoldMessengerKey,
       home: HomePage(scaffoldMessengerKey),
     );

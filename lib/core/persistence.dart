@@ -227,6 +227,7 @@ Future<MaterialColor?> getSavedAppColor() async {
       .firstWhere((c) => c?.shade500.value == value, orElse: () => null);
 }
 
+//todo remove this unused pref after some time
 const _appBrightnessKey = "isDark";
 
 Future saveBrightness(bool isDark) async {
@@ -238,6 +239,28 @@ Future<Brightness> getSavedBrightness() async {
   var s = await SharedPreferences.getInstance();
   var isDark = s.getBool(_appBrightnessKey) ?? false;
   return isDark ? Brightness.dark : Brightness.light;
+}
+
+const _appThemeModeKey = "themeMode";
+
+Future saveThemeMode(ThemeMode themeMode) async {
+  var s = await SharedPreferences.getInstance();
+  await s.setString(_appThemeModeKey, themeMode.name);
+}
+
+Future<ThemeMode> getSavedThemeMode() async {
+  var s = await SharedPreferences.getInstance();
+  var themeModeStr = s.getString(_appThemeModeKey);
+  if (themeModeStr == null) {
+    var brightness = await getSavedBrightness();
+    if (brightness == Brightness.light) {
+      return ThemeMode.light;
+    } else {
+      return ThemeMode.dark;
+    }
+  } else {
+    return ThemeMode.values.byName(themeModeStr);
+  }
 }
 
 const _isIecUnits = "isIec";

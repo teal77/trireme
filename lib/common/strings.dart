@@ -208,6 +208,9 @@ class Strings {
   static String settingsAppearance = "Appearance";
   static String settingsAppThemeColor = "App theme color";
   static String settingsDarkMode = "Dark Mode";
+  static String settingsDarkModeSystem = "Follow system";
+  static String settingsDarkModeAlwaysLight = "Always light";
+  static String settingsDarkModeAlwaysDark = "Always dark";
   static String settingsByteSizeStyle = "Byte size unit";
   static String settingsKibibytes = "Kibibytes (KiB, MiB, GiB)";
   static String settingsKibibytesInfo = "1024 based";

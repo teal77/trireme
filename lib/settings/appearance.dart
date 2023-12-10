@@ -40,14 +40,14 @@ class AppearanceSettings extends StatefulWidget {
 
 class _AppearanceSettingsState extends State<AppearanceSettings> {
   late MaterialColor appThemeColor;
-  bool isDark = false;
   late ByteSizeStyle byteSizeStyle;
+  late ThemeMode themeMode;
 
   @override
   Widget build(BuildContext context) {
     appThemeColor = PreferenceProvider.of(context).appThemeColor;
-    isDark = PreferenceProvider.of(context).brightness == Brightness.dark;
     byteSizeStyle = PreferenceProvider.of(context).byteSizeStyle;
+    themeMode = PreferenceProvider.of(context).themeMode;
 
     return ListView(
       children: <Widget>[
@@ -61,11 +61,22 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
           },
         ),
         getDivider(),
-        SwitchListTile(
-          title: Text(Strings.settingsDarkMode),
-          value: isDark,
-          onChanged: ((value) => {toggleDarkMode(value)}),
-        ),
+        getSubHeader(Strings.settingsDarkMode),
+        RadioListTile(
+            value: ThemeMode.system,
+            groupValue: themeMode,
+            title: Text(Strings.settingsDarkModeSystem),
+            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
+        RadioListTile(
+            value: ThemeMode.light,
+            groupValue: themeMode,
+            title: Text(Strings.settingsDarkModeAlwaysLight),
+            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
+        RadioListTile(
+            value: ThemeMode.dark,
+            groupValue: themeMode,
+            title: Text(Strings.settingsDarkModeAlwaysDark),
+            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
         getDivider(),
         getSubHeader(Strings.settingsByteSizeStyle),
         RadioListTile(
@@ -123,10 +134,10 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
     }
   }
 
-  void toggleDarkMode(bool isDark) async {
-    await saveBrightness(isDark);
-    var newPreference = PreferenceProvider.of(context)
-        .apply(brightness: isDark ? Brightness.dark : Brightness.light);
+  void setThemeMode(ThemeMode? themeMode) async {
+    if (themeMode == null) return;
+    await saveThemeMode(themeMode);
+    var newPreference = PreferenceProvider.of(context).apply(themeMode: themeMode);
     PreferenceProvider.updatePreference(context, newPreference);
   }
 
