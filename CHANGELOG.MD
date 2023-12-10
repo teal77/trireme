@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0-beta.2] - 2023-12-10
+### Added
+- Dark mode setting for following system theme
+
+### Fixed
+- Fix broken torrent list when trying to display queued torrents
+
 ## [1.4.0-beta.1] - 2023-09-16
 ### Fixed
 - Fix broken session speed indicator
