@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.4.0] - 2023-12-25
+### Added
+- Remember entries in torrent path dialogs and display them in an auto complete list
+- Dark mode setting for following system theme
+- Monochrome app icon
+
+### Fixed
+- White window background color before theme loads in
+- Missing notch near bottom app bar add icon
+- Dark mode not using accent colors
+- Flags not displaying because countryflags.io went down (F)
 
 ## [1.4.0-beta.2] - 2023-12-10
 ### Added
