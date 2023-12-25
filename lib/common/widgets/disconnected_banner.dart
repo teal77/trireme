@@ -35,9 +35,9 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
     with SingleTickerProviderStateMixin {
   static const _tag = "_DisconnectedBannerState";
 
-  AnimationController controller;
-  TriremeRepository repository;
-  StreamSubscription subscription;
+  late AnimationController controller;
+  late TriremeRepository repository;
+  late StreamSubscription subscription;
   var isBannerShowing = false;
   var enableRetry = true;
 
@@ -46,7 +46,6 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
     super.initState();
     controller = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
-    checkConnectionAndShowBanner();
   }
 
   @override
@@ -77,7 +76,7 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
             child: child,
           )),
       child: TriremeBanner(Strings.homeDisconnectedInfo, [
-        FlatButton(
+        TextButton(
           onPressed: enableRetry ? onRetryPressed : null,
           child: Text(Strings.strcRetry),
         )

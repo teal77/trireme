@@ -17,9 +17,6 @@
  */
 
 import 'package:flutter/material.dart';
-
-import 'package:meta/meta.dart';
-
 import 'package:trireme_client/trireme_client.dart';
 
 import '../trireme_repository.dart';
@@ -28,7 +25,7 @@ import 'client_provider.dart';
 class RepositoryProvider extends StatelessWidget {
   final Widget child;
 
-  RepositoryProvider({Key key, @required this.child}) : super(key: key);
+  RepositoryProvider({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +39,21 @@ class RepositoryProvider extends StatelessWidget {
   static TriremeRepository repositoryOf(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
-        .state
-        .repository;
+        !.state
+        .repository!;
   }
 
   static RepositoryProviderState of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
-        .state;
+        !.state;
   }
 }
 
 class _RepositoryProviderInternal extends StatefulWidget {
   final Widget child;
 
-  _RepositoryProviderInternal({Key key, @required this.child})
+  _RepositoryProviderInternal({Key? key, required this.child})
       : super(key: key);
 
   @override
@@ -67,8 +64,8 @@ class _RepositoryProviderInternal extends StatefulWidget {
 
 class RepositoryProviderState extends State<_RepositoryProviderInternal>
     with WidgetsBindingObserver {
-  TriremeRepository repository;
-  TriremeClient _client;
+  TriremeRepository? repository;
+  TriremeClient? _client;
 
   void setRepository(TriremeRepository repository) {
     setState(() {
@@ -80,14 +77,14 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
   void initState() {
     super.initState();
     repository ??= TriremeRepository();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _client = ClientProvider.of(context).client;
-    repository.client = _client;
+    repository?.client = _client;
   }
 
   @override
@@ -102,16 +99,16 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      repository.pause();
+      repository?.pause();
     } else if (state == AppLifecycleState.resumed) {
-      repository.resume();
+      repository?.resume();
     }
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    repository.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+    repository?.dispose();
     super.dispose();
   }
 }
@@ -119,7 +116,7 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
 class _RepositoryProviderInherited extends InheritedWidget {
   final RepositoryProviderState state;
 
-  _RepositoryProviderInherited({Key key, this.state, Widget child})
+  _RepositoryProviderInherited({Key? key, required this.state, required Widget child})
       : super(key: key, child: child);
 
   @override

@@ -56,7 +56,7 @@ class _MaxSpeedSetting extends StatefulWidget {
   final bool isDownloadSpeed;
 
   _MaxSpeedSetting(
-      {Key key, this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed})
+      {Key? key, required this.torrentId, required this.currentMaxSpeed, required this.isDownloadSpeed})
       : super(key: key);
 
   @override
@@ -67,10 +67,10 @@ class _MaxSpeedSetting extends StatefulWidget {
 
 class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
     with TriremeProgressBarMixin {
-  SpeedUnit userSelectedUnit;
+  late SpeedUnit userSelectedUnit;
 
-  TextEditingController textEditingController;
-  TriremeRepository repository;
+  late TextEditingController textEditingController;
+  late TriremeRepository repository;
 
   @override
   void initState() {
@@ -122,7 +122,9 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
               value: userSelectedUnit,
               onChanged: (v) {
                 setState(() {
-                  userSelectedUnit = v;
+                  if (v != null) {
+                    userSelectedUnit = v;
+                  }
                 });
               },
             ),
@@ -134,14 +136,14 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            OutlineButton(
+            OutlinedButton(
               onPressed: resetSpeed,
               child: Text(Strings.detailOptionsResetLabel),
             ),
             Container(
               width: 16.0,
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: setSelectedSpeed,
               child: Text(Strings.strOk),
             )
@@ -151,8 +153,8 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
     );
   }
 
-  int getSpeed() {
-    int userEnteredSpeed;
+  int? getSpeed() {
+    int? userEnteredSpeed;
     try {
       if (textEditingController.text.isNotEmpty) {
         userEnteredSpeed = int.parse(textEditingController.text);
@@ -169,7 +171,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
       SpeedUnit.kbps: 1,
       SpeedUnit.mbps: 1000,
     };
-    var speedInKbps = speedMultipliers[userSelectedUnit] * userEnteredSpeed;
+    var speedInKbps = speedMultipliers[userSelectedUnit]! * userEnteredSpeed;
     return speedInKbps;
   }
 
@@ -178,7 +180,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
   }
 
   void setSelectedSpeed() {
-    int newSpeed = getSpeed();
+    var newSpeed = getSpeed();
     if (newSpeed != null) {
       setSpeed(newSpeed);
     }
@@ -201,7 +203,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
   }
 
   void showErrorSnackbar(Object error) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(prettifyError(error)),
         ));
   }

@@ -26,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
+import '../core/persistence.dart';
 import 'file_picker.dart';
 
 class AddTorrentPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class AddTorrentState extends State<AddTorrentPage> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              key.currentState.addTorrent();
+              key.currentState?.addTorrent();
             },
           )
         ],
@@ -75,7 +76,7 @@ class _AddTorrent extends StatefulWidget {
 class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   static const _tag = "_AddTorrentState";
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   String torrentUrl = "";
   String torrentFileName = "";
@@ -90,8 +91,8 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   bool addPaused = false;
   bool prioritiseFirstLast = false;
 
-  TextEditingController urlEditController;
-  String selectedFilePath;
+  late TextEditingController urlEditController;
+  String? selectedFilePath;
 
   @override
   void initState() {
@@ -182,9 +183,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
               maxLines: 1,
               onChanged: (s) {
                 torrentInfoHash = s;
-                setState(() {
-
-                });
+                setState(() {});
               },
             ),
           ),
@@ -313,8 +312,8 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   String getTorrentFileNameFromPath() {
-    if (selectedFilePath == null || selectedFilePath.isEmpty) return "";
-    var tempName = selectedFilePath.split("/").last;
+    if (selectedFilePath == null || selectedFilePath!.isEmpty) return "";
+    var tempName = selectedFilePath!.split("/").last;
     if (tempName.contains(".torrent")) {
       return tempName.replaceRange(
           tempName.lastIndexOf(".torrent"), null, ".torrent");
@@ -323,19 +322,31 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     }
   }
 
-  Future<String> showPathInputDialog(String title) async {
-    String userInput;
-    return showDialog(
+  Future<String?> showPathInputDialog(String title) async {
+    var userInput = '';
+    return showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
-              content: TextField(
-                keyboardType: TextInputType.url,
-                autocorrect: false,
-                onChanged: (s) => userInput = s,
+              content: Autocomplete<String>(
+                optionsBuilder: (_) => getSavedTorrentDestList(),
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController controller,
+                    FocusNode focusNode,
+                    VoidCallback onFieldSubmitted) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    keyboardType: TextInputType.url,
+                    autocorrect: false,
+                    onChanged: (s) => userInput = s,
+                    onSubmitted: (_) => onFieldSubmitted,
+                  );
+                },
+                onSelected: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     Navigator.pop(context, userInput);
@@ -346,27 +357,32 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   void showDownloadPathDialog() async {
-    String path =
-        await showPathInputDialog(Strings.addTorrentDownloadPathTitle);
+    var path = await showPathInputDialog(Strings.addTorrentDownloadPathTitle);
     if (path != null) {
       setState(() {
         downloadPath = path;
       });
+      var torrentDests = await getSavedTorrentDestList();
+      var newTorrentDests = makeUpdatedTorrentDestList(path, torrentDests);
+      await saveTorrentDestList(newTorrentDests);
     }
   }
 
   void showMoveCompletedPathDialog() async {
-    String path =
+    var path =
         await showPathInputDialog(Strings.addTorrentMoveCompletedPathTitle);
     if (path != null) {
       setState(() {
         moveCompletedPath = path;
       });
+      var torrentDests = await getSavedTorrentDestList();
+      var newTorrentDests = makeUpdatedTorrentDestList(path, torrentDests);
+      await saveTorrentDestList(newTorrentDests);
     }
   }
 
-  Future<num> showNumberInputDialog(String title, {String hintText}) async {
-    String userInput;
+  Future<num?> showNumberInputDialog(String title, {String? hintText}) async {
+    var userInput;
     num n = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -377,16 +393,16 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
                 onChanged: (s) => userInput = s,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.detailOptionsResetLabel),
                   onPressed: () {
                     Navigator.pop(context, -1);
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
-                    num n;
+                    var n;
                     try {
                       if (userInput != null && userInput.isNotEmpty) {
                         n = num.parse(userInput);
@@ -407,49 +423,49 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   void showMaxDownloadSpeedDialog() async {
-    int i = (await showNumberInputDialog(
+    var i = (await showNumberInputDialog(
             Strings.addTorrentSelectDownloadSpeedTitle,
             hintText: Strings.addTorrentDownloadSpeedHint))
         ?.toInt();
     if (i != null) {
       if (i < 0) i = -1;
       setState(() {
-        downloadSpeedLimit = i;
+        downloadSpeedLimit = i!;
       });
     }
   }
 
   void showMaxUploadSpeedDialog() async {
-    int i = (await showNumberInputDialog(
+    var i = (await showNumberInputDialog(
             Strings.addTorrentSelectUploadSpeedTitle,
             hintText: Strings.addTorrentUploadSpeedHint))
         ?.toInt();
     if (i != null) {
       if (i < 0) i = -1;
       setState(() {
-        uploadSpeedLimit = i;
+        uploadSpeedLimit = i!;
       });
     }
   }
 
   void showMaxConnectionDialog() async {
-    int i = (await showNumberInputDialog(Strings.detailMaxConnectionTitle))
+    var i = (await showNumberInputDialog(Strings.detailMaxConnectionTitle))
         ?.toInt();
     if (i != null) {
       if (i < 0) i = -1;
       setState(() {
-        connectionLimit = i;
+        connectionLimit = i!;
       });
     }
   }
 
   void showMaxUploadSlotsDialog() async {
-    int i = (await showNumberInputDialog(Strings.detailMaxUploadSlotsTitle))
+    var i = (await showNumberInputDialog(Strings.detailMaxUploadSlotsTitle))
         ?.toInt();
     if (i != null) {
       if (i < 0) i = -1;
       setState(() {
-        uploadSlotLimit = i;
+        uploadSlotLimit = i!;
       });
     }
   }
@@ -472,7 +488,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     }
   }
 
-  void addTorrentUrl() async {
+  Future addTorrentUrl() async {
     var torrentUrl = urlEditController.text;
     if (torrentUrl.isEmpty) {
       return;
@@ -480,12 +496,12 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     await repository.addTorrentUrl(torrentUrl, getTorrentOptions());
   }
 
-  void addTorrentFile() async {
-    if (selectedFilePath.isEmpty) {
+  Future addTorrentFile() async {
+    if (selectedFilePath?.isEmpty ?? false) {
       return;
     }
     var fileName = torrentFileName;
-    var torrentFile = File(selectedFilePath);
+    var torrentFile = File(selectedFilePath!);
     if (await torrentFile.exists()) {
       var fileContent = await torrentFile.readAsBytes();
       var fileDump = base64.encode(fileContent);
@@ -495,7 +511,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
     }
   }
 
-  void addTorrentHash() async {
+  Future addTorrentHash() async {
     var torrentUrl = formMagnetUrlFromHash();
     if (torrentUrl.isEmpty) {
       return;
@@ -536,6 +552,14 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  List<String> makeUpdatedTorrentDestList(
+      String latestDest, List<String> oldList) {
+    var newList = oldList.toList();
+    newList.removeWhere((e) => e == latestDest);
+    newList.insert(0, latestDest);
+    return newList.take(10).toList();
   }
 }

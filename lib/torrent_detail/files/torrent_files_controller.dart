@@ -31,10 +31,10 @@ class TorrentFileListController {
     Priority.mixed: Strings.detailFileMixed,
   };
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   String getFilePriority(File file) {
-    return priorities[file.priority];
+    return priorities[file.priority]!;
   }
 
   Future setPriorityForFiles(List<File> files, List<int> currentPriorities,
@@ -68,14 +68,14 @@ class TorrentFileListController {
     var currentDir = file;
     while (!currentDir.isRoot) {
       segments.add(currentDir.name);
-      currentDir = currentDir.parent;
+      currentDir = currentDir.parent!;
     }
     return "/${segments.reversed.join("/")}";
   }
 
   Future renameFile(String torrentId, File file, String newName) {
     var oldPath = file.path.substring(1); //we need to skip the first "/"
-    var newPath = "${file.parent.path}/$newName".substring(1);
+    var newPath = "${file.parent?.path}/$newName".substring(1);
     if (file.isFolder) {
       return repository.renameFolder(torrentId, oldPath, newPath);
     } else {

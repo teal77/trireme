@@ -46,7 +46,7 @@ class TorrentDetailsPage extends StatefulWidget {
 class TorrentDetailState extends State<TorrentDetailsPage>
     with TriremeProgressBarMixin {
   TorrentDetailsController controller = TorrentDetailsController();
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -62,9 +62,9 @@ class TorrentDetailState extends State<TorrentDetailsPage>
         if (snapshot.connectionState == ConnectionState.active) {
           hideProgressBar();
           if (snapshot.hasData) {
-            return _TorrentDetailContent(widget.torrentId, snapshot.data);
+            return _TorrentDetailContent(widget.torrentId, snapshot.data!);
           } else if (snapshot.hasError) {
-            return ErrorPage(snapshot.error);
+            return ErrorPage(snapshot.error!);
           }
         } else {
           showProgressBar();
@@ -92,7 +92,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
         TriremeProgressBarMixin,
         TabControllerAnimationProviderMixin,
         SingleTickerProviderStateMixin {
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -243,7 +243,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
     ));
   }
@@ -270,7 +270,7 @@ class _TorrentDetail extends StatelessWidget {
               ),
               Offstage(
                 offstage:
-                torrentDetail.label == null || torrentDetail.label.isEmpty,
+                torrentDetail.label == null || torrentDetail.label!.isEmpty,
                 child: Container(
                   decoration: BoxDecoration(color: Colors.black),
                   padding: const EdgeInsets.all(4.0),

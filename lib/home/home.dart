@@ -35,7 +35,8 @@ import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
 import 'package:trireme/torrent_list/torrent_list_controller.dart';
 import 'package:trireme/settings/settings.dart';
-import 'package:unicorndial/unicorndial.dart';
+
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'filter.dart';
 import 'home_app_bar.dart';
@@ -45,13 +46,21 @@ import 'navigation_drawer.dart';
 import 'network_speed_bottomsheet_content.dart';
 
 class HomePage extends StatelessWidget {
+  final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey;
+
+  const HomePage(this.rootScaffoldMessengerKey, {super.key});
+
   @override
   Widget build(BuildContext context) {
-    return _HomePageContent();
+    return _HomePageContent(rootScaffoldMessengerKey);
   }
 }
 
 class _HomePageContent extends StatefulWidget {
+  final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey;
+
+  const _HomePageContent(this.rootScaffoldMessengerKey);
+
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -61,19 +70,18 @@ class _HomePageContent extends StatefulWidget {
 class _HomePageState extends State<_HomePageContent> {
   var controller = HomePageController();
 
-  var scaffoldKey = GlobalKey<ScaffoldState>();
   var loadingContainerKey = GlobalKey<LoadingContainerState>();
   var torrentListKey = GlobalKey<TorrentListState>();
 
   var loading = false;
   List<ServerDBModel> servers = [];
-  ServerDBModel selectedServer;
+  ServerDBModel? selectedServer;
   var sortCriterion = SortCriteria.name;
   var reverseSort = false;
   var filterSpec = FilterSpec.all;
   var selectedItemCount = 0;
 
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void initState() {
@@ -89,7 +97,7 @@ class _HomePageState extends State<_HomePageContent> {
     loadingContainerKey.currentState?.hideProgress();
 
     if (servers.isEmpty) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
+      widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeAddServerSnackbarText),
           duration: Duration(days: 999),
           action: SnackBarAction(
@@ -97,10 +105,10 @@ class _HomePageState extends State<_HomePageContent> {
               onPressed: onAddServerClicked)));
       return;
     } else {
-      scaffoldKey.currentState.removeCurrentSnackBar();
+      widget.rootScaffoldMessengerKey.currentState!.removeCurrentSnackBar();
     }
 
-    loadingContainerKey.currentState.showProgress();
+    loadingContainerKey.currentState!.showProgress();
 
     var selectedServer = await controller.getSelectedServer();
     var savedSortMode = await getSavedSortMode();
@@ -115,7 +123,7 @@ class _HomePageState extends State<_HomePageContent> {
       this.filterSpec = savedFilterSpec;
     });
 
-    List<int> certificate;
+    List<int>? certificate;
     if (selectedServer.certificate != null &&
         selectedServer.certificate.isNotEmpty) {
       certificate = selectedServer.certificate.codeUnits;
@@ -127,14 +135,14 @@ class _HomePageState extends State<_HomePageContent> {
     try {
       await client.init();
     } catch (e) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
+      widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
         content: Text(prettifyError(e)),
         duration: const Duration(seconds: 3),
       ));
     }
 
     ClientProvider.of(context).setClient(client);
-    loadingContainerKey.currentState.hideProgress();
+    loadingContainerKey.currentState!.hideProgress();
 
     checkIntentDataAndAddTorrent();
   }
@@ -148,7 +156,6 @@ class _HomePageState extends State<_HomePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       appBar: getHomeAppBar(
           context,
           selectedItemCount,
@@ -173,8 +180,8 @@ class _HomePageState extends State<_HomePageContent> {
           ),
           DeleteButton(Strings.homeDeleteTooltip, (deleteData) {
             deleteData
-                ? torrentListKey.currentState.deleteTorrentsWithData()
-                : torrentListKey.currentState.deleteTorrents();
+                ? torrentListKey.currentState!.deleteTorrentsWithData()
+                : torrentListKey.currentState!.deleteTorrents();
           }),
           LabelButton(repository, Strings.homeLabelTooltip, setLabel),
           getOverflowButton()),
@@ -206,64 +213,47 @@ class _HomePageState extends State<_HomePageContent> {
         changeServer(s);
       }, launchSettingsScreen),
       bottomNavigationBar: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8.0,
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            SpeedIndicator(
-                Icons.arrow_downward,
-                repository.getSessionDownloadSpeed(
-                    PreferenceProvider.of(context).byteSizeStyle), () {
-              _showNetworkSpeedBottomSheet(context, true, repository);
-            }),
-            SpeedIndicator(
-                Icons.arrow_upward,
-                repository.getSessionUploadSpeed(
-                    PreferenceProvider.of(context).byteSizeStyle), () {
-              _showNetworkSpeedBottomSheet(context, false, repository);
-            })
-          ],
-        ),
-      )),
-      floatingActionButton: UnicornDialer(
-        hasNotch: true,
-        parentButton: Icon(Icons.add),
-        orientation: UnicornOrientation.VERTICAL,
-        childButtons: [
-          UnicornButton(
-            currentButton: FloatingActionButton(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                SpeedIndicator(
+                    Icons.arrow_downward,
+                    repository.getSessionDownloadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
+                  _showNetworkSpeedBottomSheet(context, true, repository);
+                }),
+                SpeedIndicator(
+                    Icons.arrow_upward,
+                    repository.getSessionUploadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
+                  _showNetworkSpeedBottomSheet(context, false, repository);
+                })
+              ],
+            ),
+          )),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 3,
+        childPadding: const EdgeInsets.all(5),
+        spaceBetweenChildren: 4,
+        children: [
+          SpeedDialChild(
               child: Icon(Icons.insert_drive_file),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByFile,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.file),
-            ),
-            labelText: Strings.homeAddTorrentByFile,
-            hasLabel: true,
-          ),
-          UnicornButton(
-            currentButton: FloatingActionButton(
+              onTap: () => onAddTorrentClicked(AddTorrentKind.file),
+              label: Strings.homeAddTorrentByFile),
+          SpeedDialChild(
               child: Icon(Icons.info_outline),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByInfoHash,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.infohash),
-            ),
-            labelText: Strings.homeAddTorrentByInfoHash,
-            hasLabel: true,
-          ),
-          UnicornButton(
-            currentButton: FloatingActionButton(
+              onTap: () => onAddTorrentClicked(AddTorrentKind.infohash),
+              label: Strings.homeAddTorrentByInfoHash),
+          SpeedDialChild(
               child: Icon(Icons.link),
-              heroTag: null,
-              mini: true,
-              tooltip: Strings.homeAddTorrentByUrl,
-              onPressed: () => onAddTorrentClicked(AddTorrentKind.url),
-            ),
-            labelText: Strings.homeAddTorrentByUrl,
-            hasLabel: true,
-          ),
+              onTap: () => onAddTorrentClicked(AddTorrentKind.url),
+              label: Strings.homeAddTorrentByUrl)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -321,7 +311,7 @@ class _HomePageState extends State<_HomePageContent> {
     persistSortMode();
   }
 
-  FilterSpec _tempFilterSpec;
+  late FilterSpec _tempFilterSpec;
 
   void showFilters() async {
     _tempFilterSpec = filterSpec;
@@ -342,19 +332,19 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void clearSelection() {
-    torrentListKey.currentState.clearSelection();
+    torrentListKey.currentState!.clearSelection();
   }
 
   void pauseTorrents() {
-    torrentListKey.currentState.pauseTorrents();
+    torrentListKey.currentState!.pauseTorrents();
   }
 
   void resumeTorrents() {
-    torrentListKey.currentState.resumeTorrents();
+    torrentListKey.currentState!.resumeTorrents();
   }
 
   void setLabel(String label) {
-    torrentListKey.currentState.setTorrentsLabel(label);
+    torrentListKey.currentState!.setTorrentsLabel(label);
   }
 
   Widget getOverflowButton() {
@@ -377,10 +367,10 @@ class _HomePageState extends State<_HomePageContent> {
   void onOverflowMenuClick(OverflowButtons overflowButton) {
     switch (overflowButton) {
       case OverflowButtons.selectAll:
-        torrentListKey.currentState.selectAll();
+        torrentListKey.currentState!.selectAll();
         return;
       case OverflowButtons.invertSelection:
-        torrentListKey.currentState.invertSelection();
+        torrentListKey.currentState!.invertSelection();
         return;
     }
   }
@@ -394,9 +384,13 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void checkIntentDataAndAddTorrent() async {
+    var messenger = ScaffoldMessenger.of(context);
+
     try {
       var intentUrl = await PlatformChannel.getOpenedUrl();
-      addTorrentUrl(intentUrl);
+      if (intentUrl != null) {
+        addTorrentUrl(intentUrl);
+      }
       return;
     } on PlatformException {
       //nop
@@ -404,10 +398,12 @@ class _HomePageState extends State<_HomePageContent> {
 
     try {
       var intentFilePath = await PlatformChannel.getOpenedFile();
-      addTorrentFile(intentFilePath);
+      if (intentFilePath != null) {
+        addTorrentFile(intentFilePath);
+      }
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {
-        scaffoldKey.currentState.showSnackBar(SnackBar(
+        messenger.showSnackBar(SnackBar(
           content: Text(Strings.homeErrorCouldNotOpenFile),
           duration: const Duration(seconds: 3),
         ));
@@ -483,10 +479,14 @@ class SpeedIndicator extends StatelessWidget {
     return StreamBuilder<String>(
         stream: dataStream,
         builder: (context, snapshot) {
-          return FlatButton.icon(
+          return TextButton.icon(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
               onPressed: this.onPressed,
               icon: Icon(iconData),
-              label: Text(snapshot.hasData ? snapshot.data : "0"));
+              label: Text(snapshot.hasData ? snapshot.data ?? "0" : "0"));
         });
   }
 }

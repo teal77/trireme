@@ -23,7 +23,7 @@ import 'package:flutter/services.dart';
 class FilePicker {
   static const platform = MethodChannel('org.deluge.trireme');
 
-  static Future<String> pickFile() async {
+  static Future<String?> pickFile() async {
     return await platform.invokeMethod<String>('pickFile');
   }
 }

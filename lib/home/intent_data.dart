@@ -23,11 +23,11 @@ import 'package:flutter/services.dart';
 class PlatformChannel {
   static const platform = MethodChannel('org.deluge.trireme');
 
-  static Future<String> getOpenedFile() async {
+  static Future<String?> getOpenedFile() async {
     return await platform.invokeMethod<String>('getOpenedFile');
   }
 
-  static Future<String> getOpenedUrl() async {
+  static Future<String?> getOpenedUrl() async {
     return await platform.invokeMethod<String>('getOpenedUrl');
   }
 }

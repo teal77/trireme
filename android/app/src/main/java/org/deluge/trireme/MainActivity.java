@@ -26,6 +26,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -35,7 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import io.flutter.app.FlutterActivity;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
@@ -52,11 +55,16 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GeneratedPluginRegistrant.registerWith(this);
-        listenForMethodChannelCalls();
         if (getIntent() != null) {
             saveIntentData();
         }
+    }
+
+    @Override
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        super.configureFlutterEngine(flutterEngine);
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        listenForMethodChannelCalls(flutterEngine);
     }
 
     @Override
@@ -81,23 +89,24 @@ public class MainActivity extends FlutterActivity {
         recreate();
     }
 
-    void listenForMethodChannelCalls() {
-        new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler((call, result) -> {
-            switch (call.method) {
-                case "pickFile":
-                    pickFile(result);
-                    break;
-                case "getOpenedUrl":
-                    getOpenedUrl(result);
-                    break;
-                case "getOpenedFile":
-                    getOpenedFile(result);
-                    break;
-                default:
-                    result.notImplemented();
-                    break;
-            }
-        });
+    void listenForMethodChannelCalls(FlutterEngine flutterEngine) {
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+                .setMethodCallHandler((call, result) -> {
+                    switch (call.method) {
+                        case "pickFile":
+                            pickFile(result);
+                            break;
+                        case "getOpenedUrl":
+                            getOpenedUrl(result);
+                            break;
+                        case "getOpenedFile":
+                            getOpenedFile(result);
+                            break;
+                        default:
+                            result.notImplemented();
+                            break;
+                    }
+                });
     }
 
     void saveIntentData() {
@@ -206,7 +215,7 @@ public class MainActivity extends FlutterActivity {
 
     void requestReadPermission() {
         ActivityCompat.requestPermissions(this,
-                new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 REQUEST_CODE_READ_PERMISSION);
     }
 }

@@ -18,7 +18,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
@@ -37,7 +37,7 @@ class TorrentPeersPage extends StatefulWidget {
 
 class TorrentPeersState extends State<TorrentPeersPage>
     with TriremeProgressBarMixin {
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -54,7 +54,7 @@ class TorrentPeersState extends State<TorrentPeersPage>
           hideProgressBar();
 
           if (snapshot.hasData) {
-            return _TorrentPeersList(snapshot.data);
+            return _TorrentPeersList(snapshot.data!);
           }
         } else {
           showProgressBar();
@@ -66,8 +66,6 @@ class TorrentPeersState extends State<TorrentPeersPage>
 }
 
 class _TorrentPeersList extends StatelessWidget {
-  static const flagUrl = "http://www.countryflags.io/XX/flat/32.png";
-
   final Peers peers;
 
   _TorrentPeersList(this.peers);
@@ -89,24 +87,25 @@ class _TorrentPeersList extends StatelessWidget {
   }
 
   Widget getListTileForPeer(BuildContext context, Peer peer) {
-    Widget placeholder = Container(
-      color: Colors.transparent,
-      height: 24.0,
-      width: 24.0,
-    );
-
     Widget getCountryFlag() {
-      if (peer.country.trim().isEmpty) {
-        return placeholder;
-      } else {
-        return CachedNetworkImage(
-          placeholder: (_,__) => placeholder,
-          errorWidget: (_,__, dynamic ___) => placeholder,
-          imageUrl: flagUrl.replaceFirst("XX", peer.country),
+      return Container(
+          color: Colors.transparent,
           height: 24.0,
           width: 24.0,
-        );
-      }
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Text(
+                peer.country
+                    .toUpperCase()
+                    .split('')
+                    .map((char) => 127397 + char.codeUnitAt(0))
+                    .map((code) => String.fromCharCode(code))
+                    .join(),
+                style: TextStyle(fontSize: 18)
+              )
+            ],
+          ));
     }
 
     return Padding(
@@ -131,7 +130,7 @@ class _TorrentPeersList extends StatelessWidget {
                       ),
                       Offstage(
                         offstage: peer.seed == 0,
-                        child: Text("Seed"),
+                        child: const Text("Seed"),
                       )
                     ],
                   ),
@@ -141,7 +140,7 @@ class _TorrentPeersList extends StatelessWidget {
                   DefaultTextStyle.merge(
                     style: TextStyle(
                         fontSize: 12.0,
-                        color: Theme.of(context).textTheme.caption.color),
+                        color: Theme.of(context).textTheme.caption!.color),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -152,7 +151,7 @@ class _TorrentPeersList extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_downward,
                             size: 12.0,
-                            color: Theme.of(context).textTheme.caption.color,
+                            color: Theme.of(context).textTheme.caption!.color,
                           ),
                         ),
                         Offstage(
@@ -164,7 +163,7 @@ class _TorrentPeersList extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_upward,
                             size: 12.0,
-                            color: Theme.of(context).textTheme.caption.color,
+                            color: Theme.of(context).textTheme.caption!.color,
                           ),
                         ),
                         Offstage(

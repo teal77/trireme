@@ -43,7 +43,7 @@ class EditServerState extends State<EditServer> {
           IconButton(
             icon: Icon(Icons.delete),
             tooltip: Strings.settingsDeleteServerTooltip,
-            onPressed: () => key.currentState.deleteServer(),
+            onPressed: () => key.currentState!.deleteServer(),
           )
         ],
       ),
@@ -116,7 +116,7 @@ class _EditServerState extends State<_EditServer> {
   }
 
   void showSnackBar(String text) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(text))
     );
   }

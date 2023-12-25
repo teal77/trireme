@@ -42,8 +42,8 @@ class _TrackerListState extends State<TrackerList>
     with TriremeProgressBarMixin {
   final _key = GlobalKey<_TrackersListPageState>();
   var selectedItemCount = 0;
-  TriremeRepository repository;
-  StreamSubscription<DelugeRpcEvent> eventsStreamSubscription;
+  late TriremeRepository repository;
+  StreamSubscription<DelugeRpcEvent>? eventsStreamSubscription;
 
   @override
   void didChangeDependencies() {
@@ -100,9 +100,9 @@ class _TrackerListState extends State<TrackerList>
               ],
               title: Text(selectedItemCount.toString()),
               backgroundColor: theme.backgroundColor,
-              textTheme: theme.textTheme,
+              toolbarTextStyle: theme.textTheme.bodyMedium,
+              titleTextStyle: theme.textTheme.titleLarge,
               iconTheme: theme.iconTheme,
-              brightness: theme.brightness,
             ),
       body: FutureBuilder(
         future: repository.getTorrentOptionsUpdates(widget.torrentId).first,
@@ -117,7 +117,7 @@ class _TrackerListState extends State<TrackerList>
             });
           } else if (snapshot.hasError) {
             hideProgressBar();
-            return ErrorPage(snapshot.error);
+            return ErrorPage(snapshot.error!);
           } else {
             showProgressBar();
             return Container();
@@ -134,27 +134,27 @@ class _TrackerListState extends State<TrackerList>
   }
 
   void clearSelection() {
-    _key.currentState.clearSelection();
+    _key.currentState!.clearSelection();
   }
 
   void delete() {
-    _key.currentState.delete();
+    _key.currentState!.delete();
   }
 
   void edit() {
-    _key.currentState.edit();
+    _key.currentState!.edit();
   }
 
   void moveUp() {
-    _key.currentState.moveUp();
+    _key.currentState!.moveUp();
   }
 
   void moveDn() {
-    _key.currentState.moveDn();
+    _key.currentState!.moveDn();
   }
 
   void add() {
-    _key.currentState.add();
+    _key.currentState!.add();
   }
 }
 
@@ -174,7 +174,7 @@ class TrackerListPage extends StatefulWidget {
 
 class _TrackersListPageState extends State<TrackerListPage> {
   final _key = GlobalKey<_TrackerListContentState>();
-  TriremeRepository repository;
+  late TriremeRepository repository;
   final selectedTrackers = <int>[];
 
   @override
@@ -210,28 +210,28 @@ class _TrackersListPageState extends State<TrackerListPage> {
   }
 
   void delete() {
-    _key.currentState.delete();
+    _key.currentState!.delete();
     clearSelection();
   }
 
   void edit() {
-    _key.currentState.edit(
+    _key.currentState!.edit(
         widget.trackers.firstWhere((e) => e.tier == selectedTrackers.first));
     clearSelection();
   }
 
   void moveUp() {
-    _key.currentState.moveUp();
+    _key.currentState!.moveUp();
     clearSelection();
   }
 
   void moveDn() {
-    _key.currentState.moveDn();
+    _key.currentState!.moveDn();
     clearSelection();
   }
 
   void add() {
-    _key.currentState.add();
+    _key.currentState!.add();
   }
 }
 
@@ -255,7 +255,7 @@ class _TrackerListContent extends StatefulWidget {
 }
 
 class _TrackerListContentState extends State<_TrackerListContent> {
-  TriremeRepository repository;
+  late TriremeRepository repository;
 
   @override
   void didChangeDependencies() {
@@ -335,7 +335,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
     }
   }
 
-  Future<String> showUrlInputDialog(String title, {String initial = ''}) async {
+  Future<String?> showUrlInputDialog(String title, {String initial = ''}) async {
     final textController = TextEditingController(text: initial);
     return showDialog(
         context: context,
@@ -347,7 +347,7 @@ class _TrackerListContentState extends State<_TrackerListContent> {
                 controller: textController,
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
                     Navigator.pop(context, textController.text);
@@ -365,7 +365,8 @@ class _TrackerListContentState extends State<_TrackerListContent> {
 
   void editTracker(String url, Tracker tracker) {
     final t = widget.trackers
-        .firstWhere((e) => e.url == tracker.url, orElse: () => null);
+        .cast<Tracker?>()
+        .firstWhere((e) => e?.url == tracker.url, orElse: () => null);
     if (t != null) {
       t.url = url;
       setTracker(formTrackersApiRequest(widget.trackers));

@@ -85,7 +85,7 @@ class TorrentItem {
         torrentListItem.isFinished,
         dateAdded,
         seedingTime,
-        torrentListItem.label,
+        torrentListItem.label ?? "",
         torrentListItem.trackerHost);
   }
 
@@ -108,7 +108,7 @@ class TorrentItem {
 }
 
 TorrentState getTorrentStateForStateString(String stateStr, bool isFinished) {
-  TorrentState state = torrentStatusMap[stateStr];
+  TorrentState? state = torrentStatusMap[stateStr];
   if (state == null) {
     if (stateStr == "Queued") {
       if (isFinished) {

@@ -35,7 +35,8 @@ class TriremeBanner extends StatelessWidget {
               padding: const EdgeInsets.only(
                   left: 16.0, right: 8.0, top: 16.0, bottom: 8.0),
               child: Text(text)),
-          ButtonTheme.bar(
+          ButtonBarTheme(
+            data: ButtonBarThemeData(),
             child: ButtonBar(
               children: actions,
             ),

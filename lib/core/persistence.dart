@@ -41,7 +41,7 @@ const _columnPassword = "password";
 const _columnCertificate = "certificate";
 
 class ServerDBModel {
-  final int id;
+  final int? id;
   final String host;
   final int port;
   final String username;
@@ -61,20 +61,24 @@ class ServerDBModel {
     };
 
     if (id != null) {
-      map[_columnId] = id;
+      map[_columnId] = id!;
     }
 
     return map;
   }
 
-  factory ServerDBModel.fromMap(Map<String, Object> map) {
-    return ServerDBModel._(map[_columnId] as int, map[_columnHost] as String,
-        map[_columnPort] as int, map[_columnUsername] as String,
-        map[_columnPassword] as String, map[_columnCertificate] as String);
+  factory ServerDBModel.fromMap(Map<String, Object?> map) {
+    return ServerDBModel._(
+        map[_columnId] as int,
+        map[_columnHost] as String,
+        map[_columnPort] as int,
+        map[_columnUsername] as String,
+        map[_columnPassword] as String,
+        map[_columnCertificate] as String);
   }
 
   factory ServerDBModel(String host, int port, String username, String password,
-      String certificate) {
+      String? certificate) {
     return ServerDBModel._(
         null, host, port, username, password, certificate ?? "");
   }
@@ -84,7 +88,7 @@ class ServerDBModel {
 }
 
 class ServerDetailsDatabase {
-  Database _database;
+  Database? _database;
 
   Future open() async {
     var appDataDir = await getApplicationDocumentsDirectory();
@@ -94,11 +98,11 @@ class ServerDetailsDatabase {
   }
 
   Future addServer(ServerDBModel server) async {
-    await _database.insert(_tableName, server.toMap());
+    await _database!.insert(_tableName, server.toMap());
   }
 
   Future<List<ServerDBModel>> getServers() async {
-    var records = await _database.query(_tableName);
+    var records = await _database!.query(_tableName);
     return records.map((map) => ServerDBModel.fromMap(map)).toList();
   }
 
@@ -108,12 +112,12 @@ class ServerDetailsDatabase {
   }
 
   Future deleteServer(ServerDBModel server) async {
-    await _database
-        .delete(_tableName, where: "$_columnId = ?", whereArgs: <Object>[server.id]);
+    await _database!.delete(_tableName,
+        where: "$_columnId = ?", whereArgs: <Object>[server.id!]);
   }
 
   Future close() async {
-    await _database.close();
+    await _database?.close();
     _database = null;
   }
 }
@@ -134,7 +138,7 @@ void _upgradeDb(Database db, int oldVersion, int newVersion) async {
     case 1:
       await db.execute(
           "alter table $_tableName add column $_columnCertificate text not null "
-              "default ''");
+          "default ''");
   }
 }
 
@@ -147,7 +151,7 @@ Future saveSortMode(SortCriteria sortMode) async {
 
 Future<SortCriteria> getSavedSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_sortModeKey) as String;
+  var sortStr = s.get(_sortModeKey) as String?;
   return SortCriteria.values.firstWhere((s) => s.toString() == sortStr,
       orElse: () => SortCriteria.name);
 }
@@ -178,7 +182,7 @@ Future<FilterSpec> getSavedFilterSpec() async {
     return FilterSpec.all;
   } else {
     Map<String, String> filterDict =
-    (json.decode(filterStr) as Map).cast<String, String>();
+        (json.decode(filterStr) as Map).cast<String, String>();
     return FilterSpec(
         filterDict["state"] ?? FilterSpec.strAll,
         filterDict["label"] ?? FilterSpec.strAll,
@@ -215,13 +219,15 @@ Future saveAppColor(MaterialColor color) async {
   await s.setInt(_appColorKey, color.shade500.value);
 }
 
-Future<MaterialColor> getSavedAppColor() async {
+Future<MaterialColor?> getSavedAppColor() async {
   var s = await SharedPreferences.getInstance();
   var value = s.getInt(_appColorKey);
-  return colorList.firstWhere((c) => c.shade500.value == value,
-      orElse: () => null);
+  return colorList
+      .cast<MaterialColor?>()
+      .firstWhere((c) => c?.shade500.value == value, orElse: () => null);
 }
 
+//todo remove this unused pref after some time
 const _appBrightnessKey = "isDark";
 
 Future saveBrightness(bool isDark) async {
@@ -233,6 +239,28 @@ Future<Brightness> getSavedBrightness() async {
   var s = await SharedPreferences.getInstance();
   var isDark = s.getBool(_appBrightnessKey) ?? false;
   return isDark ? Brightness.dark : Brightness.light;
+}
+
+const _appThemeModeKey = "themeMode";
+
+Future saveThemeMode(ThemeMode themeMode) async {
+  var s = await SharedPreferences.getInstance();
+  await s.setString(_appThemeModeKey, themeMode.name);
+}
+
+Future<ThemeMode> getSavedThemeMode() async {
+  var s = await SharedPreferences.getInstance();
+  var themeModeStr = s.getString(_appThemeModeKey);
+  if (themeModeStr == null) {
+    var brightness = await getSavedBrightness();
+    if (brightness == Brightness.light) {
+      return ThemeMode.light;
+    } else {
+      return ThemeMode.dark;
+    }
+  } else {
+    return ThemeMode.values.byName(themeModeStr);
+  }
 }
 
 const _isIecUnits = "isIec";
@@ -257,9 +285,9 @@ Future saveFileSortMode(SortBy sortMode) async {
 
 Future<SortBy> getSavedFileSortMode() async {
   var s = await SharedPreferences.getInstance();
-  var sortStr = s.get(_fileSortModeKey) as String;
-  return SortBy.values.firstWhere((s) => s.toString() == sortStr,
-      orElse: () => SortBy.name);
+  var sortStr = s.get(_fileSortModeKey) as String?;
+  return SortBy.values
+      .firstWhere((s) => s.toString() == sortStr, orElse: () => SortBy.name);
 }
 
 const _fileSortReverseKey = "fileReverseSort";
@@ -272,4 +300,18 @@ Future saveFileSortReverse(bool reverse) async {
 Future<bool> getSavedFileSortReverseMode() async {
   var s = await SharedPreferences.getInstance();
   return s.getBool(_fileSortReverseKey) ?? false;
+}
+
+const _torrentDestinationsKey = "torrentDestinations";
+
+Future saveTorrentDestList(List<String> dests) async {
+  var s = await SharedPreferences.getInstance();
+  await s.setStringList(_torrentDestinationsKey, dests);
+}
+
+Future<List<String>> getSavedTorrentDestList() async {
+  var s = await SharedPreferences.getInstance();
+  return (s.getStringList(_torrentDestinationsKey) ?? List.empty())
+      .where((s) => s.isNotEmpty)
+      .toList();
 }

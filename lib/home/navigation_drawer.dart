@@ -25,7 +25,7 @@ import 'package:trireme/core/persistence.dart';
 
 class NavDrawer extends StatelessWidget {
   final List<ServerDBModel> servers;
-  final ServerDBModel selectedServer;
+  final ServerDBModel? selectedServer;
   final VoidCallback onAddServerPressed;
   final ValueChanged<ServerDBModel> onServerChanged;
   final VoidCallback onSettingsPressed;
@@ -72,7 +72,7 @@ class NavDrawer extends StatelessWidget {
 
   List<Widget> buildServerSwitchTiles() {
     return servers
-        .where((s) => s.id != selectedServer.id)
+        .where((s) => s.id != selectedServer?.id)
         .map(
           (s) => buildServerTile(s),
         )

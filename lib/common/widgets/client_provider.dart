@@ -23,18 +23,21 @@ import 'package:trireme_client/trireme_client.dart';
 import '../common.dart';
 
 class ClientProvider extends StatefulWidget {
-  final Widget child;
-  final TriremeClient client;
+  final Widget? child;
+  final TriremeClient? client;
 
-  ClientProvider({Key key, this.child, this.client}) : super(key: key);
+  ClientProvider({Key? key, this.child, this.client}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ClientProviderState();
 
   static ClientProviderState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_ClientProviderInherited)
-    as _ClientProviderInherited)
-        .state;
+    var state = context.dependOnInheritedWidgetOfExactType<_ClientProviderInherited>()?.state;
+    if (state != null) {
+      return state;
+    } else {
+      throw "Client provider was null";
+    }
   }
 }
 
@@ -42,11 +45,11 @@ class ClientProviderState extends State<ClientProvider>
     with WidgetsBindingObserver {
   static const _tag = "ClientProviderState";
 
-  TriremeClient _client;
+  TriremeClient? _client;
 
-  TriremeClient get client => _client;
+  TriremeClient? get client => _client;
 
-  void setClient(TriremeClient client) {
+  void setClient(TriremeClient? client) {
     setState(() {
       _client = client;
     });
@@ -56,14 +59,14 @@ class ClientProviderState extends State<ClientProvider>
   void initState() {
     super.initState();
     _client = widget.client;
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
     return _ClientProviderInherited(
       state: this,
-      child: widget.child,
+      child: widget.child!,
     );
   }
 
@@ -79,10 +82,10 @@ class ClientProviderState extends State<ClientProvider>
   }
 
   void reInitClient() async {
-    TriremeClient client = _client;
+    var client = _client;
     setClient(null);
     try {
-      await client.init();
+      await client?.init();
     } catch (e) {
       Log.e(_tag, e.toString());
     }
@@ -91,16 +94,16 @@ class ClientProviderState extends State<ClientProvider>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _client.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+    _client?.dispose();
     super.dispose();
   }
 }
 
 class _ClientProviderInherited extends InheritedWidget {
-  final ClientProviderState state;
+  final ClientProviderState? state;
 
-  _ClientProviderInherited({Key key, this.state, Widget child})
+  _ClientProviderInherited({Key? key, this.state, required Widget child})
       : super(key: key, child: child);
 
   @override

@@ -21,15 +21,14 @@ import 'package:flutter/material.dart';
 class LoadingContainer extends StatefulWidget {
   final Widget child;
 
-  LoadingContainer({Key key, this.child}) : super(key: key);
+  LoadingContainer({Key? key, required this.child}) : super(key: key);
 
   static LoadingContainerState of(BuildContext context) {
     var state =
-    context.ancestorStateOfType(const TypeMatcher<LoadingContainerState>());
+    context.findAncestorStateOfType<LoadingContainerState>();
     if (state != null) {
-      return state as LoadingContainerState;
+      return state;
     }
-
     throw "Could not find a LoadingContainer in this widget tree";
   }
 
@@ -39,7 +38,7 @@ class LoadingContainer extends StatefulWidget {
 
 class LoadingContainerState extends State<LoadingContainer>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
