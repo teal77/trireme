@@ -46,7 +46,7 @@ android {
 
     defaultConfig {
         applicationId "org.deluge.trireme"
-        minSdkVersion 16
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 31
         versionCode 24
         versionName "1.4.0"

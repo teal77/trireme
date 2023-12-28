@@ -39,9 +39,11 @@ class _MyApp extends StatelessWidget {
       title: "Deluge",
       color: PreferenceProvider.of(context).appThemeColor,
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: PreferenceProvider.of(context).appThemeColor,
       ),
       darkTheme: ThemeData(
+        useMaterial3: false,
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: PreferenceProvider.of(context).appThemeColor,
           accentColor: PreferenceProvider.of(context).appThemeColor.shade200,
