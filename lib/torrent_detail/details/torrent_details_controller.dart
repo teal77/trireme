@@ -53,7 +53,7 @@ class TorrentDetailsController {
     if (torrentDetail.timeCompleted == null) return "";
 
     var completedDate = DateTime.fromMillisecondsSinceEpoch(
-        torrentDetail.timeCompleted.toInt() * 1000);
+        torrentDetail.timeCompleted!.toInt() * 1000);
     var since = DateTime.now().difference(completedDate);
 
     if (since.inDays > 365) {
