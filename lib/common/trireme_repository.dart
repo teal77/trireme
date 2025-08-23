@@ -508,6 +508,12 @@ class TriremeRepository {
     _invalidateOldResponses();
     return client.setTorrentTrackers(torrentId, trackers);
   }
+
+  Future getFreeSpace() {
+    if (client.isDisposed) return Future.error("error");
+    _invalidateOldResponses();
+    return client.getFreeSpace("");
+  }
 }
 
 extension _StreamExtensions<T> on Stream<T> {

@@ -30,8 +30,9 @@ class NavDrawer extends StatelessWidget {
   final ValueChanged<ServerDBModel> onServerChanged;
   final VoidCallback onSettingsPressed;
 
-  NavDrawer(this.servers, this.selectedServer, this.onAddServerPressed,
-      this.onServerChanged, this.onSettingsPressed);
+  const NavDrawer(this.servers, this.selectedServer, this.onAddServerPressed,
+      this.onServerChanged, this.onSettingsPressed,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,34 +41,23 @@ class NavDrawer extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: ListView(
-            children: <Widget>[
-              NavDrawerHeader(),
-              buildSelectedServer(context),
-            ]
-              ..addAll(buildServerSwitchTiles())
-              ..add(buildAddServerTile()),
             padding: EdgeInsets.zero,
+            children: <Widget>[
+              const NavDrawerHeader(),
+              if (selectedServer != null) SelectedServer(selectedServer!),
+              ...buildServerSwitchTiles(),
+              buildAddServerTile(),
+            ],
           ),
         ),
         ListTile(
-          leading: Icon(Icons.settings),
+          leading: const Icon(Icons.settings),
           title: Text(Strings.homeSettings),
           onTap: onSettingsPressed,
         ),
 //        AboutListTile()
       ],
     ));
-  }
-
-  Widget buildSelectedServer(BuildContext context) {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      child: selectedServer == null
-          ? Container()
-          : ListTile(
-              title: Text(selectedServer.toString()),
-            ),
-    );
   }
 
   List<Widget> buildServerSwitchTiles() {
@@ -90,12 +80,14 @@ class NavDrawer extends StatelessWidget {
     return ListTile(
       title: Text(Strings.homeAddServerDrawerButtonText),
       onTap: onAddServerPressed,
-      trailing: Icon(Icons.add),
+      trailing: const Icon(Icons.add),
     );
   }
 }
 
 class NavDrawerHeader extends StatelessWidget {
+  const NavDrawerHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -103,13 +95,71 @@ class NavDrawerHeader extends StatelessWidget {
       height: 160.0,
       child: Align(
         alignment: AlignmentDirectional.center,
-        child: SvgPicture.asset(
-          "assets/icons/trireme.svg",
-          height: 80.0,
-          width: 80.0,
-          color: Colors.white,
-        ),
+        child: SvgPicture.asset("assets/icons/trireme.svg",
+            height: 80.0,
+            width: 80.0,
+            color: Theme.of(context).primaryColor.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white),
       ),
     );
+  }
+}
+
+class SelectedServer extends StatefulWidget {
+  const SelectedServer(this.selectedServer, {super.key});
+
+  final ServerDBModel selectedServer;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SelectedServerState();
+  }
+}
+
+class _SelectedServerState extends State<SelectedServer> {
+  late TriremeRepository repository;
+  int? freeSpace;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    repository = RepositoryProvider.repositoryOf(context);
+    if (Scaffold.of(context).isDrawerOpen) {
+      _fetchFreeSpace();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Theme.of(context).primaryColor,
+        child: Theme(
+            data: Theme.of(context).copyWith(
+                listTileTheme: Theme.of(context).listTileTheme.copyWith(
+                    textColor:
+                        Theme.of(context).primaryColor.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white)),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(widget.selectedServer.toString()),
+                  subtitle: Row(
+                    children: [
+                      if (freeSpace != null) ByteSize(freeSpace!),
+                      if (freeSpace != null) const Text(" free")
+                    ],
+                  ),
+                ),
+              ],
+            )));
+  }
+
+  _fetchFreeSpace() async {
+    final fs = await repository.getFreeSpace();
+    setState(() {
+      freeSpace = fs;
+    });
   }
 }
