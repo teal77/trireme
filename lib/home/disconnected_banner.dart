@@ -1,6 +1,6 @@
 /*
  * Trireme for Deluge - A Deluge thin client for Android.
- * Copyright (C) 2018  Aashrava Holla
+ * Copyright (C) 2025  Aashrava Holla
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,9 +24,11 @@ import 'package:rxdart/rxdart.dart';
 
 import 'package:trireme/common/common.dart';
 
-import 'banner.dart';
+import '../common/widgets/banner.dart';
 
 class DisconnectedBanner extends StatefulWidget {
+  const DisconnectedBanner({super.key});
+
   @override
   _DisconnectedBannerState createState() => _DisconnectedBannerState();
 }
@@ -108,7 +110,6 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
 
   Future checkConnectionAndShowBanner() async {
     if (checking) return;
-    if (repository == null) return;
     Log.v(_tag, "Checking connection to daemon");
     checking = true;
     try {

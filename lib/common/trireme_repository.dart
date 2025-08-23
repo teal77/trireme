@@ -514,6 +514,24 @@ class TriremeRepository {
     _invalidateOldResponses();
     return client.getFreeSpace("");
   }
+
+  Future<bool> isSessionPaused() {
+    if (client.isDisposed) return Future.error("error");
+    _invalidateOldResponses();
+    return client.isSessionPaused();
+  }
+
+  Future pauseSession() {
+    if (client.isDisposed) return Future.error("error");
+    _invalidateOldResponses();
+    return client.pauseSession();
+  }
+
+  Future resumeSession() {
+    if (client.isDisposed) return Future.error("error");
+    _invalidateOldResponses();
+    return client.resumeSession();
+  }
 }
 
 extension _StreamExtensions<T> on Stream<T> {

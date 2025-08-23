@@ -22,6 +22,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trireme/home/session_paused_banner.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
@@ -29,7 +30,7 @@ import 'package:trireme/add_server/add_server.dart';
 import 'package:trireme/add_torrent/add_torrent.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/delete_button.dart';
-import 'package:trireme/common/widgets/disconnected_banner.dart';
+import 'package:trireme/home/disconnected_banner.dart';
 import 'package:trireme/common/widgets/label_button.dart';
 import 'package:trireme/core/persistence.dart';
 import 'package:trireme/torrent_list/torrent_list.dart';
@@ -190,6 +191,7 @@ class _HomePageState extends State<_HomePageContent> {
           child: Column(
             children: <Widget>[
               DisconnectedBanner(),
+              const SessionPausedBanner(),
               FilterSpecContainer(
                 filterSpec,
                 setFilter,

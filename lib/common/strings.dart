@@ -76,6 +76,8 @@ class Strings {
   static String homeAddTorrentByFile = "File";
   static String homeAddTorrentByUrl = "Link";
   static String homeAddTorrentByInfoHash = "Infohash";
+  static String homeSessionPaused = "Session paused";
+  static String homeResumeSession = "RESUME";
 
   static String addTorrentTitle = "Add Torrent";
   static String addTorrentUrlHint = "Enter torrent URL";

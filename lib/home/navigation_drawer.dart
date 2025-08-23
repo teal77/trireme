@@ -120,6 +120,7 @@ class SelectedServer extends StatefulWidget {
 class _SelectedServerState extends State<SelectedServer> {
   late TriremeRepository repository;
   int? freeSpace;
+  bool isPaused = true;
 
   @override
   void didChangeDependencies() {
@@ -151,6 +152,12 @@ class _SelectedServerState extends State<SelectedServer> {
                       if (freeSpace != null) const Text(" free")
                     ],
                   ),
+                  trailing: IconButton(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    constraints: const BoxConstraints(),
+                    icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+                    onPressed: _toggleSessionPause,
+                  ),
                 ),
               ],
             )));
@@ -158,8 +165,22 @@ class _SelectedServerState extends State<SelectedServer> {
 
   _fetchFreeSpace() async {
     final fs = await repository.getFreeSpace();
+    final paused = await repository.isSessionPaused();
     setState(() {
       freeSpace = fs;
+      isPaused = paused;
     });
+  }
+
+  _toggleSessionPause() async {
+    final oldIsPaused = isPaused;
+    setState(() {
+      isPaused = !oldIsPaused;
+    });
+    if (oldIsPaused) {
+      await repository.resumeSession();
+    } else {
+      await repository.pauseSession();
+    }
   }
 }
