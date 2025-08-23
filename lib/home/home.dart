@@ -100,10 +100,8 @@ class _HomePageState extends State<_HomePageContent> {
     if (servers.isEmpty) {
       widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeAddServerSnackbarText),
-          duration: Duration(days: 999),
-          action: SnackBarAction(
-              label: Strings.homeAddServerSnackbarAction,
-              onPressed: onAddServerClicked)));
+          duration: const Duration(days: 999),
+          action: SnackBarAction(label: Strings.homeAddServerSnackbarAction, onPressed: onAddServerClicked)));
       return;
     } else {
       widget.rootScaffoldMessengerKey.currentState!.removeCurrentSnackBar();
@@ -119,18 +117,16 @@ class _HomePageState extends State<_HomePageContent> {
     setState(() {
       this.servers = servers;
       this.selectedServer = selectedServer;
-      this.sortCriterion = savedSortMode;
-      this.reverseSort = savedReverseMode;
-      this.filterSpec = savedFilterSpec;
+      sortCriterion = savedSortMode;
+      reverseSort = savedReverseMode;
+      filterSpec = savedFilterSpec;
     });
 
     List<int>? certificate;
-    if (selectedServer.certificate != null &&
-        selectedServer.certificate.isNotEmpty) {
+    if (selectedServer.certificate.isNotEmpty) {
       certificate = selectedServer.certificate.codeUnits;
     }
-    var client = TriremeClient(
-        selectedServer.username, selectedServer.password, selectedServer.host,
+    var client = TriremeClient(selectedServer.username, selectedServer.password, selectedServer.host,
         port: selectedServer.port, pinnedCertificate: certificate);
 
     try {
@@ -160,11 +156,8 @@ class _HomePageState extends State<_HomePageContent> {
       appBar: getHomeAppBar(
           context,
           selectedItemCount,
-          IconButton(
-              icon: const Icon(Icons.filter_list),
-              tooltip: Strings.homeFilterTooltip,
-              onPressed: showFilters),
-          _getSortingButton(onSortCriterionChanged),
+          IconButton(icon: const Icon(Icons.filter_list), tooltip: Strings.homeFilterTooltip, onPressed: showFilters),
+          _getSortingButton(sortCriterion, reverseSort, onSortCriterionChanged),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: clearSelection,
@@ -190,20 +183,15 @@ class _HomePageState extends State<_HomePageContent> {
           key: loadingContainerKey,
           child: Column(
             children: <Widget>[
-              DisconnectedBanner(),
+              const DisconnectedBanner(),
               const SessionPausedBanner(),
               FilterSpecContainer(
                 filterSpec,
                 setFilter,
               ),
               Expanded(
-                child: TorrentList(
-                    torrentListKey,
-                    sortCriterion,
-                    reverseSort,
-                    filterSpec,
-                    (selectedItemCount) => setState(
-                        () => this.selectedItemCount = selectedItemCount)),
+                child: TorrentList(torrentListKey, sortCriterion, reverseSort, filterSpec,
+                    (selectedItemCount) => setState(() => this.selectedItemCount = selectedItemCount)),
               )
             ],
           )),
@@ -222,16 +210,13 @@ class _HomePageState extends State<_HomePageContent> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SpeedIndicator(
-                    Icons.arrow_downward,
-                    repository.getSessionDownloadSpeed(
-                        PreferenceProvider.of(context).byteSizeStyle), () {
+                SpeedIndicator(Icons.arrow_downward,
+                    repository.getSessionDownloadSpeed(PreferenceProvider.of(context).byteSizeStyle), () {
                   _showNetworkSpeedBottomSheet(context, true, repository);
                 }),
                 SpeedIndicator(
-                    Icons.arrow_upward,
-                    repository.getSessionUploadSpeed(
-                        PreferenceProvider.of(context).byteSizeStyle), () {
+                    Icons.arrow_upward, repository.getSessionUploadSpeed(PreferenceProvider.of(context).byteSizeStyle),
+                    () {
                   _showNetworkSpeedBottomSheet(context, false, repository);
                 })
               ],
@@ -245,15 +230,15 @@ class _HomePageState extends State<_HomePageContent> {
         spaceBetweenChildren: 4,
         children: [
           SpeedDialChild(
-              child: Icon(Icons.insert_drive_file),
+              child: const Icon(Icons.insert_drive_file),
               onTap: () => onAddTorrentClicked(AddTorrentKind.file),
               label: Strings.homeAddTorrentByFile),
           SpeedDialChild(
-              child: Icon(Icons.info_outline),
+              child: const Icon(Icons.info_outline),
               onTap: () => onAddTorrentClicked(AddTorrentKind.infohash),
               label: Strings.homeAddTorrentByInfoHash),
           SpeedDialChild(
-              child: Icon(Icons.link),
+              child: const Icon(Icons.link),
               onTap: () => onAddTorrentClicked(AddTorrentKind.url),
               label: Strings.homeAddTorrentByUrl)
         ],
@@ -263,8 +248,7 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddServerClicked() async {
-    var didAddServer = await Navigator.push<bool>(
-        context, MaterialPageRoute(builder: (context) => AddServerPage()));
+    var didAddServer = await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => AddServerPage()));
 
     if (didAddServer == null || didAddServer == false) return;
 
@@ -293,8 +277,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void launchSettingsScreen() async {
     Navigator.pop(context);
-    await Navigator.push<void>(
-        context, MaterialPageRoute(builder: (context) => SettingsList()));
+    await Navigator.push<void>(context, MaterialPageRoute(builder: (context) => SettingsList()));
     var servers = await controller.getSavedServers();
     setState(() {
       this.servers = servers;
@@ -317,8 +300,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void showFilters() async {
     _tempFilterSpec = filterSpec;
-    await showFilterBottomSheet(
-        context, repository.getFilterTree(), filterSpec, onFilterSelected);
+    await showFilterBottomSheet(context, repository.getFilterTree(), filterSpec, onFilterSelected);
     setFilter(_tempFilterSpec);
   }
 
@@ -379,10 +361,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void onAddTorrentClicked(AddTorrentKind kind) {
     Navigator.push<void>(
-        context,
-        MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => AddTorrentPage(kind)));
+        context, MaterialPageRoute(fullscreenDialog: true, builder: (context) => AddTorrentPage(kind)));
   }
 
   void checkIntentDataAndAddTorrent() async {
@@ -422,11 +401,10 @@ class _HomePageState extends State<_HomePageContent> {
 
   void addTorrentFile(String filePath) async {
     String getTorrentFileNameFromPath(String filePath) {
-      if (filePath == null || filePath.isEmpty) return "";
+      if (filePath.isEmpty) return "";
       var tempName = filePath.split("/").last;
       if (tempName.contains(".torrent")) {
-        return tempName.replaceRange(
-            tempName.lastIndexOf(".torrent"), null, ".torrent");
+        return tempName.replaceRange(tempName.lastIndexOf(".torrent"), null, ".torrent");
       } else {
         return tempName;
       }
@@ -442,8 +420,7 @@ class _HomePageState extends State<_HomePageContent> {
     if (await torrentFile.exists()) {
       var fileContent = await torrentFile.readAsBytes();
       var fileDump = base64.encode(fileContent);
-      await repository.addTorrentFile(
-          fileName, fileDump, {"owner": repository.client.username});
+      await repository.addTorrentFile(fileName, fileDump, {"owner": repository.client.username});
     } else {
       throw "Torrent file $fileName does not exist";
     }
@@ -458,12 +435,9 @@ class _HomePageState extends State<_HomePageContent> {
     await saveSortReverse(reverseSort);
   }
 
-  void _showNetworkSpeedBottomSheet(BuildContext context,
-      bool isDownloadSpeedGraph, TriremeRepository repository) {
+  void _showNetworkSpeedBottomSheet(BuildContext context, bool isDownloadSpeedGraph, TriremeRepository repository) {
     showModalBottomSheet<void>(
-        context: context,
-        builder: (context) =>
-            NetworkSpeedBottomSheet(isDownloadSpeedGraph, repository));
+        context: context, builder: (context) => NetworkSpeedBottomSheet(isDownloadSpeedGraph, repository));
   }
 }
 
@@ -474,7 +448,7 @@ class SpeedIndicator extends StatelessWidget {
   final Stream<String> dataStream;
   final VoidCallback onPressed;
 
-  SpeedIndicator(this.iconData, this.dataStream, this.onPressed);
+  const SpeedIndicator(this.iconData, this.dataStream, this.onPressed, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -486,45 +460,41 @@ class SpeedIndicator extends StatelessWidget {
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
-              onPressed: this.onPressed,
+              onPressed: onPressed,
               icon: Icon(iconData),
               label: Text(snapshot.hasData ? snapshot.data ?? "0" : "0"));
         });
   }
 }
 
-typedef void OnSortModeSelected(SortCriteria newCriterion);
+typedef OnSortModeSelected = void Function(SortCriteria newCriterion);
 
-Widget _getSortingButton(OnSortModeSelected callback) {
+Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort, OnSortModeSelected callback) {
+  PopupMenuEntry<SortCriteria> makeSortByButton(value, label) {
+    return PopupMenuItem<SortCriteria>(
+        value: value,
+        child: Row(
+          children: [
+            Text(label),
+            const Spacer(),
+            if (value == currentSortingCriterion) Icon(reverseSort ? Icons.arrow_downward : Icons.arrow_upward)
+          ],
+        ));
+  }
+
   return PopupMenuButton<SortCriteria>(
       onSelected: callback,
       icon: const Icon(Icons.sort),
       tooltip: Strings.homeSortTooltip,
       itemBuilder: (context) => <PopupMenuEntry<SortCriteria>>[
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.name, child: Text(Strings.homeSortByName)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.status,
-                child: Text(Strings.homeSortByStatus)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.dateAdded,
-                child: Text(Strings.homeSortByDateAdded)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.seedingTime,
-                child: Text(Strings.homeSortBySeedingTime)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.downloadProgress,
-                child: Text(Strings.homeSortByDownloadProgress)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.downloadSpeed,
-                child: Text(Strings.homeSortByDownloadSpeed)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.uploadSpeed,
-                child: Text(Strings.homeSortByUploadSpeed)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.ratio,
-                child: Text(Strings.homeSortByRatio)),
-            PopupMenuItem<SortCriteria>(
-                value: SortCriteria.size, child: Text(Strings.homeSortBySize)),
+            makeSortByButton(SortCriteria.name, Strings.homeSortByName),
+            makeSortByButton(SortCriteria.status, Strings.homeSortByStatus),
+            makeSortByButton(SortCriteria.dateAdded, Strings.homeSortByDateAdded),
+            makeSortByButton(SortCriteria.seedingTime, Strings.homeSortBySeedingTime),
+            makeSortByButton(SortCriteria.downloadProgress, Strings.homeSortByDownloadProgress),
+            makeSortByButton(SortCriteria.downloadSpeed, Strings.homeSortByDownloadSpeed),
+            makeSortByButton(SortCriteria.uploadSpeed, Strings.homeSortByUploadSpeed),
+            makeSortByButton(SortCriteria.ratio, Strings.homeSortByRatio),
+            makeSortByButton(SortCriteria.size, Strings.homeSortBySize),
           ]);
 }
