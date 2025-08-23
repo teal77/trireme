@@ -119,6 +119,7 @@ class Strings {
   static String detailCommentLabel = "Comment:";
   static String detailCompletedLabel = "Completed:";
   static String detailSeedingTime = "Seeding time:";
+  static String detailLastSeenComplete = "Last seen complete:";
   static String detailStatusSubHeader = "STATUS";
   static String detailRatioLabel = "Ratio";
   static String detailUp = "Up";

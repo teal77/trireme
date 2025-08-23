@@ -17,11 +17,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/delete_button.dart';
 import 'package:trireme/common/widgets/label_button.dart';
@@ -35,7 +33,7 @@ import 'torrent_details_controller.dart';
 class TorrentDetailsPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentDetailsPage(this.torrentId);
+  const TorrentDetailsPage(this.torrentId, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -43,8 +41,7 @@ class TorrentDetailsPage extends StatefulWidget {
   }
 }
 
-class TorrentDetailState extends State<TorrentDetailsPage>
-    with TriremeProgressBarMixin {
+class TorrentDetailState extends State<TorrentDetailsPage> with TriremeProgressBarMixin {
   TorrentDetailsController controller = TorrentDetailsController();
   late TriremeRepository repository;
 
@@ -79,7 +76,7 @@ class _TorrentDetailContent extends StatefulWidget {
   final String torrentId;
   final TorrentDetail torrentDetail;
 
-  _TorrentDetailContent(this.torrentId, this.torrentDetail);
+  const _TorrentDetailContent(this.torrentId, this.torrentDetail);
 
   @override
   State createState() {
@@ -88,10 +85,7 @@ class _TorrentDetailContent extends StatefulWidget {
 }
 
 class _TorrentDetailContentState extends State<_TorrentDetailContent>
-    with
-        TriremeProgressBarMixin,
-        TabControllerAnimationProviderMixin,
-        SingleTickerProviderStateMixin {
+    with TriremeProgressBarMixin, TabControllerAnimationProviderMixin, SingleTickerProviderStateMixin {
   late TriremeRepository repository;
 
   @override
@@ -115,9 +109,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
               children: <Widget>[
                 IconButton(
                   icon: Icon(isPaused() ? Icons.play_arrow : Icons.pause),
-                  tooltip: isPaused()
-                      ? Strings.detailResumeTorrentTooltip
-                      : Strings.detailPauseTorrentTooltip,
+                  tooltip: isPaused() ? Strings.detailResumeTorrentTooltip : Strings.detailPauseTorrentTooltip,
                   onPressed: () {
                     if (isPaused()) {
                       resumeTorrent();
@@ -126,10 +118,8 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
                     }
                   },
                 ),
-                DeleteButton(
-                    Strings.detailDeleteTorrentTooltip, _deleteTorrent),
-                LabelButton(
-                    repository, Strings.detailLabelTorrentTooltip, setLabel),
+                DeleteButton(Strings.detailDeleteTorrentTooltip, _deleteTorrent),
+                LabelButton(repository, Strings.detailLabelTorrentTooltip, setLabel),
                 IconButton(
                   icon: const Icon(Icons.search),
                   tooltip: Strings.detailRecheckStorageTooltip,
@@ -160,8 +150,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
   }
 
   bool isPaused() {
-    return getTorrentStateForStateString(
-        widget.torrentDetail.state, widget.torrentDetail.isFinished) ==
+    return getTorrentStateForStateString(widget.torrentDetail.state, widget.torrentDetail.isFinished) ==
         TorrentState.paused;
   }
 
@@ -233,9 +222,7 @@ class _TorrentDetailContentState extends State<_TorrentDetailContent>
 
   void showMoveStorageDialog() {
     Navigator.of(context).push<void>(MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) =>
-            MoveStorageDialog(widget.torrentId, widget.torrentDetail.path)));
+        fullscreenDialog: true, builder: (context) => MoveStorageDialog(widget.torrentId, widget.torrentDetail.path)));
   }
 
   void showErrorSnackBar(Object error) {
@@ -269,14 +256,13 @@ class _TorrentDetail extends StatelessWidget {
                 child: Text("Added ${controller.getAddedDate()}"),
               ),
               Offstage(
-                offstage:
-                torrentDetail.label == null || torrentDetail.label!.isEmpty,
+                offstage: torrentDetail.label == null || torrentDetail.label!.isEmpty,
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.black),
+                  decoration: const BoxDecoration(color: Colors.black),
                   padding: const EdgeInsets.all(4.0),
                   child: Text(
                     torrentDetail.label ?? "",
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               )
@@ -311,9 +297,7 @@ class _TorrentDetail extends StatelessWidget {
           Container(
             height: 4.0,
           ),
-          Text(
-              "${Strings.detailIsPrivateLabel} ${torrentDetail.private ? Strings
-                  .strYes : Strings.strNo}"),
+          Text("${Strings.detailIsPrivateLabel} ${torrentDetail.private ? Strings.strYes : Strings.strNo}"),
           Offstage(
             offstage: torrentDetail.comment.isEmpty,
             child: Padding(
@@ -325,13 +309,11 @@ class _TorrentDetail extends StatelessWidget {
             ),
           ),
           Offstage(
-            offstage: torrentDetail.timeCompleted == null ||
-                !torrentDetail.isFinished,
+            offstage: torrentDetail.timeCompleted == null || !torrentDetail.isFinished,
             child: Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                "${Strings.detailCompletedLabel} ${controller
-                    .getCompletedDate()}",
+                "${Strings.detailCompletedLabel} ${controller.getCompletedDate()}",
                 softWrap: true,
               ),
             ),
@@ -342,6 +324,16 @@ class _TorrentDetail extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 "${Strings.detailSeedingTime} ${controller.getSeedingTime()}",
+                softWrap: true,
+              ),
+            ),
+          ),
+          Offstage(
+            offstage: torrentDetail.isFinished,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "${Strings.detailLastSeenComplete} ${controller.getLastSeenComplete()}",
                 softWrap: true,
               ),
             ),
@@ -373,36 +365,30 @@ class _TorrentStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.torrentDetail = torrentDetail;
-    MaterialColor color = TorrentStateProperties(getTorrentStateForStateString(
-        torrentDetail.state, torrentDetail.isFinished))
-        .color;
+    MaterialColor color =
+        TorrentStateProperties(getTorrentStateForStateString(torrentDetail.state, torrentDetail.isFinished)).color;
     return Center(
-        child: Container(
+        child: SizedBox(
             width: 208.0,
             child: AspectRatio(
                 aspectRatio: 1.0,
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      constraints: BoxConstraints.expand(),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.grey.shade200),
+                      constraints: const BoxConstraints.expand(),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade200),
                       padding: const EdgeInsets.all(4.0),
                       child: CircularProgressIndicator(
                         value: torrentDetail.progress / 100.0,
                         backgroundColor: color.shade200,
-                        valueColor:
-                        AlwaysStoppedAnimation<Color>(color.shade500),
+                        valueColor: AlwaysStoppedAnimation<Color>(color.shade500),
                         strokeWidth: 8.0,
                       ),
                     ),
                     Container(
-                        constraints: BoxConstraints.expand(),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme
-                                .of(context)
-                                .scaffoldBackgroundColor),
+                        constraints: const BoxConstraints.expand(),
+                        decoration:
+                            BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).scaffoldBackgroundColor),
                         margin: const EdgeInsets.all(8.0),
                         child: _buildTorrentStatusContent(context)),
                   ],
@@ -410,17 +396,14 @@ class _TorrentStatus extends StatelessWidget {
   }
 
   Widget _buildTorrentStatusContent(BuildContext context) {
-    var formatter =
-    ByteSizeFormatter.of(PreferenceProvider
-        .of(context)
-        .byteSizeStyle);
+    var formatter = ByteSizeFormatter.of(PreferenceProvider.of(context).byteSizeStyle);
     return Column(children: <Widget>[
       Container(
         height: 16.0,
       ),
       Text(
         controller.getProgressPercentage(),
-        style: TextStyle(fontSize: 24.0),
+        style: const TextStyle(fontSize: 24.0),
       ),
       Text(torrentDetail.state),
       Container(
@@ -429,69 +412,65 @@ class _TorrentStatus extends StatelessWidget {
       Row(
         children: <Widget>[
           Expanded(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.arrow_downward,
-                        size: 14.0,
-                      ),
-                      Text(Strings.detailDown),
-                    ],
+                  const Icon(
+                    Icons.arrow_downward,
+                    size: 14.0,
                   ),
-                  Text(
-                    controller.getDoneSize(formatter),
-                    style: TextStyle(fontSize: 22.0),
-                  ),
-                  Text("of ${controller.getWantedSize(formatter)}"),
-                  Text(
-                    controller.getDownloadSpeed(formatter),
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Text(
-                      "${Strings.detailSeeds} ${torrentDetail.connectedSeeds}"),
-                  Text(
-                    "of ${torrentDetail.totalSeeds}",
-                    style: TextStyle(fontSize: 12.0),
-                  )
-                ]),
+                  Text(Strings.detailDown),
+                ],
+              ),
+              Text(
+                controller.getDoneSize(formatter),
+                style: const TextStyle(fontSize: 22.0),
+              ),
+              Text("of ${controller.getWantedSize(formatter)}"),
+              Text(
+                controller.getDownloadSpeed(formatter),
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              Text("${Strings.detailSeeds} ${torrentDetail.connectedSeeds}"),
+              Text(
+                "of ${torrentDetail.totalSeeds}",
+                style: const TextStyle(fontSize: 12.0),
+              )
+            ]),
           ),
           Container(
             width: 4.0,
           ),
           Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 14.0,
-                      ),
-                      Text(Strings.detailUp),
-                    ],
+                  const Icon(
+                    Icons.arrow_upward,
+                    size: 14.0,
                   ),
-                  Text(
-                    controller.getUploadedSize(formatter),
-                    style: TextStyle(fontSize: 22.0),
-                  ),
-                  Text("${Strings.detailRatioLabel} ${controller.getRatio()}"),
-                  Text(
-                    controller.getUploadSpeed(formatter),
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Text(
-                      "${Strings.detailPeers} ${torrentDetail.connectedPeers}"),
-                  Text(
-                    "of ${torrentDetail.totalPeers}",
-                    style: TextStyle(fontSize: 12.0),
-                  )
+                  Text(Strings.detailUp),
                 ],
-              ))
+              ),
+              Text(
+                controller.getUploadedSize(formatter),
+                style: const TextStyle(fontSize: 22.0),
+              ),
+              Text("${Strings.detailRatioLabel} ${controller.getRatio()}"),
+              Text(
+                controller.getUploadSpeed(formatter),
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              Text("${Strings.detailPeers} ${torrentDetail.connectedPeers}"),
+              Text(
+                "of ${torrentDetail.totalPeers}",
+                style: const TextStyle(fontSize: 12.0),
+              )
+            ],
+          ))
         ],
       ),
     ]);
