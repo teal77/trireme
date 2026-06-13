@@ -348,8 +348,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.3.5"
-      resolved-ref: "4efd4f0af9892811451c6d345554282a16f74a86"
+      ref: "v1.3.6"
+      resolved-ref: d93b16bac038dde610e9454fd18518c2f708281a
       url: "https://github.com/teal77/trireme_client.git"
     source: git
     version: "0.0.1"
