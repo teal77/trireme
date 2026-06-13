@@ -19,6 +19,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:trireme_client/events.dart';
@@ -253,7 +254,29 @@ class TriremeRepository {
 
   Future<Response<Map<String, TorrentListItem>>> _getTorrentList(
       Map<String, Object> filterDict) async {
-    return await client.getTorrentsList(filterDict);
+    if (filterDict.isNotEmpty) {
+      return await client.getTorrentsList(filterDict);
+    }
+
+    var allIds = await client.getSessionState();
+    if (allIds.length <= 500) {
+      return await client.getTorrentsList(filterDict);
+    }
+
+    return await Stream.fromIterable(allIds.slices(500))
+        .flatMap(
+          (chunk) => Stream.fromFuture(
+              client.getTorrentsList({'id': chunk})),
+          maxConcurrent: 2,
+        )
+        .fold(
+          Response('', 0, <String, TorrentListItem>{}),
+          (acc, r) => Response(
+            r.apiName,
+            r.requestId,
+            {...acc.response, ...r.response},
+          ),
+        );
   }
 
   void subscribeForTorrentListUpdates(TorrentItem item) {
