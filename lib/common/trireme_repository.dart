@@ -329,47 +329,54 @@ class TriremeRepository {
     _invalidateEverythingBefore(client.latestRequestId);
   }
 
-  Future pauseTorrents(List<String> torrentIds) {
+  Future pauseTorrents(List<String> torrentIds) async {
     if (client.isDisposed || torrentIds.isEmpty) return Future.error("Error");
+    var result = await client.pauseTorrents(torrentIds);
     _invalidateOldResponses();
-    return client.pauseTorrents(torrentIds);
+    return result;
   }
 
-  Future resumeTorrents(List<String> torrentIds) {
+  Future resumeTorrents(List<String> torrentIds) async {
     if (client.isDisposed || torrentIds.isEmpty) return Future.error("Error");
+    var result = await client.resumeTorrents(torrentIds);
     _invalidateOldResponses();
-    return client.resumeTorrents(torrentIds);
+    return result;
   }
 
-  Future recheckTorrents(List<String> torrentIds) {
+  Future recheckTorrents(List<String> torrentIds) async {
     if (client.isDisposed || torrentIds.isEmpty) return Future.error("error");
+    var result = await client.forceRecheck(torrentIds);
     _invalidateOldResponses();
-    return client.forceRecheck(torrentIds);
+    return result;
   }
 
-  Future reAnnounceTorrents(List<String> torrentIds) {
+  Future reAnnounceTorrents(List<String> torrentIds) async {
     if (client.isDisposed || torrentIds.isEmpty) return Future.error("error");
+    var result = await client.forceReAnnounce(torrentIds);
     _invalidateOldResponses();
-    return client.forceReAnnounce(torrentIds);
+    return result;
   }
 
-  Future<bool> removeTorrent(String torrentId, bool removeData) {
+  Future<bool> removeTorrent(String torrentId, bool removeData) async {
     if (client.isDisposed || torrentId.isEmpty) return Future.error("error");
+    var result = await client.removeTorrent(torrentId, removeData);
     _invalidateOldResponses();
-    return client.removeTorrent(torrentId, removeData);
+    return result;
   }
 
   Future<List<Object>> removeTorrents(
-      List<String> torrentIds, bool removeData) {
+      List<String> torrentIds, bool removeData) async {
     if (client.isDisposed || torrentIds.isEmpty) return Future.error("error");
+    var result = await client.removeTorrents(torrentIds, removeData);
     _invalidateOldResponses();
-    return client.removeTorrents(torrentIds, removeData);
+    return result;
   }
 
-  Future<bool> moveStorage(String torrentId, String path) {
+  Future<bool> moveStorage(String torrentId, String path) async {
     if (client.isDisposed || torrentId.isEmpty) return Future.error("error");
+    var result = await client.moveStorage([torrentId], path);
     _invalidateOldResponses();
-    return client.moveStorage([torrentId], path);
+    return result;
   }
 
   Future<List<String>> getLabels() {
@@ -377,10 +384,11 @@ class TriremeRepository {
     return client.getLabels();
   }
 
-  Future setTorrentLabel(String torrentId, String label) {
+  Future setTorrentLabel(String torrentId, String label) async {
     if (client.isDisposed || torrentId.isEmpty) return Future.error("error");
+    var result = await client.setTorrentLabel(torrentId, label);
     _invalidateOldResponses();
-    return client.setTorrentLabel(torrentId, label);
+    return result;
   }
 
   Future<Response<TorrentFiles>> _getTorrentFiles(String torrentId) async {
@@ -399,18 +407,20 @@ class TriremeRepository {
         .map(_unpackResponse);
   }
 
-  Future renameFile(String torrentId, int index, String newName) {
+  Future renameFile(String torrentId, int index, String newName) async {
     if (torrentId.isEmpty) return Future.error("error");
-    _invalidateOldResponses();
-    return client.renameTorrentFiles(torrentId, [
+    var result = await client.renameTorrentFiles(torrentId, [
       <Object>[index, newName]
     ]);
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future renameFolder(String torrentId, String oldName, String newName) {
+  Future renameFolder(String torrentId, String oldName, String newName) async {
     if (torrentId.isEmpty) return Future.error("error");
+    var result = await client.renameTorrentFolder(torrentId, oldName, newName);
     _invalidateOldResponses();
-    return client.renameTorrentFolder(torrentId, oldName, newName);
+    return result;
   }
 
   Stream<Peers> getTorrentPeers(String torrentId) {
@@ -424,11 +434,12 @@ class TriremeRepository {
         .map(_unpackResponse);
   }
 
-  Future setTorrentFilePriorities(String torrentId, List<int> priorities) {
+  Future setTorrentFilePriorities(String torrentId, List<int> priorities) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{'file_priorities': priorities});
+    _invalidateOldResponses();
+    return result;
   }
 
   Future<Response<TorrentOptions>> _getTorrentOptions(String torrentId) {
@@ -448,112 +459,128 @@ class TriremeRepository {
   }
 
   Future setTorrentPrioritiseFirstLast(
-      String torrentId, bool prioritiseFirstLast) {
+      String torrentId, bool prioritiseFirstLast) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId],
+    var result = await client.setTorrentOptions([torrentId],
         <String, Object>{"prioritize_first_last_pieces": prioritiseFirstLast});
+    _invalidateOldResponses();
+    return result;
   }
 
   Future setTorrentMoveCompletedPath(
-      String torrentId, String moveCompletedPath) {
+      String torrentId, String moveCompletedPath) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions([torrentId],
+    var result = await client.setTorrentOptions([torrentId],
         <String, Object>{"move_completed_path": moveCompletedPath});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentMoveCompleted(String torrentId, bool moveCompleted) {
+  Future setTorrentMoveCompleted(String torrentId, bool moveCompleted) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"move_completed": moveCompleted});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentRemoveAtRatio(String torrentId, bool removeAtRatio) {
+  Future setTorrentRemoveAtRatio(String torrentId, bool removeAtRatio) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"remove_at_ratio": removeAtRatio});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentStopRatio(String torrentId, double stopRatio) {
+  Future setTorrentStopRatio(String torrentId, double stopRatio) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"stop_ratio": stopRatio});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentStopAtRatio(String torrentId, bool stopAtRatio) {
+  Future setTorrentStopAtRatio(String torrentId, bool stopAtRatio) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"stop_at_ratio": stopAtRatio});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentAutoManaged(String torrentId, bool autoManaged) {
+  Future setTorrentAutoManaged(String torrentId, bool autoManaged) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"auto_managed": autoManaged});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentMaxUploadSlots(String torrentId, int maxUploadSlots) {
+  Future setTorrentMaxUploadSlots(String torrentId, int maxUploadSlots) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"max_upload_slots": maxUploadSlots});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentMaxConnections(String torrentId, int maxConnections) {
+  Future setTorrentMaxConnections(String torrentId, int maxConnections) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"max_connections": maxConnections});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentMaxUploadSpeed(String torrentId, int maxSpeed) {
+  Future setTorrentMaxUploadSpeed(String torrentId, int maxSpeed) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"max_upload_speed": maxSpeed});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentMaxDownloadSpeed(String torrentId, int maxSpeed) {
+  Future setTorrentMaxDownloadSpeed(String torrentId, int maxSpeed) async {
     if (client.isDisposed) return Future.error("error");
-    _invalidateOldResponses();
-    return client.setTorrentOptions(
+    var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{"max_download_speed": maxSpeed});
+    _invalidateOldResponses();
+    return result;
   }
 
-  Future setTorrentTrackers(String torrentId, List<Map> trackers) {
+  Future setTorrentTrackers(String torrentId, List<Map> trackers) async {
     if (client.isDisposed) return Future.error("error");
+    var result = await client.setTorrentTrackers(torrentId, trackers);
     _invalidateOldResponses();
-    return client.setTorrentTrackers(torrentId, trackers);
+    return result;
   }
 
-  Future getFreeSpace() {
+  Future getFreeSpace() async {
     if (client.isDisposed) return Future.error("error");
+    var result = await client.getFreeSpace("");
     _invalidateOldResponses();
-    return client.getFreeSpace("");
+    return result;
   }
 
-  Future<bool> isSessionPaused() {
+  Future<bool> isSessionPaused() async {
     if (client.isDisposed) return Future.error("error");
+    var result = await client.isSessionPaused();
     _invalidateOldResponses();
-    return client.isSessionPaused();
+    return result;
   }
 
-  Future pauseSession() {
+  Future pauseSession() async {
     if (client.isDisposed) return Future.error("error");
+    var result = await client.pauseSession();
     _invalidateOldResponses();
-    return client.pauseSession();
+    return result;
   }
 
-  Future resumeSession() {
+  Future resumeSession() async {
     if (client.isDisposed) return Future.error("error");
+    var result = await client.resumeSession();
     _invalidateOldResponses();
-    return client.resumeSession();
+    return result;
   }
 }
 
