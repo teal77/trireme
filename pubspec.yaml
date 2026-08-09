@@ -76,3 +76,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies, 
   # see https://flutter.io/custom-fonts/#from-packages
+
+
+
+
+
+
+dependency_overrides:
+  win32: 5.2.0
