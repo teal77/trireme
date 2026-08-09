@@ -78,7 +78,7 @@ android {
     productFlavors {
         github {
             dimension "deploy"
-
+            signingConfig signingConfigs.debug
         }
 
         fdroid {
