@@ -1,10 +1,11 @@
 name: trireme
 
 dependencies:
+  win32: ^5.5.0
   flutter:
     sdk: flutter
 
-  charts_flutter: "^0.12.0"
+  community_charts_flutter: ^1.0.1
   convert: "^3.0.2"
 
   trireme_client:
@@ -25,6 +26,7 @@ dependencies:
   duration: "^3.0.11"
 
 dev_dependencies:
+  win32: ^5.5.0
   flutter_lints: "^2.0.1"
 
 environment:

@@ -31,7 +31,7 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace "org.deluge.trireme"
-    compileSdkVersion 34
+    compileSdkVersion 36
 
     lintOptions {
         disable 'InvalidPackage'
@@ -45,7 +45,7 @@ android {
     defaultConfig {
         applicationId "org.deluge.trireme"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 29
         versionName "1.4.4-beta.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -77,12 +77,12 @@ android {
     productFlavors {
         github {
             dimension "deploy"
-            signingConfig signingConfigs.github
+
         }
 
         fdroid {
             dimension "deploy"
-            signingConfig signingConfigs.unsigned
+
         }
     }
 

@@ -52,7 +52,7 @@ class _MyApp extends StatelessWidget {
         textSelectionTheme: TextSelectionThemeData(
           selectionHandleColor: PreferenceProvider.of(context).appThemeColor.shade400,
         ),
-        toggleableActiveColor: PreferenceProvider.of(context).appThemeColor.shade200,
+
       ),
       themeMode: PreferenceProvider.of(context).themeMode,
       scaffoldMessengerKey: scaffoldMessengerKey,

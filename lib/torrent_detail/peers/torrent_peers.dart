@@ -140,7 +140,7 @@ class _TorrentPeersList extends StatelessWidget {
                   DefaultTextStyle.merge(
                     style: TextStyle(
                         fontSize: 12.0,
-                        color: Theme.of(context).textTheme.caption!.color),
+                        color: Theme.of(context).textTheme.bodySmall!.color),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -151,7 +151,7 @@ class _TorrentPeersList extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_downward,
                             size: 12.0,
-                            color: Theme.of(context).textTheme.caption!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         ),
                         Offstage(
@@ -163,7 +163,7 @@ class _TorrentPeersList extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_upward,
                             size: 12.0,
-                            color: Theme.of(context).textTheme.caption!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         ),
                         Offstage(
