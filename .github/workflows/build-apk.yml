@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches:
-      - master
+      - beta
       - main
   pull_request:
 
