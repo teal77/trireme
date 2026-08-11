@@ -48,6 +48,9 @@ class DeleteButton extends StatelessWidget {
         break;
       case DeleteOptions.dontDelete:
         break;
+      case null:
+        // Dialog dismissed without choosing; nothing to do.
+        break;
     }
   }
 }
