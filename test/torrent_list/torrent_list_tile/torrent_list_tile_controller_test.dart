@@ -92,6 +92,11 @@ void main() {
     // These assert format *shape*, not exact strings: prettyDuration's wording
     // belongs to package:duration and is not this codebase's contract. The
     // branch selection is.
+    // Each duration below carries a non-zero remainder in the unit the
+    // branch is supposed to DROP. That is what makes the negative
+    // assertions discriminating: if the tersity were wrong, the dropped
+    // unit would appear. A duration with a zero remainder would satisfy
+    // the negative assertion no matter which tersity ran.
     test('under an hour, includes minutes and seconds', () {
       // 90s renders as 1m 30s: default tersity keeps seconds.
       final eta = controllerFor(eta: 90).getEta();
@@ -108,11 +113,14 @@ void main() {
     });
 
     test('over a day, truncates to hours and drops minutes', () {
-      // 90000s is 1d 1h; DurationTersity.hour drops the minutes.
-      final eta = controllerFor(eta: 90000).getEta();
+      // 90090s is 1d 1h 1m 30s. DurationTersity.hour must drop the 1m 30s.
+      // Do NOT use 90000 here: that is exactly 1d 1h 0m 0s, so the
+      // "no minutes" assertion would pass under every tersity and the
+      // test would prove nothing about the day branch.
+      final eta = controllerFor(eta: 90090).getEta();
       expect(eta, matches(RegExp(r'\d+\s*d')));
       expect(eta, matches(RegExp(r'\d+\s*h')));
-      expect(eta, isNot(matches(RegExp(r'\d+\s*m(\b|$)'))));
+      expect(eta, isNot(matches(RegExp(r'\d+\s*m(in)?(\b|$)'))));
     });
   });
 }
