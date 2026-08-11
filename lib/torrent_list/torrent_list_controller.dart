@@ -168,7 +168,7 @@ class TorrentListController {
     _reverseSort = reverse;
 
     if (_torrentItems != null && _torrentItems.isNotEmpty) {
-      _torrentItems.sort(reverse ? _comparators[criterion]!.reversed() : _comparators[criterion]);
+      _torrentItems.sort(reverse ? comparators[criterion]!.reversed() : comparators[criterion]);
     }
   }
 
@@ -276,7 +276,7 @@ enum SortCriteria {
   size
 }
 
-Map<SortCriteria, Comparator<TorrentItem>> _comparators = {
+Map<SortCriteria, Comparator<TorrentItem>> comparators = {
   SortCriteria.name: (a, b) => a.name.compareTo(b.name),
   SortCriteria.status: (a, b) => a.state.index.compareTo(b.state.index),
   SortCriteria.dateAdded: (a, b) => a.dateAdded.compareTo(b.dateAdded),
