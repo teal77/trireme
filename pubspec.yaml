@@ -28,6 +28,8 @@ dependencies:
 dev_dependencies:
   win32: ^5.5.0
   flutter_lints: "^2.0.1"
+  flutter_test:
+    sdk: flutter
 
 environment:
   flutter: ">=3.16.4"
