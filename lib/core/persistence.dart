@@ -216,7 +216,7 @@ const colorList = <MaterialColor>[
 Future saveAppColor(MaterialColor color) async {
   if (!colorList.contains(color)) throw "Unknown material color";
   var s = await SharedPreferences.getInstance();
-  await s.setInt(_appColorKey, color.shade500.value);
+  await s.setInt(_appColorKey, color.shade500.toARGB32());
 }
 
 Future<MaterialColor?> getSavedAppColor() async {
@@ -224,7 +224,7 @@ Future<MaterialColor?> getSavedAppColor() async {
   var value = s.getInt(_appColorKey);
   return colorList
       .cast<MaterialColor?>()
-      .firstWhere((c) => c?.shade500.value == value, orElse: () => null);
+      .firstWhere((c) => c?.shade500.toARGB32() == value, orElse: () => null);
 }
 
 //todo remove this unused pref after some time

@@ -25,7 +25,7 @@ import 'package:trireme/common/common.dart';
 class TorrentPeersPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentPeersPage(this.torrentId);
+  const TorrentPeersPage(this.torrentId, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -66,7 +66,7 @@ class TorrentPeersState extends State<TorrentPeersPage>
 class _TorrentPeersList extends StatelessWidget {
   final Peers peers;
 
-  _TorrentPeersList(this.peers);
+  const _TorrentPeersList(this.peers);
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class _TorrentPeersList extends StatelessWidget {
                     .map((char) => 127397 + char.codeUnitAt(0))
                     .map((code) => String.fromCharCode(code))
                     .join(),
-                style: TextStyle(fontSize: 18)
+                style: const TextStyle(fontSize: 18)
               )
             ],
           ));

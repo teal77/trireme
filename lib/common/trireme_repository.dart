@@ -22,8 +22,6 @@ import 'dart:collection';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:trireme_client/events.dart';
-import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/common/bytesize.dart';
@@ -314,7 +312,7 @@ class TriremeRepository {
   }
 
   Stream<TorrentDetail> getTorrentDetails(String torrentId) {
-    if (client.isDisposed || torrentId.isEmpty) return Stream.empty();
+    if (client.isDisposed || torrentId.isEmpty) return const Stream.empty();
     return _clockStream
         .flatMap((_) => Stream.fromFuture(client.getTorrentDetails(torrentId)))
         .retry()

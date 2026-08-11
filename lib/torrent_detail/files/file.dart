@@ -62,7 +62,7 @@ class File {
   void addChild(File file) {
     children.add(file);
     file.parent = this;
-    file.path = "${this.path}/${file.name}";
+    file.path = "${path}/${file.name}";
   }
 
   @override

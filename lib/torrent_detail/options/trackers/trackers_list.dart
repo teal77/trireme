@@ -30,7 +30,7 @@ import 'package:trireme_client/events.dart';
 class TrackerList extends StatefulWidget {
   final String torrentId;
 
-  TrackerList(this.torrentId);
+  const TrackerList(this.torrentId, {super.key});
 
   @override
   State createState() {
@@ -99,7 +99,7 @@ class _TrackerListState extends State<TrackerList>
                 )
               ],
               title: Text(selectedItemCount.toString()),
-              backgroundColor: theme.colorScheme.background,
+              backgroundColor: theme.colorScheme.surface,
               toolbarTextStyle: theme.textTheme.bodyMedium,
               titleTextStyle: theme.textTheme.titleLarge,
               iconTheme: theme.iconTheme,
@@ -163,7 +163,7 @@ class TrackerListPage extends StatefulWidget {
   final List<Tracker> trackers;
   final ValueChanged<int> callback;
 
-  TrackerListPage(Key key, this.torrentId, this.trackers, this.callback)
+  const TrackerListPage(Key key, this.torrentId, this.trackers, this.callback)
       : super(key: key);
 
   @override
@@ -244,7 +244,7 @@ class _TrackerListContent extends StatefulWidget {
   final ValueChanged<int> selectedCallback;
   final _ToggleTrackerCallback toggleCallback;
 
-  _TrackerListContent(Key key, this.torrentId, this.trackers,
+  const _TrackerListContent(Key key, this.torrentId, this.trackers,
       this.selectedTrackers, this.selectedCallback, this.toggleCallback)
       : super(key: key);
 

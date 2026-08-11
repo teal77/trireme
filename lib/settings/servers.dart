@@ -24,6 +24,8 @@ import 'package:trireme/core/persistence.dart';
 import 'edit_server.dart';
 
 class ServerList extends StatelessWidget {
+  const ServerList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

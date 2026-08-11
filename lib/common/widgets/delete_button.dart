@@ -26,12 +26,12 @@ class DeleteButton extends StatelessWidget {
   final String toolTip;
   final DeleteCallback deleteCallback;
 
-  DeleteButton(this.toolTip, this.deleteCallback);
+  const DeleteButton(this.toolTip, this.deleteCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.delete),
+      icon: const Icon(Icons.delete),
       tooltip: toolTip,
       onPressed: () => _showConfirmationDialog(context),
     );
@@ -85,7 +85,7 @@ Future<DeleteOptions?> showConfirmationDialog(BuildContext context) {
 }
 
 class _DeleteConfirmationDialogContent extends StatefulWidget {
-  _DeleteConfirmationDialogContent(Key key) : super(key: key);
+  const _DeleteConfirmationDialogContent(Key key) : super(key: key);
 
   @override
   State createState() {

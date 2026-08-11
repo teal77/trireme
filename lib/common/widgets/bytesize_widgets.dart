@@ -18,13 +18,12 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 class ByteSize extends StatelessWidget {
   final int bytes;
 
-  ByteSize(this.bytes);
+  const ByteSize(this.bytes, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class ByteSize extends StatelessWidget {
 class ByteSizePerSecond extends StatelessWidget {
   final int bytes;
 
-  ByteSizePerSecond(this.bytes);
+  const ByteSizePerSecond(this.bytes, {super.key});
 
   @override
   Widget build(BuildContext context) {

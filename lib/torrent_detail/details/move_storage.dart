@@ -26,7 +26,7 @@ class MoveStorageDialog extends StatefulWidget {
   final String torrentId;
   final String currentPath;
 
-  MoveStorageDialog(this.torrentId, this.currentPath);
+  const MoveStorageDialog(this.torrentId, this.currentPath, {super.key});
 
   @override
   State createState() => MoveStorageDialogState();
@@ -66,7 +66,7 @@ class _MoveStorage extends StatefulWidget {
   final String torrentId;
   final String currentPath;
 
-  _MoveStorage({Key? key, required this.torrentId, required this.currentPath}) : super(key: key);
+  const _MoveStorage({Key? key, required this.torrentId, required this.currentPath}) : super(key: key);
 
   @override
   State createState() => _MoveStorageState();

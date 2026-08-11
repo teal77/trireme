@@ -64,7 +64,7 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
               } else if (snapshot.hasError) {
                 return ErrorPage(snapshot.error!);
               } else {
-                return Align(
+                return const Align(
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(),
                 );
@@ -80,8 +80,8 @@ class FilterSelector extends StatefulWidget {
   final FilterSpec lastSelected;
   final FilterSelectedCallback callback;
 
-  FilterSelector(this.stateFilters, this.labelFilters, this.trackerFilters,
-      this.lastSelected, this.callback);
+  const FilterSelector(this.stateFilters, this.labelFilters, this.trackerFilters,
+      this.lastSelected, this.callback, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -124,19 +124,19 @@ class _FilterSelectorState extends State<FilterSelector> {
         children: <Widget>[
           Text(
             Strings.homeFilterByStatus,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
           ),
           FilterChipContainer(
               widget.stateFilters, statusFilter, onStateFilterChanged),
           Text(
             Strings.homeFilterByLabel,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
           ),
           FilterChipContainer(
               widget.labelFilters, labelFilter, onLabelFilterChanged),
           Text(
             Strings.homeFilterByTrackerHost,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
           ),
           FilterChipContainer(
               widget.trackerFilters, trackerFilter, onTrackerFilterChanged),
@@ -170,7 +170,7 @@ class FilterChipContainer extends StatefulWidget {
   final String lastSelected;
   final ValueChanged<String> selectionChanged;
 
-  FilterChipContainer(this.choices, this.lastSelected, this.selectionChanged);
+  const FilterChipContainer(this.choices, this.lastSelected, this.selectionChanged, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -221,7 +221,7 @@ class FilterSpecContainer extends StatelessWidget {
   final FilterSpec filterSpec;
   final ValueChanged<FilterSpec> filterChangedCallback;
 
-  FilterSpecContainer(this.filterSpec, this.filterChangedCallback);
+  const FilterSpecContainer(this.filterSpec, this.filterChangedCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {

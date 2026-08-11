@@ -22,6 +22,8 @@ import 'package:trireme/common/common.dart';
 import 'package:trireme/core/persistence.dart';
 
 class AppearanceSettingsScreen extends StatelessWidget {
+  const AppearanceSettingsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
 }
 
 class AppearanceSettings extends StatefulWidget {
+  const AppearanceSettings({super.key});
+
   @override
   _AppearanceSettingsState createState() => _AppearanceSettingsState();
 }
@@ -62,35 +66,41 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
         ),
         getDivider(),
         getSubHeader(Strings.settingsDarkMode),
-        RadioListTile(
-            value: ThemeMode.system,
-            groupValue: themeMode,
-            title: Text(Strings.settingsDarkModeSystem),
-            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
-        RadioListTile(
-            value: ThemeMode.light,
-            groupValue: themeMode,
-            title: Text(Strings.settingsDarkModeAlwaysLight),
-            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
-        RadioListTile(
-            value: ThemeMode.dark,
-            groupValue: themeMode,
-            title: Text(Strings.settingsDarkModeAlwaysDark),
-            onChanged: ((ThemeMode? value) => {setThemeMode(value)})),
+        RadioGroup<ThemeMode>(
+          groupValue: themeMode,
+          onChanged: setThemeMode,
+          child: Column(
+            children: <Widget>[
+              RadioListTile(
+                  value: ThemeMode.system,
+                  title: Text(Strings.settingsDarkModeSystem)),
+              RadioListTile(
+                  value: ThemeMode.light,
+                  title: Text(Strings.settingsDarkModeAlwaysLight)),
+              RadioListTile(
+                  value: ThemeMode.dark,
+                  title: Text(Strings.settingsDarkModeAlwaysDark)),
+            ],
+          ),
+        ),
         getDivider(),
         getSubHeader(Strings.settingsByteSizeStyle),
-        RadioListTile(
-            value: ByteSizeStyle.iec,
-            groupValue: byteSizeStyle,
-            title: Text(Strings.settingsKibibytes),
-            subtitle: Text(Strings.settingsKibibytesInfo),
-            onChanged: ((ByteSizeStyle? value) => {setByteSizeStyle(value)})),
-        RadioListTile(
-            value: ByteSizeStyle.si,
-            groupValue: byteSizeStyle,
-            title: Text(Strings.settingsKilobytes),
-            subtitle: Text(Strings.settingsKilobytesInfo),
-            onChanged: ((ByteSizeStyle? value) => {setByteSizeStyle(value)})),
+        RadioGroup<ByteSizeStyle>(
+          groupValue: byteSizeStyle,
+          onChanged: setByteSizeStyle,
+          child: Column(
+            children: <Widget>[
+              RadioListTile(
+                  value: ByteSizeStyle.iec,
+                  title: Text(Strings.settingsKibibytes),
+                  subtitle: Text(Strings.settingsKibibytesInfo)),
+              RadioListTile(
+                  value: ByteSizeStyle.si,
+                  title: Text(Strings.settingsKilobytes),
+                  subtitle: Text(Strings.settingsKilobytesInfo)),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -153,7 +163,7 @@ class MaterialColorPicker extends StatelessWidget {
   final MaterialColor selectedColor;
   final ValueChanged<MaterialColor> onColorChanged;
 
-  MaterialColorPicker(this.selectedColor, this.onColorChanged);
+  const MaterialColorPicker(this.selectedColor, this.onColorChanged, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +196,7 @@ class MaterialColorPicker extends StatelessWidget {
 
     Widget _getColorButton(MaterialColor c) {
       return Padding(
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           child: GestureDetector(
             onTap: () => onColorChanged(c),
             child: CircleAvatar(

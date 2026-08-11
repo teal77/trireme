@@ -26,6 +26,8 @@ import 'package:trireme/common/common.dart';
 import 'add_server_controller.dart';
 
 class AddServerPage extends StatelessWidget {
+  const AddServerPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +239,7 @@ class _AddServerState extends State<_AddServerPageContent>
 
 //Copied from https://github.com/flutter/flutter/blob/7a6a65a597581c44d99fd7deeaf2405432aeec8b/examples/flutter_gallery/lib/demo/material/text_form_field_demo.dart
 class PasswordField extends StatefulWidget {
-  const PasswordField({
+  const PasswordField({super.key, 
     this.hintText,
     this.labelText,
     this.helperText,

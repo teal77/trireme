@@ -24,7 +24,7 @@ import 'package:trireme/core/persistence.dart';
 class PreferenceProvider extends StatefulWidget {
   final Widget child;
 
-  PreferenceProvider(this.child);
+  const PreferenceProvider(this.child, {super.key});
 
   @override
   _PreferenceProviderState createState() => _PreferenceProviderState();
@@ -80,7 +80,7 @@ class _PreferenceProviderState extends State<PreferenceProvider> {
 class _PreferenceProviderInherited extends InheritedWidget {
   final _PreferenceProviderState state;
 
-  _PreferenceProviderInherited(this.state, Widget child) : super(child: child);
+  const _PreferenceProviderInherited(this.state, Widget child) : super(child: child);
 
   @override
   bool updateShouldNotify(_PreferenceProviderInherited oldWidget) {

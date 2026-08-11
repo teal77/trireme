@@ -23,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/events.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'network_speed_graph.dart';
@@ -32,7 +31,7 @@ class NetworkSpeedBottomSheet extends StatelessWidget {
   final bool isDownload;
   final TriremeRepository repository;
 
-  NetworkSpeedBottomSheet(this.isDownload, this.repository);
+  const NetworkSpeedBottomSheet(this.isDownload, this.repository, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +90,7 @@ class _NetworkSpeed extends StatelessWidget {
   final String title;
   final Stream<NetworkSpeedData> dataStream;
 
-  _NetworkSpeed(this.title, this.dataStream);
+  const _NetworkSpeed(this.title, this.dataStream);
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +108,7 @@ class _NetworkSpeed extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
             ),
             NetworkSpeedGraph(dataStream),
             Align(
@@ -140,7 +139,7 @@ class SpeedLimitSetter extends StatefulWidget {
   final bool isForDownloadSpeed;
   final TriremeRepository repository;
 
-  SpeedLimitSetter(this.isForDownloadSpeed, this.repository);
+  const SpeedLimitSetter(this.isForDownloadSpeed, this.repository, {super.key});
 
   @override
   _SpeedLimitSliderState createState() => _SpeedLimitSliderState();
@@ -209,7 +208,7 @@ class _SpeedLimitSliderState extends State<SpeedLimitSetter> {
         children: <Widget>[
           Text(
             Strings.homeSpeedLimitTitle,
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
           ),
           Container(
             height: 16.0,

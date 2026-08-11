@@ -23,7 +23,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import '../core/persistence.dart';
@@ -32,7 +31,7 @@ import 'file_picker.dart';
 class AddTorrentPage extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
 
-  AddTorrentPage(this.addTorrentKind);
+  const AddTorrentPage(this.addTorrentKind, {super.key});
 
   @override
   State createState() => AddTorrentState();
@@ -67,7 +66,7 @@ class AddTorrentState extends State<AddTorrentPage> {
 class _AddTorrent extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
 
-  _AddTorrent(Key key, this.addTorrentKind) : super(key: key);
+  const _AddTorrent(Key key, this.addTorrentKind) : super(key: key);
 
   @override
   State createState() => _AddTorrentState();

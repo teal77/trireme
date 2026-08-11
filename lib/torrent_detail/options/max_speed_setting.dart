@@ -25,8 +25,8 @@ class MaxSpeedSettingScreen extends StatelessWidget {
   final int currentMaxSpeed;
   final bool isDownloadSpeed;
 
-  MaxSpeedSettingScreen(
-      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed);
+  const MaxSpeedSettingScreen(
+      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _MaxSpeedSetting extends StatefulWidget {
   final int currentMaxSpeed;
   final bool isDownloadSpeed;
 
-  _MaxSpeedSetting(
+  const _MaxSpeedSetting(
       {Key? key, required this.torrentId, required this.currentMaxSpeed, required this.isDownloadSpeed})
       : super(key: key);
 
@@ -103,7 +103,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
           children: <Widget>[
             Expanded(
               child: TextField(
-                keyboardType: TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                     signed: true, decimal: true),
                 controller: textEditingController,
               ),

@@ -23,13 +23,12 @@ import 'package:flutter/material.dart';
 
 import 'package:community_charts_flutter/community_charts_flutter.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 class NetworkSpeedGraph extends StatelessWidget {
   final Stream<NetworkSpeedData> speeds;
 
-  NetworkSpeedGraph(this.speeds);
+  const NetworkSpeedGraph(this.speeds, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class _NetworkSpeedGraph extends StatelessWidget {
   static const graphGranularity = 5000;
   final NetworkSpeedData speedData;
 
-  _NetworkSpeedGraph(this.speedData);
+  const _NetworkSpeedGraph(this.speedData);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class _NetworkSpeedGraph extends StatelessWidget {
     return LineChart(
       getChartData(),
       animate: false,
-      domainAxis: NumericAxisSpec(
+      domainAxis: const NumericAxisSpec(
         renderSpec: NoneRenderSpec(),
       ),
       primaryMeasureAxis: NumericAxisSpec(

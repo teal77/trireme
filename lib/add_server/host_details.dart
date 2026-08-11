@@ -23,6 +23,8 @@ import 'package:trireme/common/common.dart';
 import 'add_server_controller.dart';
 
 class HostDetails extends StatefulWidget {
+  const HostDetails({super.key});
+
   @override
   _HostDetailsState createState() => _HostDetailsState();
 }
@@ -43,7 +45,7 @@ class _HostDetailsState extends State<HostDetails> {
           onSaved: (s) => host = s,
           validator: controller.validateHost,
         ),
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
         TextFormField(
@@ -53,7 +55,7 @@ class _HostDetailsState extends State<HostDetails> {
           onSaved: (s) => port = s,
           validator: controller.validatePort,
         ),
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
       ],

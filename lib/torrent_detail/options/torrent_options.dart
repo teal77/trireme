@@ -24,7 +24,6 @@ import 'package:trireme/torrent_detail/options/trackers/trackers_list.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'max_speed_setting.dart';
@@ -33,7 +32,7 @@ import 'torrent_options_controller.dart';
 class TorrentOptionsPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentOptionsPage(this.torrentId);
+  const TorrentOptionsPage(this.torrentId, {super.key});
 
   @override
   State createState() {
@@ -76,7 +75,7 @@ class _TorrentOptionsContent extends StatefulWidget {
   final String torrentId;
   final TorrentOptions torrentOptions;
 
-  _TorrentOptionsContent(this.torrentId, this.torrentOptions);
+  const _TorrentOptionsContent(this.torrentId, this.torrentOptions);
 
   @override
   State createState() {

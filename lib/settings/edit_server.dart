@@ -25,7 +25,7 @@ import 'package:trireme/home/home_controller.dart';
 class EditServer extends StatefulWidget {
   final ServerDBModel server;
 
-  EditServer(this.server);
+  const EditServer(this.server, {super.key});
 
   @override
   EditServerState createState() => EditServerState();
@@ -41,7 +41,7 @@ class EditServerState extends State<EditServer> {
         title: Text(Strings.settingsServerDetails),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             tooltip: Strings.settingsDeleteServerTooltip,
             onPressed: () => key.currentState!.deleteServer(),
           )
@@ -57,7 +57,7 @@ class EditServerState extends State<EditServer> {
 class _EditServer extends StatefulWidget {
   final ServerDBModel server;
 
-  _EditServer(Key key, this.server) : super(key: key);
+  const _EditServer(Key key, this.server) : super(key: key);
 
   @override
   _EditServerState createState() => _EditServerState();

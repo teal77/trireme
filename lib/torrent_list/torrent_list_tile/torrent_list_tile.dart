@@ -18,7 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
 import 'package:trireme/torrent_list/torrent_list_tile/torrent_list_tile_controller.dart';
@@ -31,7 +30,7 @@ class TorrentListItem extends StatefulWidget {
   final TorrentItem data;
   final TorrentListController listController;
 
-  TorrentListItem(this.data, this.listController);
+  const TorrentListItem(this.data, this.listController, {super.key});
 
   @override
   State<StatefulWidget> createState() => TorrentListItemState();
@@ -46,7 +45,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   @override
   void initState() {
     super.initState();
-    this.data = widget.data;
+    data = widget.data;
     controller.torrentItem = data;
     widget.listController.subscribeForStatusUpdates(data);
   }
@@ -54,7 +53,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   @override
   void didUpdateWidget(TorrentListItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this.data = widget.data;
+    data = widget.data;
     controller.torrentItem = data;
     widget.listController.unSubscribeFromUpdates(oldWidget.data);
     widget.listController.subscribeForStatusUpdates(data);
@@ -125,7 +124,7 @@ class TorrentListItemState extends State<TorrentListItem> {
         style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.w600),
       ),
       Padding(
-        padding: EdgeInsets.only(top: 4.0),
+        padding: const EdgeInsets.only(top: 4.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -235,11 +234,11 @@ class TorrentListItemState extends State<TorrentListItem> {
 class TorrentStateProperties {
   static const iconSize = 40.0;
 
-  static final downloadingColor = Colors.blue;
-  static final queuedColor = Colors.lightBlue;
-  static final seedingColor = Colors.lightGreen;
-  static final inactiveColor = Colors.grey;
-  static final pausedColor = Colors.pink;
+  static const downloadingColor = Colors.blue;
+  static const queuedColor = Colors.lightBlue;
+  static const seedingColor = Colors.lightGreen;
+  static const inactiveColor = Colors.grey;
+  static const pausedColor = Colors.pink;
 
   static final downloading = TorrentStateProperties._(
       downloadingColor,
