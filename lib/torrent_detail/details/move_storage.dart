@@ -113,10 +113,6 @@ class _MoveStorageState extends State<_MoveStorage>
     showProgressBar();
     try {
       bool result = await repository.moveStorage(widget.torrentId, newPath);
-      if (result == null) {
-        Navigator.pop(context);
-        return;
-      }
       if (result) {
         showSnackBar(Strings.strSuccess);
         await Future<void>.delayed(const Duration(seconds: 1));

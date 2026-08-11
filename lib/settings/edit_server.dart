@@ -90,7 +90,7 @@ class _EditServerState extends State<_EditServer> {
 
   bool _isCertSaved() {
     var cert = widget.server.certificate;
-    return (cert != null && cert.isNotEmpty);
+    return cert.isNotEmpty;
   }
 
   void deleteServer() async {

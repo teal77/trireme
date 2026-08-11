@@ -77,7 +77,7 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
   void initState() {
     super.initState();
     repository ??= TriremeRepository();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -107,7 +107,7 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     repository?.dispose();
     super.dispose();
   }

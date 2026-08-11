@@ -73,7 +73,7 @@ class TorrentListController {
     }
   }
 
-  int getItemCount() => _torrentItems == null ? 0 : _torrentItems.length;
+  int getItemCount() => _torrentItems.length;
 
   TorrentItem getItemAt(int index) => _torrentItems[index];
 
@@ -93,8 +93,6 @@ class TorrentListController {
         rethrow;
       }
     }
-
-    if (_torrentItems == null) return;
 
     sort(_sortCriterion, _reverseSort);
 
@@ -146,8 +144,6 @@ class TorrentListController {
   }
 
   void _updateTorrentList(List<TorrentItem> newTorrentItems) {
-    if (newTorrentItems == null) return;
-
     for (var t in newTorrentItems) {
       _updateTorrent(t);
     }
@@ -167,7 +163,7 @@ class TorrentListController {
     _sortCriterion = criterion;
     _reverseSort = reverse;
 
-    if (_torrentItems != null && _torrentItems.isNotEmpty) {
+    if (_torrentItems.isNotEmpty) {
       _torrentItems.sort(reverse ? comparators[criterion]!.reversed() : comparators[criterion]);
     }
   }

@@ -313,7 +313,6 @@ class TorrentStateProperties {
       case TorrentState.queuedForUpload:
         return queuedForUpload;
     }
-    throw "Unhandled state ${t.toString()}";
   }
 }
 

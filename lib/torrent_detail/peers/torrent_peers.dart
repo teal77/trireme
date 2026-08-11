@@ -18,8 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:trireme_client/deserialization.dart';
 
 import 'package:trireme/common/common.dart';

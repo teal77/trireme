@@ -18,8 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:meta/meta.dart';
-
 class Selectable extends StatelessWidget {
   final bool selected;
   final Widget child;
