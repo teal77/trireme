@@ -569,9 +569,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.3.6"
-      resolved-ref: d93b16bac038dde610e9454fd18518c2f708281a
-      url: "https://github.com/teal77/trireme_client.git"
+      ref: "v1.4.0"
+      resolved-ref: "27646485f5ca48815ad07940343893285ea6e345"
+      url: "https://github.com/drolevar/trireme_client.git"
     source: git
     version: "0.0.1"
   typed_data:
