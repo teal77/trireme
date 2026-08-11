@@ -7,6 +7,7 @@
 build/
 ios/.generated/
 ios/Flutter/ephemeral/
+android/.kotlin/
 packages
 .flutter-plugins
 .flutter-plugins-dependencies
