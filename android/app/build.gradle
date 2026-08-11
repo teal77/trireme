@@ -50,8 +50,8 @@ android {
         // version silently tracked whoever built it. API 24 is Android 7.0.
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 29
-        versionName "1.4.4-beta.1"
+        versionCode 30
+        versionName "1.4.5-beta.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

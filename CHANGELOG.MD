@@ -5,6 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Minimum Android version is now 7.0 (API 24), pinned explicitly. It
+  previously tracked whichever Flutter SDK built the app, so release builds
+  shipped a 4.4 floor while local builds produced 7.0.
+- Built with Flutter 3.44 and Dart 3.
+- Now depends on drolevar/trireme_client v1.4.0. Its generated code is
+  identical to the previous v1.3.6, so daemon communication is unchanged.
+
+- The release APK is larger: about 50 MB, up from 22 MB. Raising the minimum
+  to API 24 crosses Android's API 23 threshold, at which the build stores
+  native libraries uncompressed instead of deflating them. The download is
+  bigger, but the app now installs smaller and starts faster, because the
+  system maps those libraries directly out of the APK instead of extracting a
+  second copy.
+
+### Fixed
+- A missing case in the delete-confirmation dialog's option handling.
+
 ## [1.4.1] - 2023-12-28
 ### Fixed
 - Theme issue in F-Droid build
