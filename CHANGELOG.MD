@@ -12,8 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Built with Flutter 3.44 and Dart 3.
 - Now depends on drolevar/trireme_client v1.4.0. Its generated code is
   identical to the previous v1.3.6, so daemon communication is unchanged.
-
-- The release APK is larger: about 50 MB, up from 22 MB. Raising the minimum
+- The release APK is larger: about 58 MB, up from 22 MB. Raising the minimum
   to API 24 crosses Android's API 23 threshold, at which the build stores
   native libraries uncompressed instead of deflating them. The download is
   bigger, but the app now installs smaller and starts faster, because the
