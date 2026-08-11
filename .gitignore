@@ -6,6 +6,7 @@
 .pub/
 build/
 ios/.generated/
+ios/Flutter/ephemeral/
 packages
 .flutter-plugins
 .flutter-plugins-dependencies

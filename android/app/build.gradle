@@ -31,10 +31,10 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace "org.deluge.trireme"
-    compileSdkVersion 36
+    compileSdk 36
     ndkVersion = "28.2.13676358"
 
-    lintOptions {
+    lint {
         disable 'InvalidPackage'
     }
 
@@ -45,7 +45,10 @@ android {
 
     defaultConfig {
         applicationId "org.deluge.trireme"
-        minSdkVersion flutter.minSdkVersion
+        // Pinned deliberately. This was flutter.minSdkVersion, which resolves
+        // to 19 on Flutter 3.16 and 24 on 3.44 — so the app's minimum Android
+        // version silently tracked whoever built it. API 24 is Android 7.0.
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode 29
         versionName "1.4.4-beta.1"

@@ -16,8 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.deluge.trireme">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
