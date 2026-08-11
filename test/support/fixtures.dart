@@ -81,3 +81,27 @@ TorrentItem buildTorrentItem({
     ),
   );
 }
+
+TorrentFile buildTorrentFile({
+  int index = 0,
+  int size = 0,
+  int offset = 0,
+  required String path,
+}) {
+  return TorrentFile()
+    ..index = index
+    ..size = size
+    ..offset = offset
+    ..path = path;
+}
+
+TorrentFiles buildTorrentFiles({
+  required List<TorrentFile> files,
+  required List<int> priorities,
+  required List<double> progress,
+}) {
+  return TorrentFiles()
+    ..files = files
+    ..filePriorities = priorities
+    ..fileProgress = progress;
+}
