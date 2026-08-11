@@ -30,13 +30,17 @@ import 'package:trireme/torrent_list/torrent_item.dart';
 class TorrentDetailsController {
   final ratioFormatter = NumberFormat("####.###");
 
+  final DateTime Function() _now;
+
+  TorrentDetailsController({DateTime Function()? now}) : _now = now ?? DateTime.now;
+
   late TorrentItem torrentItem;
   late TorrentDetail torrentDetail;
 
   String getAddedDate() {
     var addedDate = DateTime.fromMillisecondsSinceEpoch(
         torrentDetail.addedTime.toInt() * 1000);
-    var since = DateTime.now().difference(addedDate);
+    var since = _now().difference(addedDate);
 
     if (since.inDays > 365) {
       return DateFormat.yMMMd().add_jm().format(addedDate);
@@ -54,7 +58,7 @@ class TorrentDetailsController {
 
     var completedDate = DateTime.fromMillisecondsSinceEpoch(
         torrentDetail.timeCompleted!.toInt() * 1000);
-    var since = DateTime.now().difference(completedDate);
+    var since = _now().difference(completedDate);
 
     if (since.inDays > 365) {
       return DateFormat.yMMMd().add_jm().format(completedDate);
@@ -135,7 +139,7 @@ class TorrentDetailsController {
 
   String getLastSeenComplete() {
     var lastSeenComplete = DateTime.fromMillisecondsSinceEpoch(torrentDetail.lastSeenComplete * 1000);
-    var since = DateTime.now().difference(lastSeenComplete);
+    var since = _now().difference(lastSeenComplete);
 
     if (since.inDays > 365) {
       return DateFormat.yMMMd().add_jm().format(lastSeenComplete);
