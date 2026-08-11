@@ -22,7 +22,10 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.4' # Or your preferred version
+          # Must stay >= 3.27, which is the lowest stable bundling Dart 3.6 —
+          # trireme_client v1.4.0 declares sdk: ">=3.6.0 <4.0.0" and a git
+          # dependency resolves to exactly one version, so pub cannot fall back.
+          flutter-version: '3.44.9'
           channel: 'stable'
 
       - name: Install dependencies
