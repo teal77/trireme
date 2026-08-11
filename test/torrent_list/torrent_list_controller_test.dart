@@ -1,3 +1,21 @@
+/*
+ * Trireme for Deluge - A Deluge thin client for Android.
+ * Copyright (C) 2018  Aashrava Holla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/torrent_list/torrent_item.dart';
@@ -14,19 +32,19 @@ void main() {
   group('sort comparators', () {
     test('name sorts lexicographically', () {
       final items = [
-        buildTorrentItem(id: 'b', name: 'beta'),
-        buildTorrentItem(id: 'a', name: 'alpha'),
+        buildTorrentItem(id: 'x', name: 'beta'),
+        buildTorrentItem(id: 'y', name: 'alpha'),
       ];
-      expect(sortedIds(items, comparators[SortCriteria.name]!), ['a', 'b']);
+      expect(sortedIds(items, comparators[SortCriteria.name]!), ['y', 'x']);
     });
 
     test('status sorts by TorrentState declaration order', () {
       final items = [
-        buildTorrentItem(id: 'seed', state: 'Seeding'),
-        buildTorrentItem(id: 'down', state: 'Downloading'),
+        buildTorrentItem(id: 'x', state: 'Seeding'),
+        buildTorrentItem(id: 'y', state: 'Downloading'),
       ];
       expect(sortedIds(items, comparators[SortCriteria.status]!),
-          ['down', 'seed']);
+          ['y', 'x']);
     });
 
     test('dateAdded sorts oldest first', () {
@@ -158,7 +176,11 @@ void main() {
   group('FilterSpec equality', () {
     test('equal field values compare equal and hash equal', () {
       const a = FilterSpec('Seeding', 'music', 'tracker.example');
-      const b = FilterSpec('Seeding', 'music', 'tracker.example');
+      // Built at runtime so Dart cannot canonicalise it to the same
+      // instance as `a` — otherwise `identical` alone satisfies these
+      // assertions and the field comparison is never exercised.
+      final b = FilterSpec('Seeding', 'music', ['tracker', 'example'].join('.'));
+      expect(identical(a, b), isFalse);
       expect(a, b);
       expect(a.hashCode, b.hashCode);
     });

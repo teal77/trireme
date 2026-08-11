@@ -276,7 +276,7 @@ enum SortCriteria {
   size
 }
 
-Map<SortCriteria, Comparator<TorrentItem>> comparators = {
+final Map<SortCriteria, Comparator<TorrentItem>> comparators = {
   SortCriteria.name: (a, b) => a.name.compareTo(b.name),
   SortCriteria.status: (a, b) => a.state.index.compareTo(b.state.index),
   SortCriteria.dateAdded: (a, b) => a.dateAdded.compareTo(b.dateAdded),

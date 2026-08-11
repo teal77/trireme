@@ -1,3 +1,21 @@
+/*
+ * Trireme for Deluge - A Deluge thin client for Android.
+ * Copyright (C) 2018  Aashrava Holla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:trireme/torrent_detail/details/torrent_details_controller.dart';
@@ -36,7 +54,11 @@ void main() {
   // matches both.
   final yearFormat = RegExp(r'^\w{3} \d{1,2}, \d{4} \d{1,2}:\d{2}\s[AP]M$');
   final monthFormat = RegExp(r'^\w{3} \d{1,2} \d{1,2}:\d{2}\s[AP]M$');
-  final dayFormat = RegExp(r'^\S+, \w{3} \d{1,2} \d{1,2}:\d{2}\s[AP]M$');
+  // DateFormat("EEEEE, ...") renders a narrow (one-letter) weekday, e.g.
+  // "F, Jun 12 ...". That narrowness is what this pins: a CLDR change to a
+  // wide weekday in a future intl bump is a real behavior change worth
+  // noticing, so the weekday group is bounded rather than left as `\S+`.
+  final dayFormat = RegExp(r'^\w{1,3}, \w{3} \d{1,2} \d{1,2}:\d{2}\s[AP]M$');
   final timeFormat = RegExp(r'^\d{1,2}:\d{2}:\d{2}\s[AP]M$');
 
   group('getAddedDate branch selection', () {
