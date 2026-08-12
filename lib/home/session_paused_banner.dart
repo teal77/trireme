@@ -71,15 +71,8 @@ class _SessionPausedBannerState extends State<SessionPausedBanner>
   @override
   Widget build(BuildContext context) {
     final animation = CurvedAnimation(parent: controller, curve: Curves.ease);
-    return AnimatedBuilder(
+    return CollapsibleBanner(
       animation: animation,
-      builder: (context, child) => TickerMode(
-          enabled: animation.value > 0.0,
-          child: Align(
-            alignment: AlignmentDirectional.bottomEnd,
-            heightFactor: animation.value,
-            child: child,
-          )),
       child: TriremeBanner(Strings.homeSessionPaused, [
         TextButton(
           onPressed: onResumePressed,

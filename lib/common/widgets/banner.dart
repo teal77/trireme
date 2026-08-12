@@ -18,6 +18,39 @@
 
 import 'package:flutter/material.dart';
 
+/// Collapses [child] to nothing as [animation] runs down to zero.
+///
+/// The ClipRect is load bearing. Align does not clip, and with a bottom
+/// alignment a zero-height Align paints its child at minus its own height --
+/// so a collapsed banner still drew its card, on top of whichever banner sat
+/// above it in the column. Flutter's own SizeTransition is this same pair of
+/// widgets for the same reason.
+class CollapsibleBanner extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget child;
+
+  const CollapsibleBanner(
+      {required this.animation, required this.child, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) => TickerMode(
+        enabled: animation.value > 0.0,
+        child: ClipRect(
+          child: Align(
+            alignment: AlignmentDirectional.bottomEnd,
+            heightFactor: animation.value,
+            child: child,
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
 class TriremeBanner extends StatelessWidget {
   final String text;
   final List<Widget> actions;

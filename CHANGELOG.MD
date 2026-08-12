@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was also discarding the errors.
 - Opening a torrent's details with no working connection shows an error instead
   of a progress bar that never finishes.
+- The "Session paused" banner no longer appears when the connection drops. A
+  hidden banner was still drawing itself over the banner above it, so losing
+  the connection showed the disconnected banner with the session-paused card
+  painted on top of it.
 - The pause/resume session button in the navigation drawer no longer acts on a
   guess. It assumed the session was paused until the daemon said otherwise, so
   it often showed "resume" for a running session and tapping it sent a command
