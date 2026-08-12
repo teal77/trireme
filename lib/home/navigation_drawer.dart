@@ -118,17 +118,21 @@ class SelectedServer extends StatefulWidget {
 }
 
 class _SelectedServerState extends State<SelectedServer> {
+  static const _tag = "_SelectedServerState";
+
   late TriremeRepository repository;
   int? freeSpace;
-  bool isPaused = true;
+
+  // Null until the daemon tells us. Rendering a guess here used to make the
+  // button send a command the daemon then ignored, which looked like a dead
+  // button.
+  bool? isPaused;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     repository = RepositoryProvider.repositoryOf(context);
-    if (Scaffold.of(context).isDrawerOpen) {
-      _fetchFreeSpace();
-    }
+    _fetchServerState();
   }
 
   @override
@@ -155,32 +159,53 @@ class _SelectedServerState extends State<SelectedServer> {
                   trailing: IconButton(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     constraints: const BoxConstraints(),
-                    icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
-                    onPressed: _toggleSessionPause,
+                    icon: Icon(
+                        isPaused == true ? Icons.play_arrow : Icons.pause),
+                    onPressed:
+                        isPaused == null ? null : _toggleSessionPause,
                   ),
                 ),
               ],
             )));
   }
 
-  _fetchFreeSpace() async {
-    final fs = await repository.getFreeSpace();
-    final paused = await repository.isSessionPaused();
-    setState(() {
-      freeSpace = fs;
-      isPaused = paused;
-    });
+  void _fetchServerState() async {
+    try {
+      // Both calls go to the same daemon, so run them together rather than
+      // waiting out two round trips before the button becomes usable.
+      final results = await Future.wait(
+          [repository.getFreeSpace(), repository.isSessionPaused()]);
+      if (!mounted) return;
+      setState(() {
+        freeSpace = results[0] as int;
+        isPaused = results[1] as bool;
+      });
+    } catch (e) {
+      // The client is disposed while the app is in the background and during
+      // a reconnect, so this fails routinely. Leave the button disabled.
+      Log.e(_tag, e.toString());
+    }
   }
 
-  _toggleSessionPause() async {
-    final oldIsPaused = isPaused;
+  void _toggleSessionPause() async {
+    final wasPaused = isPaused!;
     setState(() {
-      isPaused = !oldIsPaused;
+      isPaused = !wasPaused;
     });
-    if (oldIsPaused) {
-      await repository.resumeSession();
-    } else {
-      await repository.pauseSession();
+    try {
+      if (wasPaused) {
+        await repository.resumeSession();
+      } else {
+        await repository.pauseSession();
+      }
+    } catch (e) {
+      Log.e(_tag, e.toString());
+      // The daemon never took the change, so stop showing it as applied.
+      if (mounted) {
+        setState(() {
+          isPaused = wasPaused;
+        });
+      }
     }
   }
 }

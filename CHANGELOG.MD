@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   system maps those libraries directly out of the APK instead of extracting a
   second copy.
 
+### Fixed
+- The pause/resume session button in the navigation drawer no longer acts on a
+  guess. It assumed the session was paused until the daemon said otherwise, so
+  it often showed "resume" for a running session and tapping it sent a command
+  the daemon ignored, which looked like the button was dead. It is now disabled
+  until the real state arrives, and it reverts if the daemon rejects the change.
+- Free space in the navigation drawer is fetched whenever the drawer opens.
+  Previously it was skipped in cases where the drawer was not yet marked open,
+  and a failed fetch was never reported or retried.
+
 ## [1.4.1] - 2023-12-28
 ### Fixed
 - Theme issue in F-Droid build
