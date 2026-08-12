@@ -110,6 +110,15 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
 
   Future checkConnectionAndShowBanner() async {
     if (checking) return;
+    if (!repository.isReady()) {
+      // No client has been attached yet. Polls fail by definition in that
+      // window, and getDaemonInfo would throw on the null client and be read
+      // as a lost connection -- so the banner would flash during startup.
+      // A connection that drops later keeps its client, so this only skips
+      // the pre-connection window.
+      Log.v(_tag, "No client yet, not checking");
+      return;
+    }
     Log.v(_tag, "Checking connection to daemon");
     checking = true;
     try {
