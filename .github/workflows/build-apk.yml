@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Evaluated at job level on purpose: a step's own env is not in scope for
+      # that step's `if`, and the secrets context is not available there either.
+      HAS_RELEASE_KEY: ${{ secrets.RELEASE_KEYSTORE_BASE64 != '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -41,8 +45,57 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      # Without these secrets the build falls back to the debug key, and an
+      # ephemeral runner generates a fresh one every time -- so those APKs
+      # cannot be installed over each other. Secrets are not exposed to pull
+      # requests from forks, so this step is skipped there rather than failing
+      # the build; those APKs are for testing only.
+      - name: Set up release signing
+        if: env.HAS_RELEASE_KEY == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > android/app/release.keystore
+          # storeFile is resolved relative to the app module.
+          {
+            echo "storeFile=release.keystore"
+            echo "storePassword=$STORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/key.properties
+
       - name: Build APK
         run: flutter build apk --release --flavor github
+
+      # Prints the certificate the APK actually carries. With the secrets set
+      # this fingerprint must be identical on every run -- that is the whole
+      # point, and it is the one thing worth checking after a key rotation.
+      #
+      # apksigner, not keytool: at minSdk 24 the APK carries a v2/v3 signature
+      # and no legacy JAR signature, so `keytool -printcert -jarfile` prints
+      # nothing at all. Gradle's own warning is not enough either, because
+      # `flutter build` filters Gradle's log output.
+      - name: Report the signing certificate
+        run: |
+          set -uo pipefail
+          APK=build/app/outputs/flutter-apk/app-github-release.apk
+          APKSIGNER=$(ls -d "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          if [ -n "$APKSIGNER" ]; then
+            "$APKSIGNER" verify --print-certs "$APK" | grep -E 'certificate DN|SHA-256 digest' || true
+          else
+            echo "apksigner not found, skipping the certificate report"
+          fi
+          if [ "$HAS_RELEASE_KEY" != "true" ]; then
+            echo "::warning::Signed with the debug key. This APK cannot be installed over one from any other build and must not be published. Set the RELEASE_KEYSTORE_BASE64, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS and RELEASE_KEY_PASSWORD secrets."
+          fi
+
+      - name: Remove signing material
+        if: always()
+        run: rm -f android/key.properties android/app/release.keystore
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v7

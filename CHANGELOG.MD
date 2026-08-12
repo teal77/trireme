@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and a failed fetch was never reported or retried.
 
 ### Changed
+- Release builds can be signed with a real key. Published APKs were signed with
+  a throwaway debug key that was regenerated on every build, so Android refused
+  to install a new version over an old one and the only way to update was to
+  uninstall first, losing the server list and all settings. Builds still fall
+  back to the debug key when no key is configured, but they now say so.
 - Minimum Android version is now 7.0 (API 24), pinned explicitly. It
   previously tracked whichever Flutter SDK built the app, so release builds
   shipped a 4.4 floor while local builds produced 7.0.

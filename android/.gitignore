@@ -10,3 +10,7 @@
 GeneratedPluginRegistrant.java
 
 /key.properties
+
+# Signing material. Never commit these.
+*.keystore
+*.jks

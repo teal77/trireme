@@ -21,6 +21,17 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// The release key lives in android/key.properties, which is gitignored and so
+// is absent in every fresh clone and on any CI runner that has not been given
+// the secrets. Without it the github flavor falls back to the debug key, and
+// because a debug keystore is generated on demand, an ephemeral runner
+// produces a different key on every build -- Android then refuses to install
+// the new APK over the old one, and the only way through is to uninstall,
+// which destroys the server list and every preference. Builds signed that way
+// must not be published.
+def releaseKeyPropertiesFile = rootProject.file('key.properties')
+def hasReleaseKey = releaseKeyPropertiesFile.exists()
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -57,12 +68,13 @@ android {
 
     signingConfigs {
         github {
-            def keystorePropertiesFile = rootProject.file("key.properties")
             def keystoreProperties = new Properties()
 
-            if (!keystorePropertiesFile.exists()) return
+            if (!hasReleaseKey) return
 
-            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            releaseKeyPropertiesFile.withReader('UTF-8') { reader ->
+                keystoreProperties.load(reader)
+            }
 
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
@@ -81,7 +93,7 @@ android {
     productFlavors {
         github {
             dimension "deploy"
-            signingConfig signingConfigs.debug
+            signingConfig hasReleaseKey ? signingConfigs.github : signingConfigs.debug
         }
 
         fdroid {
@@ -105,4 +117,21 @@ flutter {
 
 dependencies {
     implementation 'androidx.core:core:1.7.0'
+}
+
+// Say out loud which key a release build was signed with. A debug-signed
+// release looks identical to a properly signed one until someone tries to
+// upgrade and Android rejects it.
+gradle.taskGraph.whenReady { graph ->
+    def buildingGithubRelease = graph.allTasks.any {
+        it.name.toLowerCase().contains('githubrelease')
+    }
+    if (!buildingGithubRelease) return
+
+    if (hasReleaseKey) {
+        logger.lifecycle('Signing the github release with the key from android/key.properties')
+    } else {
+        logger.warn('WARNING: android/key.properties is missing, so this release is signed with the debug key.')
+        logger.warn('WARNING: it cannot be installed over an APK signed with a different key. Do not publish it.')
+    }
 }
