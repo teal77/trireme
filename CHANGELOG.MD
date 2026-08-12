@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Losing the connection to the daemon is reported again. The "Lost connection
+  to daemon" banner could only appear if a screen was opened while the daemon
+  was already unreachable; a connection that dropped while you were watching a
+  screen was never reported at all, because the retry that keeps polling alive
+  was also discarding the errors.
+- Opening a torrent's details with no working connection shows an error instead
+  of a progress bar that never finishes.
+
 ### Changed
 - Minimum Android version is now 7.0 (API 24), pinned explicitly. It
   previously tracked whichever Flutter SDK built the app, so release builds

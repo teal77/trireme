@@ -76,6 +76,14 @@ class TriremeRepository {
 
   Stream<Object> errorStream() => _errorStream.stream;
 
+  // Must be called on the failing call itself, upstream of retry(). retry()
+  // never forwards an error downstream -- it is unbounded, so the branch that
+  // would emit one is unreachable -- and anything hung off the end of a polling
+  // pipeline therefore only ever sees the merged seed fail.
+  void _reportError(Object e, StackTrace _) {
+    if (!_errorStream.isClosed) _errorStream.add(e);
+  }
+
   void init() {
     _readinessStream = StreamController.broadcast();
     _errorStream = StreamController.broadcast();
@@ -145,13 +153,14 @@ class TriremeRepository {
 
   Stream<SessionStatus> _getSessionStatusStream() {
     _sessionStatusStream ??= _clockStream
-          .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
-          .retry()
-          .syncWithClockStream(_clockStream)
-          .doOnError((e, _) => _errorStream.add(e))
-          .asBroadcastStream()
-          .where(_isResponseValid)
-          .map(_unpackResponse);
+        .flatMap((_) =>
+            Stream.fromFuture(_getSessionStatus()).doOnError(_reportError))
+        .retry()
+        .syncWithClockStream(_clockStream)
+        .doOnError(_reportError)
+        .asBroadcastStream()
+        .where(_isResponseValid)
+        .map(_unpackResponse);
     return _sessionStatusStream!;
   }
 
@@ -298,11 +307,12 @@ class TriremeRepository {
 
   Stream<List<TorrentItem>> getTorrentListUpdates() {
     return _clockStream
-        .flatMap((_) => Stream.fromFuture(_getTorrentUpdate()))
+        .flatMap((_) =>
+            Stream.fromFuture(_getTorrentUpdate()).doOnError(_reportError))
         .retry()
         .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentUpdate())])
-        .doOnError((e, _) => _errorStream.add(e))
+        .doOnError(_reportError)
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -312,13 +322,18 @@ class TriremeRepository {
   }
 
   Stream<TorrentDetail> getTorrentDetails(String torrentId) {
-    if (client.isDisposed || torrentId.isEmpty) return const Stream.empty();
+    // An empty stream here reads as "still loading" to a StreamBuilder -- it
+    // closes without ever going active -- so the details screen sat on its
+    // progress bar forever. Fail instead, so the error page gets a chance.
+    if (torrentId.isEmpty) return Stream.error("No torrent selected");
+    if (client.isDisposed) return Stream.error("Not connected to the daemon");
     return _clockStream
-        .flatMap((_) => Stream.fromFuture(client.getTorrentDetails(torrentId)))
+        .flatMap((_) => Stream.fromFuture(client.getTorrentDetails(torrentId))
+            .doOnError(_reportError))
         .retry()
         .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(client.getTorrentDetails(torrentId))])
-        .doOnError((e, _) => _errorStream.add(e))
+        .doOnError(_reportError)
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -396,11 +411,12 @@ class TriremeRepository {
 
   Stream<TorrentFiles> getTorrentFilesUpdate(String torrentId) {
     return _clockStream
-        .flatMap((_) => Stream.fromFuture(_getTorrentFiles(torrentId)))
+        .flatMap((_) => Stream.fromFuture(_getTorrentFiles(torrentId))
+            .doOnError(_reportError))
         .retry()
         .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentFiles(torrentId))])
-        .doOnError((e, _) => _errorStream.add(e))
+        .doOnError(_reportError)
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -423,11 +439,12 @@ class TriremeRepository {
 
   Stream<Peers> getTorrentPeers(String torrentId) {
     return _clockStream
-        .flatMap((_) => Stream.fromFuture(client.getTorrentPeers(torrentId)))
+        .flatMap((_) => Stream.fromFuture(client.getTorrentPeers(torrentId))
+            .doOnError(_reportError))
         .retry()
         .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(client.getTorrentPeers(torrentId))])
-        .doOnError((e, _) => _errorStream.add(e))
+        .doOnError(_reportError)
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
@@ -447,11 +464,12 @@ class TriremeRepository {
 
   Stream<TorrentOptions> getTorrentOptionsUpdates(String torrentId) {
     return _clockStream
-        .flatMap((_) => Stream.fromFuture(_getTorrentOptions(torrentId)))
+        .flatMap((_) => Stream.fromFuture(_getTorrentOptions(torrentId))
+            .doOnError(_reportError))
         .retry()
         .syncWithClockStream(_clockStream)
         .mergeWith([Stream.fromFuture(_getTorrentOptions(torrentId))])
-        .doOnError((e, _) => _errorStream.add(e))
+        .doOnError(_reportError)
         .where(_isResponseValid)
         .map(_unpackResponse);
   }
