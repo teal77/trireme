@@ -39,7 +39,7 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
 
   late AnimationController controller;
   late TriremeRepository repository;
-  late StreamSubscription subscription;
+  StreamSubscription? subscription;
   var isBannerShowing = false;
   var enableRetry = true;
 
@@ -54,6 +54,10 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
   void didChangeDependencies() {
     super.didChangeDependencies();
     repository = RepositoryProvider.repositoryOf(context);
+    // didChangeDependencies runs more than once, and each run used to
+    // leave the previous subscription live -- three of them were seen
+    // on one screen, so every error fired the handler three times.
+    subscription?.cancel();
     subscription = errorStreamDebounced().listen((e) async {
       if (!isBannerShowing) {
         await checkConnectionAndShowBanner();
@@ -89,7 +93,7 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
   @override
   void dispose() {
     controller.dispose();
-    subscription.cancel();
+    subscription?.cancel();
     super.dispose();
   }
 
