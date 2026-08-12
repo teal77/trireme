@@ -31,11 +31,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # Only errors fail the build. There is a standing backlog of ~218
-      # info/warning findings, so bare `flutter analyze` would exit non-zero
-      # on every run and the step would be worthless as a gate.
+      # Infos are not fatal: there is a standing backlog of ~62, mostly const
+      # and widget-key lints. Warnings ARE fatal — this branch drove them to
+      # zero, and letting them back in silently is how the backlog regrew last
+      # time. Errors are always fatal.
       - name: Analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: flutter analyze --no-fatal-infos
 
       - name: Run tests
         run: flutter test

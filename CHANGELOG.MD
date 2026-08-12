@@ -19,9 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   system maps those libraries directly out of the APK instead of extracting a
   second copy.
 
-### Fixed
-- A missing case in the delete-confirmation dialog's option handling.
-
 ## [1.4.1] - 2023-12-28
 ### Fixed
 - Theme issue in F-Droid build
