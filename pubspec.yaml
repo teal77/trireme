@@ -24,7 +24,7 @@ dependencies:
   flutter_svg: "^1.1.1+1"
   flutter_speed_dial: "^6.0.0"
 
-  duration: "^3.0.11"
+  duration: "^4.0.3"
 
 dev_dependencies:
   flutter_lints: "^2.0.1"

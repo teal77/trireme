@@ -93,10 +93,10 @@ packages:
     dependency: "direct main"
     description:
       name: duration
-      sha256: "8b9020df63d2894f29fe250b60ca5b7f9e943d4a3cf766c2b161efeb617a0ea3"
+      sha256: "13e5d20723c9c1dde8fb318cf86716d10ce294734e81e44ae1a817f3ae714501"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.15"
+    version: "4.0.3"
   fake_async:
     dependency: transitive
     description:
