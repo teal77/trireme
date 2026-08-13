@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trireme/common/strings.dart';
@@ -91,23 +92,32 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('both bundled SVG assets decode and render', (tester) async {
+  testWidgets('both bundled SVG assets load and parse', (tester) async {
     // assets/icons/highest.svg is used by the file-priority toolbar, which
-    // needs a live repository to build. Rendering the asset directly still
-    // covers what the flutter_svg upgrade puts at risk: that this asset loads
-    // and paints with the parameters the app passes.
+    // needs a live repository to build, so its asset is covered here instead.
+    //
+    // Loading the bytes is the load-bearing part. SvgPicture.asset does NOT
+    // throw for a missing asset -- the widget is still built and
+    // takeException() stays null -- so a test that only pumps it passes with
+    // a nonsense path and proves nothing. Verified: pointing this at
+    // 'NOT-THERE.svg' passed until rootBundle.loadString was added.
     for (final asset in const [
       'assets/icons/trireme.svg',
       'assets/icons/highest.svg',
     ]) {
+      final source = await rootBundle.loadString(asset);
+      expect(source, contains('<svg'), reason: '$asset should be SVG source');
+
+      // And it must still be parseable by whichever flutter_svg is resolved.
+      final picture = await vg.loadPicture(SvgStringLoader(source), null);
+      addTearDown(picture.picture.dispose);
+      expect(picture.size.width, greaterThan(0), reason: 'parsing $asset');
+      expect(picture.size.height, greaterThan(0), reason: 'parsing $asset');
+
       await tester.pumpWidget(MaterialApp(
-        home: Center(
-          child: SvgPicture.asset(asset, width: 24.0, height: 24.0),
-        ),
+        home: Center(child: SvgPicture.asset(asset, width: 24.0, height: 24.0)),
       ));
       await tester.pumpAndSettle();
-
-      expect(find.byType(SvgPicture), findsOneWidget, reason: 'rendering $asset');
       expect(tester.takeException(), isNull, reason: 'rendering $asset');
     }
   });
