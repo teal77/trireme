@@ -22,7 +22,7 @@ dependencies:
   sqflite: "^2.0.3"
 
   flutter_svg: "^1.1.1+1"
-  flutter_speed_dial: "^6.0.0"
+  flutter_speed_dial: "^7.0.0"
 
   duration: "^4.0.3"
 
