@@ -100,6 +100,50 @@ TorrentItem buildTorrentItem({
   );
 }
 
+/// Builds the map `core.get_torrents_status` answers with for one torrent.
+///
+/// This is the wire shape, not the model: every key in `torrentListItemKeys`
+/// has to be present and of the right type, because the generated deserializer
+/// casts hard, with no fallback. A missing key, or an int where a double is
+/// declared, fails the whole response rather than the one field.
+Map<String, Object?> buildTorrentStatus({
+  String name = 'torrent',
+  String state = 'Downloading',
+  double progress = 0.0,
+  int downloadSpeed = 0,
+  int uploadSpeed = 0,
+  num eta = 0,
+  int totalSize = 0,
+  int totalDone = 0,
+  int totalUploaded = 0,
+  bool isFinished = false,
+  double ratio = 0.0,
+  num timeAdded = 1500000000,
+  num timeCompleted = 0,
+  int timeSeeding = 0,
+  String? label,
+  String trackerHost = 'tracker.example',
+}) {
+  return <String, Object?>{
+    'name': name,
+    'state': state,
+    'progress': progress,
+    'download_payload_rate': downloadSpeed,
+    'upload_payload_rate': uploadSpeed,
+    'eta': eta,
+    'total_wanted': totalSize,
+    'total_done': totalDone,
+    'total_uploaded': totalUploaded,
+    'is_finished': isFinished,
+    'ratio': ratio,
+    'time_added': timeAdded,
+    'completed_time': timeCompleted,
+    'seeding_time': timeSeeding,
+    'label': label,
+    'tracker_host': trackerHost,
+  };
+}
+
 TorrentFile buildTorrentFile({
   int index = 0,
   int size = 0,
