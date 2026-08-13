@@ -43,7 +43,18 @@ jobs:
         run: flutter analyze --no-fatal-infos
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
+
+      # Uploaded as an artifact rather than sent to a coverage service: no
+      # account, no token, and nothing that can fail independently of the code.
+      # A service can be wired in later without touching the test setup.
+      # Deliberately no minimum threshold -- the suite is new and the number is
+      # still moving, so a floor picked now would block work for no benefit.
+      - name: Upload coverage
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
 
       # Without these secrets the build falls back to the debug key, and an
       # ephemeral runner generates a fresh one every time -- so those APKs

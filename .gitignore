@@ -17,3 +17,6 @@ packages
 
 .mainframer
 mainframer.sh
+
+# Test coverage output
+/coverage/
