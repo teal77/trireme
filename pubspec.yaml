@@ -21,7 +21,7 @@ dependencies:
   shared_preferences: "^2.0.15"
   sqflite: "^2.0.3"
 
-  flutter_svg: "^1.1.1+1"
+  flutter_svg: "^2.3.0"
   flutter_speed_dial: "^7.0.0"
 
   duration: "^4.0.3"
