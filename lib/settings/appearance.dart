@@ -199,7 +199,7 @@ class MaterialColorPicker extends StatelessWidget {
       Colors.blueGrey
     ];
 
-    Widget _getColorButton(MaterialColor c) {
+    Widget getColorButton(MaterialColor c) {
       return Padding(
           padding: const EdgeInsets.all(4.0),
           child: GestureDetector(
@@ -210,6 +210,6 @@ class MaterialColorPicker extends StatelessWidget {
           ));
     }
 
-    return colorList.map((c) => _getColorButton(c)).toList();
+    return colorList.map((c) => getColorButton(c)).toList();
   }
 }

@@ -67,8 +67,7 @@ class _MoveStorage extends StatefulWidget {
   final String currentPath;
 
   const _MoveStorage(
-      {Key? key, required this.torrentId, required this.currentPath})
-      : super(key: key);
+      {super.key, required this.torrentId, required this.currentPath});
 
   @override
   State createState() => _MoveStorageState();

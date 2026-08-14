@@ -31,7 +31,7 @@ class File {
   late int priorityInt;
   late Priority priority;
   late double progress;
-  late File? parent = null;
+  File? parent;
   late List<File> children = [];
 
   File(this.name);
@@ -62,7 +62,7 @@ class File {
   void addChild(File file) {
     children.add(file);
     file.parent = this;
-    file.path = "${path}/${file.name}";
+    file.path = "$path/${file.name}";
   }
 
   @override
@@ -122,7 +122,9 @@ File convertToFileTree(TorrentFiles torrentFiles) {
 
   void computeFolderMetadata(File file) {
     if (file.isFile) return;
-    file.children.forEach((f) => computeFolderMetadata(f));
+    for (var f in file.children) {
+      computeFolderMetadata(f);
+    }
 
     file.size = file.children.fold(0, (t, f) => t + f.size);
     file.progress = ((file.children

@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 
 import 'package:trireme/common/common.dart';
 
-typedef void OnLabelSelected(String label);
+typedef OnLabelSelected = void Function(String label);
 
 class LabelButton extends StatelessWidget {
   final String tooltip;

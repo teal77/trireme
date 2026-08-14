@@ -57,11 +57,9 @@ class _MaxSpeedSetting extends StatefulWidget {
   final bool isDownloadSpeed;
 
   const _MaxSpeedSetting(
-      {Key? key,
-      required this.torrentId,
+      {required this.torrentId,
       required this.currentMaxSpeed,
-      required this.isDownloadSpeed})
-      : super(key: key);
+      required this.isDownloadSpeed});
 
   @override
   State createState() {

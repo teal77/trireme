@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 class LoadingContainer extends StatefulWidget {
   final Widget child;
 
-  const LoadingContainer({Key? key, required this.child}) : super(key: key);
+  const LoadingContainer({super.key, required this.child});
 
   static LoadingContainerState of(BuildContext context) {
     var state = context.findAncestorStateOfType<LoadingContainerState>();

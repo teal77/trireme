@@ -381,8 +381,8 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   }
 
   Future<num?> showNumberInputDialog(String title, {String? hintText}) async {
-    var userInput;
-    num n = await showDialog(
+    String userInput = '';
+    num? n = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
@@ -401,19 +401,15 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
                 TextButton(
                   child: Text(Strings.strOk),
                   onPressed: () {
-                    var n;
+                    num? n;
                     try {
-                      if (userInput != null && userInput.isNotEmpty) {
+                      if (userInput.isNotEmpty) {
                         n = num.parse(userInput);
                       }
                     } on FormatException {
                       //nop
                     }
-                    if (n != null) {
-                      Navigator.pop(context, n);
-                    } else {
-                      Navigator.pop(context);
-                    }
+                    Navigator.pop(context, n);
                   },
                 )
               ],

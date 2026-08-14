@@ -220,7 +220,7 @@ class TorrentListItemState extends State<TorrentListItem> {
       var eta = controller.getEta();
       children.add(Expanded(
           child: Text(
-        "$eta",
+        eta,
         textAlign: TextAlign.end,
       )));
     }

@@ -58,11 +58,11 @@ class DeleteButton extends StatelessWidget {
 enum DeleteOptions { delete, deleteWithData, dontDelete }
 
 Future<DeleteOptions?> showConfirmationDialog(BuildContext context) {
-  final _key = GlobalKey<_DeleteConfirmationDialogContentState>();
+  final key = GlobalKey<_DeleteConfirmationDialogContentState>();
   return showDialog<DeleteOptions>(
       context: context,
       builder: (context) => AlertDialog(
-            content: _DeleteConfirmationDialogContent(_key),
+            content: _DeleteConfirmationDialogContent(key),
             actions: <Widget>[
               TextButton(
                 child: Text(Strings.strcNo),
@@ -75,7 +75,7 @@ Future<DeleteOptions?> showConfirmationDialog(BuildContext context) {
                 onPressed: () {
                   Navigator.pop(
                       context,
-                      _key.currentState?.deleteData ?? false
+                      key.currentState?.deleteData ?? false
                           ? DeleteOptions.deleteWithData
                           : DeleteOptions.delete);
                 },

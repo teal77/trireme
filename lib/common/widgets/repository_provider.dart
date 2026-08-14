@@ -25,7 +25,7 @@ import 'client_provider.dart';
 class RepositoryProvider extends StatelessWidget {
   final Widget child;
 
-  const RepositoryProvider({Key? key, required this.child}) : super(key: key);
+  const RepositoryProvider({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,7 @@ class RepositoryProvider extends StatelessWidget {
 class _RepositoryProviderInternal extends StatefulWidget {
   final Widget child;
 
-  const _RepositoryProviderInternal({Key? key, required this.child})
-      : super(key: key);
+  const _RepositoryProviderInternal({required this.child});
 
   @override
   State<StatefulWidget> createState() {
@@ -117,8 +116,7 @@ class _RepositoryProviderInherited extends InheritedWidget {
   final RepositoryProviderState state;
 
   const _RepositoryProviderInherited(
-      {Key? key, required this.state, required Widget child})
-      : super(key: key, child: child);
+      {required this.state, required super.child});
 
   @override
   bool updateShouldNotify(_RepositoryProviderInherited oldWidget) {

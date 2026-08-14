@@ -22,8 +22,7 @@ class Selectable extends StatelessWidget {
   final bool selected;
   final Widget child;
 
-  const Selectable({Key? key, this.selected = false, required this.child})
-      : super(key: key);
+  const Selectable({super.key, this.selected = false, required this.child});
 
   @override
   Widget build(BuildContext context) {

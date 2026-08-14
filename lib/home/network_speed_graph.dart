@@ -35,7 +35,7 @@ class NetworkSpeedGraph extends StatelessWidget {
     return StreamBuilder<NetworkSpeedData>(
         stream: speeds,
         builder: (context, snapshot) {
-          return Container(
+          return SizedBox(
             height: 200.0,
             child: snapshot.hasData
                 ? _NetworkSpeedGraph(snapshot.data!)

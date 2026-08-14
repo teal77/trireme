@@ -91,11 +91,9 @@ class _TorrentFileList extends StatefulWidget {
   final File root;
 
   const _TorrentFileList(
-      {Key? key,
-      required this.torrentId,
+      {required this.torrentId,
       required this.torrentFiles,
-      required this.root})
-      : super(key: key);
+      required this.root});
 
   @override
   State createState() {
@@ -257,7 +255,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     return children;
   }
 
-  Map<SortBy, Comparator<File>> _comparators = {
+  final Map<SortBy, Comparator<File>> _comparators = {
     SortBy.name: (f1, f2) => f1.name.compareTo(f2.name),
     SortBy.size: (f1, f2) => f1.size.compareTo(f2.size),
     SortBy.priority: (f1, f2) => f1.priority.index.compareTo(f2.priority.index),
@@ -386,8 +384,8 @@ class _TorrentFileListState extends State<_TorrentFileList>
   }
 }
 
-typedef void _TorrentFileSelectedCallback(File file);
-typedef void _TorrentFileClickedCallback(File file);
+typedef _TorrentFileSelectedCallback = void Function(File file);
+typedef _TorrentFileClickedCallback = void Function(File file);
 
 class _TorrentFileListTile extends StatelessWidget {
   final File file;
@@ -441,7 +439,7 @@ class _TorrentFileListTile extends StatelessWidget {
 
 enum SortBy { name, size, priority, progress }
 
-typedef void OnSortModeSelected(SortBy newSortBy);
+typedef OnSortModeSelected = void Function(SortBy newSortBy);
 
 Widget _getSortingButton(OnSortModeSelected callback) {
   return PopupMenuButton<SortBy>(

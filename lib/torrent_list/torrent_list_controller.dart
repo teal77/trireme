@@ -27,8 +27,8 @@ import 'package:trireme/common/common.dart';
 
 import 'torrent_item.dart';
 
-typedef void OnStateUpdated();
-typedef void OnSelectedItemsChanged(int selectedCount);
+typedef OnStateUpdated = void Function();
+typedef OnSelectedItemsChanged = void Function(int selectedCount);
 
 class TorrentListController {
   static const _tag = "TorrentListController";
