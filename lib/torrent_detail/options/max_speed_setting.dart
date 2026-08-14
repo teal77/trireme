@@ -194,6 +194,7 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
       } else {
         await repository.setTorrentMaxUploadSpeed(widget.torrentId, newSpeed);
       }
+      if (!mounted) return;
       Navigator.pop(context);
     } catch (e) {
       showErrorSnackbar(e);

@@ -479,6 +479,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       } else if (widget.addTorrentKind == AddTorrentKind.infohash) {
         await addTorrentHash();
       }
+      if (!mounted) return;
       Navigator.pop(context);
     } catch (e) {
       showSnackBar(prettifyError(e));

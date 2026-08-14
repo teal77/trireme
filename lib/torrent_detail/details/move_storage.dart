@@ -116,6 +116,7 @@ class _MoveStorageState extends State<_MoveStorage>
       if (result) {
         showSnackBar(Strings.strSuccess);
         await Future<void>.delayed(const Duration(seconds: 1));
+        if (!mounted) return;
         Navigator.pop(context);
       } else {
         showSnackBar(Strings.detailMoveStorageFailedText);

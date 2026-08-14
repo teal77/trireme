@@ -138,6 +138,7 @@ class _HomePageState extends State<_HomePageContent> {
       ));
     }
 
+    if (!mounted) return;
     ClientProvider.of(context).setClient(client);
     loadingContainerKey.currentState!.hideProgress();
 
@@ -271,6 +272,7 @@ class _HomePageState extends State<_HomePageContent> {
     await persistSortMode();
     repository.dispose(); //discard everything about the previous session
     repository.client.dispose();
+    if (!mounted) return;
     RepositoryProvider.of(context).setRepository(TriremeRepository());
     await initStateAsync();
   }

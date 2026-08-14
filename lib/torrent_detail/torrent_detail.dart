@@ -60,6 +60,10 @@ class TorrentDetailState extends State<TorrentDetailPage> {
         .map((e) => e as TorrentRemovedEvent)
         .where((e) => e.torrentId == widget.torrentItem.id)
         .listen((e) {
+      // The subscription outlives a popped route, so this can fire after the
+      // screen is gone. context.mounted rather than mounted: inside a stream
+      // callback the analyzer tracks the former and not the latter.
+      if (!context.mounted) return;
       Navigator.pop(context);
     });
 

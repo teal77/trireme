@@ -101,17 +101,19 @@ class _EditServerState extends State<_EditServer> {
       showSnackBar(Strings.settingsDeletingConnectedServer);
       return;
     }
+    if (!mounted) return;
     LoadingContainer.of(context).showProgress();
     try {
       var serversDB = ServerDetailsDatabase();
       await serversDB.open();
       await serversDB.deleteServer(widget.server);
       await serversDB.close();
+      if (!mounted) return;
       Navigator.pop(context, true);
     } catch (e) {
       showSnackBar(prettifyError(e));
     } finally {
-      LoadingContainer.of(context).hideProgress();
+      if (mounted) LoadingContainer.of(context).hideProgress();
     }
   }
 

@@ -138,6 +138,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
         });
     if (color != null) {
       await saveAppColor(color);
+      if (!mounted) return;
       var newPreference =
           PreferenceProvider.of(context).apply(appThemeColor: color);
       PreferenceProvider.updatePreference(context, newPreference);
@@ -147,6 +148,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
   void setThemeMode(ThemeMode? themeMode) async {
     if (themeMode == null) return;
     await saveThemeMode(themeMode);
+    if (!mounted) return;
     var newPreference = PreferenceProvider.of(context).apply(themeMode: themeMode);
     PreferenceProvider.updatePreference(context, newPreference);
   }
@@ -154,6 +156,7 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
   void setByteSizeStyle(ByteSizeStyle? b) async {
     if (b == null) return;
     await saveByteSizeStyle(b);
+    if (!mounted) return;
     var newPreference = PreferenceProvider.of(context).apply(byteSizeStyle: b);
     PreferenceProvider.updatePreference(context, newPreference);
   }

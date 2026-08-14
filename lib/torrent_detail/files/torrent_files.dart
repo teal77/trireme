@@ -325,6 +325,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
         selectedFiles.clear();
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(
@@ -351,6 +352,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     try {
       await controller.renameFile(widget.torrentId, fileForRename, newName);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(
