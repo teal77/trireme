@@ -18,9 +18,7 @@
 
 import 'dart:math';
 
-enum ByteSizeStyle {
-  si, iec
-}
+enum ByteSizeStyle { si, iec }
 
 const _siUnits = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 const _iecUnits = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
@@ -66,4 +64,3 @@ class ByteSizeFormatter {
     }
   }
 }
-

@@ -66,8 +66,8 @@ class TorrentItem {
         ? torrentListItem.totalUploaded
         : torrentListItem.totalDone;
 
-    var dateAdded = DateTime
-        .fromMillisecondsSinceEpoch(torrentListItem.timeAdded.toInt() * 1000);
+    var dateAdded = DateTime.fromMillisecondsSinceEpoch(
+        torrentListItem.timeAdded.toInt() * 1000);
     var seedingTime = Duration(seconds: torrentListItem.timeSeeding);
 
     return TorrentItem._(
@@ -99,9 +99,9 @@ class TorrentItem {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is TorrentItem &&
-              runtimeType == other.runtimeType &&
-              id == other.id;
+      other is TorrentItem &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 
   @override
   int get hashCode => id.hashCode;

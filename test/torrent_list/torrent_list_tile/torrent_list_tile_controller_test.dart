@@ -67,8 +67,8 @@ void main() {
     });
 
     test('keeps at least one decimal place', () {
-      expect(controllerFor(ratio: 2.0, totalSize: 1000).getRatio(),
-          'Ratio: 2.0');
+      expect(
+          controllerFor(ratio: 2.0, totalSize: 1000).getRatio(), 'Ratio: 2.0');
     });
   });
 

@@ -26,7 +26,8 @@ class MaxSpeedSettingScreen extends StatelessWidget {
   final bool isDownloadSpeed;
 
   const MaxSpeedSettingScreen(
-      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed, {super.key});
+      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,10 @@ class _MaxSpeedSetting extends StatefulWidget {
   final bool isDownloadSpeed;
 
   const _MaxSpeedSetting(
-      {Key? key, required this.torrentId, required this.currentMaxSpeed, required this.isDownloadSpeed})
+      {Key? key,
+      required this.torrentId,
+      required this.currentMaxSpeed,
+      required this.isDownloadSpeed})
       : super(key: key);
 
   @override
@@ -86,7 +90,8 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
       }
     }
     userSelectedUnit = currentSpeedUnit;
-    textEditingController = TextEditingController(text: currentSpeed.toString());
+    textEditingController =
+        TextEditingController(text: currentSpeed.toString());
   }
 
   @override
@@ -205,9 +210,12 @@ class _MaxSpeedSettingState extends State<_MaxSpeedSetting>
 
   void showErrorSnackbar(Object error) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(prettifyError(error)),
-        ));
+      content: Text(prettifyError(error)),
+    ));
   }
 }
 
-enum SpeedUnit { kbps, mbps, }
+enum SpeedUnit {
+  kbps,
+  mbps,
+}

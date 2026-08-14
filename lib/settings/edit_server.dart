@@ -118,8 +118,6 @@ class _EditServerState extends State<_EditServer> {
   }
 
   void showSnackBar(String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text))
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }

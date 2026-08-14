@@ -240,7 +240,8 @@ class _AddServerState extends State<_AddServerPageContent>
 
 //Copied from https://github.com/flutter/flutter/blob/7a6a65a597581c44d99fd7deeaf2405432aeec8b/examples/flutter_gallery/lib/demo/material/text_form_field_demo.dart
 class PasswordField extends StatefulWidget {
-  const PasswordField({super.key, 
+  const PasswordField({
+    super.key,
     this.hintText,
     this.labelText,
     this.helperText,

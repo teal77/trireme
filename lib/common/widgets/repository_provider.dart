@@ -38,15 +38,15 @@ class RepositoryProvider extends StatelessWidget {
 
   static TriremeRepository repositoryOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
-        !.state
+        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()!
+        .state
         .repository!;
   }
 
   static RepositoryProviderState of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()
-        !.state;
+        .dependOnInheritedWidgetOfExactType<_RepositoryProviderInherited>()!
+        .state;
   }
 }
 
@@ -116,7 +116,8 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
 class _RepositoryProviderInherited extends InheritedWidget {
   final RepositoryProviderState state;
 
-  const _RepositoryProviderInherited({Key? key, required this.state, required Widget child})
+  const _RepositoryProviderInherited(
+      {Key? key, required this.state, required Widget child})
       : super(key: key, child: child);
 
   @override

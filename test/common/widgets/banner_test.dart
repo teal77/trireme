@@ -71,14 +71,13 @@ void main() {
     await tester.pumpWidget(_twoBanners(1.0, 0.0));
 
     final collapsed = find.byType(CollapsibleBanner).at(1);
-    expect(
-        find.descendant(of: collapsed, matching: find.byType(ClipRect)),
+    expect(find.descendant(of: collapsed, matching: find.byType(ClipRect)),
         findsOneWidget,
         reason: 'the collapsed banner must clip its overflowing child');
 
     // The clip region is the zero-height box, so nothing of it can be drawn.
-    final clipSize = tester
-        .getSize(find.descendant(of: collapsed, matching: find.byType(ClipRect)));
+    final clipSize = tester.getSize(
+        find.descendant(of: collapsed, matching: find.byType(ClipRect)));
     expect(clipSize.height, 0.0);
   });
 }

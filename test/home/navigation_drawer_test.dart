@@ -60,7 +60,8 @@ void main() {
     expect(find.byType(NavDrawerHeader), findsOneWidget);
     expect(
         find.descendant(
-            of: find.byType(NavDrawerHeader), matching: find.byType(SvgPicture)),
+            of: find.byType(NavDrawerHeader),
+            matching: find.byType(SvgPicture)),
         findsOneWidget,
         reason: 'the drawer header renders its logo through flutter_svg');
 

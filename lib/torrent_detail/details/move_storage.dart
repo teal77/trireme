@@ -66,7 +66,9 @@ class _MoveStorage extends StatefulWidget {
   final String torrentId;
   final String currentPath;
 
-  const _MoveStorage({Key? key, required this.torrentId, required this.currentPath}) : super(key: key);
+  const _MoveStorage(
+      {Key? key, required this.torrentId, required this.currentPath})
+      : super(key: key);
 
   @override
   State createState() => _MoveStorageState();
@@ -74,7 +76,6 @@ class _MoveStorage extends StatefulWidget {
 
 class _MoveStorageState extends State<_MoveStorage>
     with TriremeProgressBarMixin {
-
   late TriremeRepository repository;
   late TextEditingController controller;
 
@@ -134,7 +135,7 @@ class _MoveStorageState extends State<_MoveStorage>
 
   void showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(text),
-        ));
+      content: Text(text),
+    ));
   }
 }

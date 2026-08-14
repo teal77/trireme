@@ -161,10 +161,9 @@ class _SelectedServerState extends State<SelectedServer> {
                   trailing: IconButton(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     constraints: const BoxConstraints(),
-                    icon: Icon(
-                        isPaused == true ? Icons.play_arrow : Icons.pause),
-                    onPressed:
-                        isPaused == null ? null : _toggleSessionPause,
+                    icon:
+                        Icon(isPaused == true ? Icons.play_arrow : Icons.pause),
+                    onPressed: isPaused == null ? null : _toggleSessionPause,
                   ),
                 ),
               ],

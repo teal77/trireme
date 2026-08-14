@@ -30,8 +30,8 @@ class TorrentList extends StatefulWidget {
   final FilterSpec filterSpec;
   final ValueChanged<int> selectionCountChangedCallback;
 
-  const TorrentList(Key key, this.sortCriterion, this.reverseSort, this.filterSpec,
-      this.selectionCountChangedCallback)
+  const TorrentList(Key key, this.sortCriterion, this.reverseSort,
+      this.filterSpec, this.selectionCountChangedCallback)
       : super(key: key);
 
   @override
@@ -172,7 +172,7 @@ class TorrentListState extends State<TorrentList> with TriremeProgressBarMixin {
 
   void showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(text),
-        ));
+      content: Text(text),
+    ));
   }
 }

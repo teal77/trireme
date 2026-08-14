@@ -112,9 +112,7 @@ mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
     onTabControllerValueChanged(tabControllerAnimation!.value);
   }
 
-  void onTabControllerValueChanged(double value) {
-
-  }
+  void onTabControllerValueChanged(double value) {}
 
   Animation<Offset> getOffsetAnimationOfTab(int tab) {
     return _CustomTween(tab).animate(tabControllerAnimation!);
@@ -136,7 +134,7 @@ class _CustomTween extends Tween<Offset> {
   Offset lerp(double d) {
     double x = max(-1, min(d - tab, 1));
     double y = min((d - tab).abs(), 1);
-    return Offset(x, 2*y);
+    return Offset(x, 2 * y);
   }
 
   @override

@@ -108,7 +108,8 @@ class _NetworkSpeed extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0),
             ),
             NetworkSpeedGraph(dataStream),
             Align(

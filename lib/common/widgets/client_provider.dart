@@ -32,7 +32,9 @@ class ClientProvider extends StatefulWidget {
   State<StatefulWidget> createState() => ClientProviderState();
 
   static ClientProviderState of(BuildContext context) {
-    var state = context.dependOnInheritedWidgetOfExactType<_ClientProviderInherited>()?.state;
+    var state = context
+        .dependOnInheritedWidgetOfExactType<_ClientProviderInherited>()
+        ?.state;
     if (state != null) {
       return state;
     } else {

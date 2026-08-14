@@ -24,8 +24,7 @@ class LoadingContainer extends StatefulWidget {
   const LoadingContainer({Key? key, required this.child}) : super(key: key);
 
   static LoadingContainerState of(BuildContext context) {
-    var state =
-    context.findAncestorStateOfType<LoadingContainerState>();
+    var state = context.findAncestorStateOfType<LoadingContainerState>();
     if (state != null) {
       return state;
     }
@@ -49,8 +48,7 @@ class LoadingContainerState extends State<LoadingContainer>
 
   @override
   Widget build(BuildContext context) {
-    final animation =
-    CurvedAnimation(parent: _controller, curve: Curves.ease);
+    final animation = CurvedAnimation(parent: _controller, curve: Curves.ease);
     return Stack(
       children: <Widget>[
         widget.child,

@@ -29,8 +29,10 @@ class Strings {
   static String addServerUserDetailsTitle = "User";
   static String addServerPublicKeyLabel = "Certificate SHA1 hash";
   static String addServerCertificateIssuer = "Issuer";
-  static String addServerSaveCertificate = "Save certificate details (Optional)";
-  static String addServerSaveCertificateInfo = "Connect only with this certificate, if the certificate changes on the server, connection will be refused";
+  static String addServerSaveCertificate =
+      "Save certificate details (Optional)";
+  static String addServerSaveCertificateInfo =
+      "Connect only with this certificate, if the certificate changes on the server, connection will be refused";
 
   static String homeTitle = "Deluge";
   static String homeSelectAll = "Select all";
@@ -62,8 +64,10 @@ class Strings {
   static String homeFilterByTrackerHost = "TRACKER HOST";
   static String homeFilterNoLabel = "No Label";
   static String homeDeleteTorrentFailed = "Could not remove {} of the torrents";
-  static String homeDeleteTorrentConfirmationText = "Are you sure you want to remove these torrents?";
-  static String homeDeleteTorrentAndDataConfirmationText = "Are you sure you want to remove these torrents and delete their data?";
+  static String homeDeleteTorrentConfirmationText =
+      "Are you sure you want to remove these torrents?";
+  static String homeDeleteTorrentAndDataConfirmationText =
+      "Are you sure you want to remove these torrents and delete their data?";
   static String homeDownloadSpeedTitle = "DOWNLOAD SPEED";
   static String homeUploadSpeedTitle = "UPLOAD SPEED";
   static String homePayloadSpeedLabel = "Payload";
@@ -95,8 +99,10 @@ class Strings {
   static String addTorrentMaxUploadSlots = "Maximum upload slots";
   static String addTorrentGeneralSubHeader = "General";
   static String addTorrentAddPaused = "Add in paused state";
-  static String addTorrentPrioritiseFirstLast = "Prioritise first and last pieces";
-  static String addTorrentPrioritiseFirstLastInfo = "Download file metadata first, helps to stream a video file before it has been completely downloaded";
+  static String addTorrentPrioritiseFirstLast =
+      "Prioritise first and last pieces";
+  static String addTorrentPrioritiseFirstLastInfo =
+      "Download file metadata first, helps to stream a video file before it has been completely downloaded";
   static String addTorrentDownloadPathTitle = "Set download path";
   static String addTorrentMoveCompletedPathTitle = "Set move completed path";
   static String addTorrentSelectDownloadSpeedTitle = "Set dowload speed limit";
@@ -142,9 +148,11 @@ class Strings {
   static String detailMoveStorageTooltip = "Move storage";
   static String detailDeleteTorrentWithDataLabel = "Remove with data";
   static String detailDeleteTorrentLabel = "Remove torrent";
-  static String detailDeleteConfirmationText = "Are you sure you want to remove this torrent?";
+  static String detailDeleteConfirmationText =
+      "Are you sure you want to remove this torrent?";
   static String detailDeleteDeleteData = "Delete data";
-  static String detailDeleteDataConfirmationText = "Are you sure you want to remove this torrent and delete its files?";
+  static String detailDeleteDataConfirmationText =
+      "Are you sure you want to remove this torrent and delete its files?";
   static String detailDeleteTorrentFailedText = "Could not remove torrent";
   static String detailMoveStorageFailedText = "Could not move storage";
   static String detailMoveStorageDialogTitle = "Set storage path";
@@ -176,7 +184,8 @@ class Strings {
   static String detailMaxUploadSlots = "Maximum upload slots";
   static String detailOptionUnsetText = "Same as global";
   static String detailOptionsAutoManagedLabel = "Auto managed";
-  static String detailOptionsAutoManagedSubtitle = "Allow Deluge to automatically manage this torrent's queueing";
+  static String detailOptionsAutoManagedSubtitle =
+      "Allow Deluge to automatically manage this torrent's queueing";
   static String detailOptionsStopAtRatio = "Stop seeding at ratio";
   static String detailOptionsStopRatio = "Stop ratio";
   static String detailOptionsRemoveAtRatio = "Remove at ratio";
@@ -207,7 +216,8 @@ class Strings {
   static String settingsEditServer = "Edit Server";
   static String settingsDeleteServerTooltip = "Delete server";
   static String settingsCertSaved = "Certificate saved";
-  static String settingsDeletingConnectedServer = "Cannot delete this server because it is being used";
+  static String settingsDeletingConnectedServer =
+      "Cannot delete this server because it is being used";
   static String settingsAppearance = "Appearance";
   static String settingsAppThemeColor = "App theme color";
   static String settingsDarkMode = "Dark Mode";

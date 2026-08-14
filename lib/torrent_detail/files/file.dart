@@ -125,9 +125,9 @@ File convertToFileTree(TorrentFiles torrentFiles) {
     file.children.forEach((f) => computeFolderMetadata(f));
 
     file.size = file.children.fold(0, (t, f) => t + f.size);
-    file.progress =
-        ((file.children.fold<double>(0.0, (t, f) => t + (f.progress * f.size))) /
-            file.size.toDouble()); //average progress
+    file.progress = ((file.children
+            .fold<double>(0.0, (t, f) => t + (f.progress * f.size))) /
+        file.size.toDouble()); //average progress
 
     var childrenPriorities = file.children.map((f) => f.priority);
     if (childrenPriorities.every((p) => p == childrenPriorities.first)) {

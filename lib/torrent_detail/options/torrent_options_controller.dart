@@ -56,7 +56,8 @@ class TorrentOptionsController {
     }
   }
 
-  List<String> makeUpdatedTorrentDestList(String latestDest, List<String> oldList) {
+  List<String> makeUpdatedTorrentDestList(
+      String latestDest, List<String> oldList) {
     var newList = oldList.toList();
     newList.removeWhere((e) => e == latestDest);
     newList.insert(0, latestDest);

@@ -216,8 +216,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
                           // default colour -- keep the untinted case.
                           colorFilter: IconTheme.of(context).color == null
                               ? null
-                              : ColorFilter.mode(
-                                  IconTheme.of(context).color!,
+                              : ColorFilter.mode(IconTheme.of(context).color!,
                                   BlendMode.srcIn),
                         ),
                         tooltip: Strings.detailFileHighest,

@@ -80,8 +80,9 @@ class FilterSelector extends StatefulWidget {
   final FilterSpec lastSelected;
   final FilterSelectedCallback callback;
 
-  const FilterSelector(this.stateFilters, this.labelFilters, this.trackerFilters,
-      this.lastSelected, this.callback, {super.key});
+  const FilterSelector(this.stateFilters, this.labelFilters,
+      this.trackerFilters, this.lastSelected, this.callback,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -170,7 +171,9 @@ class FilterChipContainer extends StatefulWidget {
   final String lastSelected;
   final ValueChanged<String> selectionChanged;
 
-  const FilterChipContainer(this.choices, this.lastSelected, this.selectionChanged, {super.key});
+  const FilterChipContainer(
+      this.choices, this.lastSelected, this.selectionChanged,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -221,7 +224,8 @@ class FilterSpecContainer extends StatelessWidget {
   final FilterSpec filterSpec;
   final ValueChanged<FilterSpec> filterChangedCallback;
 
-  const FilterSpecContainer(this.filterSpec, this.filterChangedCallback, {super.key});
+  const FilterSpecContainer(this.filterSpec, this.filterChangedCallback,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -272,8 +272,7 @@ class TriremeRepository {
 
     return await Stream.fromIterable(allIds.slices(500))
         .flatMap(
-          (chunk) => Stream.fromFuture(
-              client.getTorrentsList({'id': chunk})),
+          (chunk) => Stream.fromFuture(client.getTorrentsList({'id': chunk})),
           maxConcurrent: 2,
         )
         .fold(
@@ -449,7 +448,8 @@ class TriremeRepository {
         .map(_unpackResponse);
   }
 
-  Future setTorrentFilePriorities(String torrentId, List<int> priorities) async {
+  Future setTorrentFilePriorities(
+      String torrentId, List<int> priorities) async {
     if (client.isDisposed) return Future.error("error");
     var result = await client.setTorrentOptions(
         [torrentId], <String, Object>{'file_priorities': priorities});

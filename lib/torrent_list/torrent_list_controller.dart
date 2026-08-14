@@ -114,7 +114,8 @@ class TorrentListController {
   }
 
   Stream<List<DelugeRpcEvent>> _listEventsStream() {
-    return repository.getDelugeRpcEvents()
+    return repository
+        .getDelugeRpcEvents()
         .where((e) => isListAlteringEvent(e))
         .bufferTime(const Duration(seconds: 1))
         .where((l) => l.isNotEmpty);
@@ -163,7 +164,9 @@ class TorrentListController {
     _reverseSort = reverse;
 
     if (_torrentItems.isNotEmpty) {
-      _torrentItems.sort(reverse ? comparators[criterion]!.reversed() : comparators[criterion]);
+      _torrentItems.sort(reverse
+          ? comparators[criterion]!.reversed()
+          : comparators[criterion]);
     }
   }
 

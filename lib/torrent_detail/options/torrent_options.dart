@@ -59,7 +59,8 @@ class TorrentOptionsPageState extends State<TorrentOptionsPage>
             hideProgressBar();
 
             if (snapshot.hasData) {
-              return _TorrentOptionsContent(widget.torrentId, snapshot.data as TorrentOptions);
+              return _TorrentOptionsContent(
+                  widget.torrentId, snapshot.data as TorrentOptions);
             } else if (snapshot.hasError) {
               return ErrorPage(snapshot.error!);
             }
@@ -367,7 +368,8 @@ class _TorrentsOptionsState extends State<_TorrentOptionsContent>
     if (path != null && path.isNotEmpty) {
       setMoveCompletedPath(path);
       var torrentDests = await getSavedTorrentDestList();
-      var newTorrentDests = controller.makeUpdatedTorrentDestList(path, torrentDests);
+      var newTorrentDests =
+          controller.makeUpdatedTorrentDestList(path, torrentDests);
       await saveTorrentDestList(newTorrentDests);
     }
   }

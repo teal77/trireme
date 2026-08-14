@@ -149,7 +149,8 @@ class _AppearanceSettingsState extends State<AppearanceSettings> {
     if (themeMode == null) return;
     await saveThemeMode(themeMode);
     if (!mounted) return;
-    var newPreference = PreferenceProvider.of(context).apply(themeMode: themeMode);
+    var newPreference =
+        PreferenceProvider.of(context).apply(themeMode: themeMode);
     PreferenceProvider.updatePreference(context, newPreference);
   }
 
@@ -166,7 +167,8 @@ class MaterialColorPicker extends StatelessWidget {
   final MaterialColor selectedColor;
   final ValueChanged<MaterialColor> onColorChanged;
 
-  const MaterialColorPicker(this.selectedColor, this.onColorChanged, {super.key});
+  const MaterialColorPicker(this.selectedColor, this.onColorChanged,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {

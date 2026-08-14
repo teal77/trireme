@@ -63,9 +63,8 @@ class _ServerListState extends State<_ServerList> {
       setState(() {});
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(prettifyError(e)))
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(prettifyError(e))));
     } finally {
       if (mounted) LoadingContainer.of(context).hideProgress();
     }
@@ -76,8 +75,7 @@ class _ServerListState extends State<_ServerList> {
     return ListView(
       children: ListTile.divideTiles(
           context: context,
-          tiles: servers.map((s) => _buildServerTile(s))
-      ).toList(),
+          tiles: servers.map((s) => _buildServerTile(s))).toList(),
     );
   }
 
@@ -90,9 +88,7 @@ class _ServerListState extends State<_ServerList> {
 
   void launchServerDetails(ServerDBModel s) async {
     var result = await Navigator.push<bool>(
-        context,
-        MaterialPageRoute(builder: (context) => EditServer(s))
-    );
+        context, MaterialPageRoute(builder: (context) => EditServer(s)));
     if (result == null) return;
     if (result) {
       getServersAsync();

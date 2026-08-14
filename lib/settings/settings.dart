@@ -51,7 +51,8 @@ class SettingsList extends StatelessWidget {
   }
 
   void _launchScreen(BuildContext context, Widget screen) {
-    Navigator.push<void>(context, MaterialPageRoute(builder: (context) => screen));
+    Navigator.push<void>(
+        context, MaterialPageRoute(builder: (context) => screen));
   }
 
   void launchServerListScreen(BuildContext context) {

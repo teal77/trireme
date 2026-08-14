@@ -335,7 +335,8 @@ class _TrackerListContentState extends State<_TrackerListContent> {
     }
   }
 
-  Future<String?> showUrlInputDialog(String title, {String initial = ''}) async {
+  Future<String?> showUrlInputDialog(String title,
+      {String initial = ''}) async {
     final textController = TextEditingController(text: initial);
     return showDialog(
         context: context,

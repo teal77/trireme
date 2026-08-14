@@ -32,7 +32,8 @@ class TorrentDetailsController {
 
   final DateTime Function() _now;
 
-  TorrentDetailsController({DateTime Function()? now}) : _now = now ?? DateTime.now;
+  TorrentDetailsController({DateTime Function()? now})
+      : _now = now ?? DateTime.now;
 
   late TorrentItem torrentItem;
   late TorrentDetail torrentDetail;
@@ -138,7 +139,8 @@ class TorrentDetailsController {
   }
 
   String getLastSeenComplete() {
-    var lastSeenComplete = DateTime.fromMillisecondsSinceEpoch(torrentDetail.lastSeenComplete * 1000);
+    var lastSeenComplete = DateTime.fromMillisecondsSinceEpoch(
+        torrentDetail.lastSeenComplete * 1000);
     var since = _now().difference(lastSeenComplete);
 
     if (since.inDays > 365) {

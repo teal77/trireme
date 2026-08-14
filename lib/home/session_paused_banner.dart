@@ -34,7 +34,6 @@ class SessionPausedBanner extends StatefulWidget {
 
 class _SessionPausedBannerState extends State<SessionPausedBanner>
     with SingleTickerProviderStateMixin {
-
   late AnimationController controller;
   late TriremeRepository repository;
   StreamSubscription? subscription;

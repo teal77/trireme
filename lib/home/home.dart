@@ -101,7 +101,9 @@ class _HomePageState extends State<_HomePageContent> {
       widget.rootScaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
           content: Text(Strings.homeAddServerSnackbarText),
           duration: const Duration(days: 999),
-          action: SnackBarAction(label: Strings.homeAddServerSnackbarAction, onPressed: onAddServerClicked)));
+          action: SnackBarAction(
+              label: Strings.homeAddServerSnackbarAction,
+              onPressed: onAddServerClicked)));
       return;
     } else {
       widget.rootScaffoldMessengerKey.currentState!.removeCurrentSnackBar();
@@ -126,7 +128,8 @@ class _HomePageState extends State<_HomePageContent> {
     if (selectedServer.certificate.isNotEmpty) {
       certificate = selectedServer.certificate.codeUnits;
     }
-    var client = TriremeClient(selectedServer.username, selectedServer.password, selectedServer.host,
+    var client = TriremeClient(
+        selectedServer.username, selectedServer.password, selectedServer.host,
         port: selectedServer.port, pinnedCertificate: certificate);
 
     try {
@@ -157,7 +160,10 @@ class _HomePageState extends State<_HomePageContent> {
       appBar: getHomeAppBar(
           context,
           selectedItemCount,
-          IconButton(icon: const Icon(Icons.filter_list), tooltip: Strings.homeFilterTooltip, onPressed: showFilters),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              tooltip: Strings.homeFilterTooltip,
+              onPressed: showFilters),
           _getSortingButton(sortCriterion, reverseSort, onSortCriterionChanged),
           IconButton(
             icon: const Icon(Icons.close),
@@ -191,8 +197,13 @@ class _HomePageState extends State<_HomePageContent> {
                 setFilter,
               ),
               Expanded(
-                child: TorrentList(torrentListKey, sortCriterion, reverseSort, filterSpec,
-                    (selectedItemCount) => setState(() => this.selectedItemCount = selectedItemCount)),
+                child: TorrentList(
+                    torrentListKey,
+                    sortCriterion,
+                    reverseSort,
+                    filterSpec,
+                    (selectedItemCount) => setState(
+                        () => this.selectedItemCount = selectedItemCount)),
               )
             ],
           )),
@@ -211,13 +222,16 @@ class _HomePageState extends State<_HomePageContent> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SpeedIndicator(Icons.arrow_downward,
-                    repository.getSessionDownloadSpeed(PreferenceProvider.of(context).byteSizeStyle), () {
+                SpeedIndicator(
+                    Icons.arrow_downward,
+                    repository.getSessionDownloadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
                   _showNetworkSpeedBottomSheet(context, true, repository);
                 }),
                 SpeedIndicator(
-                    Icons.arrow_upward, repository.getSessionUploadSpeed(PreferenceProvider.of(context).byteSizeStyle),
-                    () {
+                    Icons.arrow_upward,
+                    repository.getSessionUploadSpeed(
+                        PreferenceProvider.of(context).byteSizeStyle), () {
                   _showNetworkSpeedBottomSheet(context, false, repository);
                 })
               ],
@@ -249,7 +263,8 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddServerClicked() async {
-    var didAddServer = await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => AddServerPage()));
+    var didAddServer = await Navigator.push<bool>(
+        context, MaterialPageRoute(builder: (context) => AddServerPage()));
 
     if (didAddServer == null || didAddServer == false) return;
 
@@ -279,7 +294,8 @@ class _HomePageState extends State<_HomePageContent> {
 
   void launchSettingsScreen() async {
     Navigator.pop(context);
-    await Navigator.push<void>(context, MaterialPageRoute(builder: (context) => SettingsList()));
+    await Navigator.push<void>(
+        context, MaterialPageRoute(builder: (context) => SettingsList()));
     var servers = await controller.getSavedServers();
     setState(() {
       this.servers = servers;
@@ -302,7 +318,8 @@ class _HomePageState extends State<_HomePageContent> {
 
   void showFilters() async {
     _tempFilterSpec = filterSpec;
-    await showFilterBottomSheet(context, repository.getFilterTree(), filterSpec, onFilterSelected);
+    await showFilterBottomSheet(
+        context, repository.getFilterTree(), filterSpec, onFilterSelected);
     setFilter(_tempFilterSpec);
   }
 
@@ -363,7 +380,10 @@ class _HomePageState extends State<_HomePageContent> {
 
   void onAddTorrentClicked(AddTorrentKind kind) {
     Navigator.push<void>(
-        context, MaterialPageRoute(fullscreenDialog: true, builder: (context) => AddTorrentPage(kind)));
+        context,
+        MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => AddTorrentPage(kind)));
   }
 
   void checkIntentDataAndAddTorrent() async {
@@ -406,7 +426,8 @@ class _HomePageState extends State<_HomePageContent> {
       if (filePath.isEmpty) return "";
       var tempName = filePath.split("/").last;
       if (tempName.contains(".torrent")) {
-        return tempName.replaceRange(tempName.lastIndexOf(".torrent"), null, ".torrent");
+        return tempName.replaceRange(
+            tempName.lastIndexOf(".torrent"), null, ".torrent");
       } else {
         return tempName;
       }
@@ -422,7 +443,8 @@ class _HomePageState extends State<_HomePageContent> {
     if (await torrentFile.exists()) {
       var fileContent = await torrentFile.readAsBytes();
       var fileDump = base64.encode(fileContent);
-      await repository.addTorrentFile(fileName, fileDump, {"owner": repository.client.username});
+      await repository.addTorrentFile(
+          fileName, fileDump, {"owner": repository.client.username});
     } else {
       throw "Torrent file $fileName does not exist";
     }
@@ -437,9 +459,12 @@ class _HomePageState extends State<_HomePageContent> {
     await saveSortReverse(reverseSort);
   }
 
-  void _showNetworkSpeedBottomSheet(BuildContext context, bool isDownloadSpeedGraph, TriremeRepository repository) {
+  void _showNetworkSpeedBottomSheet(BuildContext context,
+      bool isDownloadSpeedGraph, TriremeRepository repository) {
     showModalBottomSheet<void>(
-        context: context, builder: (context) => NetworkSpeedBottomSheet(isDownloadSpeedGraph, repository));
+        context: context,
+        builder: (context) =>
+            NetworkSpeedBottomSheet(isDownloadSpeedGraph, repository));
   }
 }
 
@@ -450,7 +475,8 @@ class SpeedIndicator extends StatelessWidget {
   final Stream<String> dataStream;
   final VoidCallback onPressed;
 
-  const SpeedIndicator(this.iconData, this.dataStream, this.onPressed, {super.key});
+  const SpeedIndicator(this.iconData, this.dataStream, this.onPressed,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -471,7 +497,8 @@ class SpeedIndicator extends StatelessWidget {
 
 typedef OnSortModeSelected = void Function(SortCriteria newCriterion);
 
-Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort, OnSortModeSelected callback) {
+Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort,
+    OnSortModeSelected callback) {
   PopupMenuEntry<SortCriteria> makeSortByButton(value, label) {
     return PopupMenuItem<SortCriteria>(
         value: value,
@@ -479,7 +506,8 @@ Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort,
           children: [
             Text(label),
             const Spacer(),
-            if (value == currentSortingCriterion) Icon(reverseSort ? Icons.arrow_downward : Icons.arrow_upward)
+            if (value == currentSortingCriterion)
+              Icon(reverseSort ? Icons.arrow_downward : Icons.arrow_upward)
           ],
         ));
   }
@@ -491,11 +519,16 @@ Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort,
       itemBuilder: (context) => <PopupMenuEntry<SortCriteria>>[
             makeSortByButton(SortCriteria.name, Strings.homeSortByName),
             makeSortByButton(SortCriteria.status, Strings.homeSortByStatus),
-            makeSortByButton(SortCriteria.dateAdded, Strings.homeSortByDateAdded),
-            makeSortByButton(SortCriteria.seedingTime, Strings.homeSortBySeedingTime),
-            makeSortByButton(SortCriteria.downloadProgress, Strings.homeSortByDownloadProgress),
-            makeSortByButton(SortCriteria.downloadSpeed, Strings.homeSortByDownloadSpeed),
-            makeSortByButton(SortCriteria.uploadSpeed, Strings.homeSortByUploadSpeed),
+            makeSortByButton(
+                SortCriteria.dateAdded, Strings.homeSortByDateAdded),
+            makeSortByButton(
+                SortCriteria.seedingTime, Strings.homeSortBySeedingTime),
+            makeSortByButton(SortCriteria.downloadProgress,
+                Strings.homeSortByDownloadProgress),
+            makeSortByButton(
+                SortCriteria.downloadSpeed, Strings.homeSortByDownloadSpeed),
+            makeSortByButton(
+                SortCriteria.uploadSpeed, Strings.homeSortByUploadSpeed),
             makeSortByButton(SortCriteria.ratio, Strings.homeSortByRatio),
             makeSortByButton(SortCriteria.size, Strings.homeSortBySize),
           ]);

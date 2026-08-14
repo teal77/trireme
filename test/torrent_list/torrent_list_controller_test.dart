@@ -43,8 +43,7 @@ void main() {
         buildTorrentItem(id: 'x', state: 'Seeding'),
         buildTorrentItem(id: 'y', state: 'Downloading'),
       ];
-      expect(sortedIds(items, comparators[SortCriteria.status]!),
-          ['y', 'x']);
+      expect(sortedIds(items, comparators[SortCriteria.status]!), ['y', 'x']);
     });
 
     test('dateAdded sorts oldest first', () {
@@ -97,8 +96,8 @@ void main() {
         buildTorrentItem(id: 'high', ratio: 2.5),
         buildTorrentItem(id: 'low', ratio: 0.5),
       ];
-      expect(sortedIds(items, comparators[SortCriteria.ratio]!),
-          ['low', 'high']);
+      expect(
+          sortedIds(items, comparators[SortCriteria.ratio]!), ['low', 'high']);
     });
 
     test('size sorts smallest first', () {
@@ -106,8 +105,8 @@ void main() {
         buildTorrentItem(id: 'big', totalSize: 900),
         buildTorrentItem(id: 'small', totalSize: 100),
       ];
-      expect(sortedIds(items, comparators[SortCriteria.size]!),
-          ['small', 'big']);
+      expect(
+          sortedIds(items, comparators[SortCriteria.size]!), ['small', 'big']);
     });
 
     test('every criterion has a comparator', () {
@@ -179,7 +178,8 @@ void main() {
       // Built at runtime so Dart cannot canonicalise it to the same
       // instance as `a` — otherwise `identical` alone satisfies these
       // assertions and the field comparison is never exercised.
-      final b = FilterSpec('Seeding', 'music', ['tracker', 'example'].join('.'));
+      final b =
+          FilterSpec('Seeding', 'music', ['tracker', 'example'].join('.'));
       expect(identical(a, b), isFalse);
       expect(a, b);
       expect(a.hashCode, b.hashCode);

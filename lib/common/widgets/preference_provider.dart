@@ -30,14 +30,16 @@ class PreferenceProvider extends StatefulWidget {
   _PreferenceProviderState createState() => _PreferenceProviderState();
 
   static Preferences of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()
-        !.state
+    return context
+        .dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()!
+        .state
         .preferences;
   }
 
   static void updatePreference(BuildContext context, Preferences preferences) {
-    context.dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()
-        !.state
+    context
+        .dependOnInheritedWidgetOfExactType<_PreferenceProviderInherited>()!
+        .state
         .setPreference(preferences);
   }
 }
@@ -70,9 +72,9 @@ class _PreferenceProviderState extends State<PreferenceProvider> {
     var savedByteSizeStyle = await getSavedByteSizeStyle();
     var savedThemeMode = await getSavedThemeMode();
     setPreference(_preferences.apply(
-        byteSizeStyle: savedByteSizeStyle,
-        appThemeColor: savedColor,
-        themeMode: savedThemeMode,
+      byteSizeStyle: savedByteSizeStyle,
+      appThemeColor: savedColor,
+      themeMode: savedThemeMode,
     ));
   }
 }
@@ -80,7 +82,8 @@ class _PreferenceProviderState extends State<PreferenceProvider> {
 class _PreferenceProviderInherited extends InheritedWidget {
   final _PreferenceProviderState state;
 
-  const _PreferenceProviderInherited(this.state, Widget child) : super(child: child);
+  const _PreferenceProviderInherited(this.state, Widget child)
+      : super(child: child);
 
   @override
   bool updateShouldNotify(_PreferenceProviderInherited oldWidget) {

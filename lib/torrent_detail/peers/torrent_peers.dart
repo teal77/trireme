@@ -94,14 +94,13 @@ class _TorrentPeersList extends StatelessWidget {
             alignment: AlignmentDirectional.center,
             children: [
               Text(
-                peer.country
-                    .toUpperCase()
-                    .split('')
-                    .map((char) => 127397 + char.codeUnitAt(0))
-                    .map((code) => String.fromCharCode(code))
-                    .join(),
-                style: const TextStyle(fontSize: 18)
-              )
+                  peer.country
+                      .toUpperCase()
+                      .split('')
+                      .map((char) => 127397 + char.codeUnitAt(0))
+                      .map((code) => String.fromCharCode(code))
+                      .join(),
+                  style: const TextStyle(fontSize: 18))
             ],
           ));
     }

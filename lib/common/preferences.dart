@@ -21,11 +21,8 @@ import 'package:flutter/material.dart';
 import 'bytesize.dart';
 
 class Preferences {
-  static Preferences defaultPreferences = Preferences(
-    ByteSizeStyle.iec,
-    Colors.blue,
-    ThemeMode.system
-  );
+  static Preferences defaultPreferences =
+      Preferences(ByteSizeStyle.iec, Colors.blue, ThemeMode.system);
 
   ByteSizeStyle byteSizeStyle;
   MaterialColor appThemeColor;
@@ -38,7 +35,6 @@ class Preferences {
       MaterialColor? appThemeColor,
       Brightness? brightness,
       ThemeMode? themeMode}) {
-
     return Preferences(
       byteSizeStyle ?? this.byteSizeStyle,
       appThemeColor ?? this.appThemeColor,
