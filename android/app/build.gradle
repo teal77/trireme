@@ -60,7 +60,12 @@ android {
         // to 19 on Flutter 3.16 and 24 on 3.44 — so the app's minimum Android
         // version silently tracked whoever built it. API 24 is Android 7.0.
         minSdkVersion 24
-        targetSdkVersion 34
+        // Matches compileSdk and Flutter 3.44.9's own default. Raising this
+        // does NOT raise the minimum Android version -- that is minSdkVersion
+        // above, still 24 / Android 7.0. What it opts into is newer platform
+        // behaviour on newer devices, chiefly the edge-to-edge display that
+        // Android 15 enforces for apps targeting 35+.
+        targetSdkVersion 36
         versionCode 30
         versionName "1.4.5-beta.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
