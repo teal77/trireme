@@ -577,8 +577,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.5.0"
-      resolved-ref: b91c2157c03488a7ccd42bd4a7310f8e1b5532cf
+      ref: "v1.6.0"
+      resolved-ref: "447fb740260a85aa7da641d2e682d53e6fb4ebb8"
       url: "https://github.com/drolevar/trireme_client.git"
     source: git
     version: "0.0.1"
