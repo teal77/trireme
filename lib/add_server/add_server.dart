@@ -19,6 +19,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:trireme_client/trireme_client.dart';
 
@@ -130,7 +131,8 @@ class _AddServerState extends State<_AddServerPageContent>
             title: Text(Strings.addServerUserDetailsTitle),
             content: Form(
                 key: userDetailsFormKey,
-                child: Column(
+                child: AutofillGroup(
+                    child: Column(
                   children: <Widget>[
                     TextFormField(
                       decoration: InputDecoration(
@@ -143,6 +145,7 @@ class _AddServerState extends State<_AddServerPageContent>
                       autocorrect: false,
                       enableSuggestions: false,
                       textCapitalization: TextCapitalization.none,
+                      autofillHints: const [AutofillHints.username],
                       onSaved: (s) => username = s,
                       validator: controller.validateUsername,
                     ),
@@ -153,9 +156,10 @@ class _AddServerState extends State<_AddServerPageContent>
                       labelText: Strings.addServerPasswordLabel,
                       onSaved: (s) => password = s,
                       validator: controller.validatePassword,
+                      autofillHints: const [AutofillHints.password],
                     ),
                   ],
-                )),
+                ))),
             state: getStepState(2))
       ],
       currentStep: currentStep,
@@ -222,6 +226,9 @@ class _AddServerState extends State<_AddServerPageContent>
         var pemCert =
             saveCertificate ? daemonDetails?.daemonCertificate.pem : null;
         await controller.addServer(username!, password!, host!, port!, pemCert);
+        // Signals the end of the login so the password manager offers to save
+        // it. Filling works without this; saving does not.
+        TextInput.finishAutofillContext();
         await Future<void>.delayed(const Duration(seconds: 1));
         if (!mounted) return;
         Navigator.of(context).pop(true);
@@ -255,6 +262,7 @@ class PasswordField extends StatefulWidget {
     this.onSaved,
     this.validator,
     this.onFieldSubmitted,
+    this.autofillHints,
   });
 
   final String? hintText;
@@ -263,6 +271,7 @@ class PasswordField extends StatefulWidget {
   final FormFieldSetter<String>? onSaved;
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
+  final Iterable<String>? autofillHints;
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
@@ -278,6 +287,7 @@ class _PasswordFieldState extends State<PasswordField> {
       onSaved: widget.onSaved,
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
+      autofillHints: widget.autofillHints,
       decoration: InputDecoration(
         hintText: widget.hintText,
         labelText: widget.labelText,
