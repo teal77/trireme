@@ -22,6 +22,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 
@@ -106,6 +107,23 @@ public class MainActivity extends FlutterActivity {
 
     void saveIntentData() {
         Intent intent = getIntent();
+
+        // A shared torrent arrives as ACTION_SEND, whose payload is in the
+        // extras rather than in getData() -- a file as EXTRA_STREAM, a link as
+        // EXTRA_TEXT. Reading only getData() meant every share was ignored.
+        if (Intent.ACTION_SEND.equals(intent.getAction())) {
+            Uri stream = getStreamExtra(intent);
+            if (stream != null) {
+                intentTorrentFile = stream;
+                return;
+            }
+            String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (text != null && !text.isEmpty()) {
+                intentTorrentUrl = text;
+            }
+            return;
+        }
+
         if (intent.getData() == null) return;
         if (intent.getData().getScheme().equals(ContentResolver.SCHEME_CONTENT)
                 || intent.getData().getScheme().equals(ContentResolver.SCHEME_FILE)) {
@@ -113,6 +131,14 @@ public class MainActivity extends FlutterActivity {
         } else {
             intentTorrentUrl = intent.getDataString();
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    Uri getStreamExtra(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri.class);
+        }
+        return intent.getParcelableExtra(Intent.EXTRA_STREAM);
     }
 
     void onFilePickerResult(Intent data) {

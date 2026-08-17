@@ -54,6 +54,17 @@
             </intent-filter>
 
             <intent-filter>
+                <!--Accept a torrent shared from another app. The share sheet
+                    sends ACTION_SEND; ACTION_VIEW below is what a file manager
+                    or browser uses to *open* a file, which is a different
+                    thing, and only having the latter is why this app never
+                    appeared in the share sheet at all.-->
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/x-bittorrent" />
+            </intent-filter>
+
+            <intent-filter>
                 <!--Accept urls with mime type x-bittorrent-->
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
