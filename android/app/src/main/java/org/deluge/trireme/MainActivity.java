@@ -18,18 +18,14 @@
 
 package org.deluge.trireme;
 
-import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +41,6 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 public class MainActivity extends FlutterActivity {
     static final String CHANNEL = "org.deluge.trireme";
     static final int REQUEST_CODE_FILE_PICKER = 0;
-    static final int REQUEST_CODE_READ_PERMISSION = 1;
 
     MethodChannel.Result pickFileResult;
 
@@ -158,10 +153,14 @@ public class MainActivity extends FlutterActivity {
 
     void getOpenedFile(MethodChannel.Result result) {
         if (intentTorrentFile != null) {
-            if (!isReadPermissionGranted()) {
-                requestReadPermission();
-                return;
-            }
+            // No storage permission is checked here, deliberately. The URI
+            // arrives from an intent, which grants this app temporary read
+            // access to it, so openInputStream below succeeds without one.
+            //
+            // There used to be a READ_EXTERNAL_STORAGE gate that returned
+            // early without completing the result, so the Dart future never
+            // resolved -- and from Android 13 that permission cannot be
+            // granted at all, which made every shared torrent hang.
             try {
                 File f = copyFileToCacheDir(intentTorrentFile);
                 String intentTorrentFilePath = f.getAbsolutePath();
@@ -206,16 +205,5 @@ public class MainActivity extends FlutterActivity {
             }
         }
         return file;
-    }
-
-    boolean isReadPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    void requestReadPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                REQUEST_CODE_READ_PERMISSION);
     }
 }
