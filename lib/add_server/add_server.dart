@@ -135,7 +135,14 @@ class _AddServerState extends State<_AddServerPageContent>
                     TextFormField(
                       decoration: InputDecoration(
                           labelText: Strings.addServerUsernameLabel),
-                      keyboardType: TextInputType.emailAddress,
+                      // A Deluge username is a local account name, not an
+                      // email. The email keyboard offers @ and .com, and
+                      // invites autocorrect on something that must be typed
+                      // exactly.
+                      keyboardType: TextInputType.text,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      textCapitalization: TextCapitalization.none,
                       onSaved: (s) => username = s,
                       validator: controller.validateUsername,
                     ),
