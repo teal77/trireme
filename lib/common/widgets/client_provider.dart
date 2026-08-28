@@ -59,7 +59,7 @@ class ClientProviderState extends State<ClientProvider>
   void initState() {
     super.initState();
     _client = widget.client;
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -94,7 +94,7 @@ class ClientProviderState extends State<ClientProvider>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _client?.dispose();
     super.dispose();
   }

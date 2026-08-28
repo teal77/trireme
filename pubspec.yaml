@@ -24,6 +24,9 @@ dependencies:
 
   duration: "^3.0.11"
 
+  collection: any
+  meta: any
+  intl: any
 dev_dependencies:
   flutter_lints: "^2.0.1"
 

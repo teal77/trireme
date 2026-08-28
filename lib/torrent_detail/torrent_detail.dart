@@ -100,7 +100,7 @@ mixin TabControllerAnimationProviderMixin<T extends StatefulWidget> on State<T>
   void didChangeDependencies() {
     super.didChangeDependencies();
     tabControllerAnimation?.removeListener(_onAnimationChanged);
-    tabControllerAnimation = DefaultTabController.of(context)!.animation;
+    tabControllerAnimation = DefaultTabController.of(context).animation;
     tabControllerAnimation?.addListener(_onAnimationChanged);
   }
 
