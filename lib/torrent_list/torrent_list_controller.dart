@@ -94,8 +94,6 @@ class TorrentListController {
       }
     }
 
-    if (_torrentItems == null) return;
-
     sort(_sortCriterion, _reverseSort);
 
     stateUpdateCallback();
@@ -146,8 +144,6 @@ class TorrentListController {
   }
 
   void _updateTorrentList(List<TorrentItem> newTorrentItems) {
-    if (newTorrentItems == null) return;
-
     for (var t in newTorrentItems) {
       _updateTorrent(t);
     }
@@ -167,7 +163,7 @@ class TorrentListController {
     _sortCriterion = criterion;
     _reverseSort = reverse;
 
-    if (_torrentItems != null && _torrentItems.isNotEmpty) {
+    if (_torrentItems.isNotEmpty) {
       _torrentItems.sort(reverse ? _comparators[criterion]!.reversed() : _comparators[criterion]);
     }
   }

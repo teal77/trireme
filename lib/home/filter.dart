@@ -53,14 +53,12 @@ Future showFilterBottomSheet(BuildContext context, Future<FilterTree> future,
                     .map<_Filter>((e) => _Filter(e, e)));
 
                 var labelFilters = <_Filter>[];
-                if (snapshot.data!.labelFilters != null) {
-                  labelFilters = List<_Filter>.from(snapshot.data!.labelFilters
-                      .map((o) => (o as List).first as String)
-                      .where((e) => e.isNotEmpty)
-                      .map<_Filter>((e) => _Filter(e, e)));
-                  labelFilters.add(_Filter(Strings.homeFilterNoLabel, ''));
-                }
-
+                labelFilters = List<_Filter>.from(snapshot.data!.labelFilters
+                    .map((o) => (o as List).first as String)
+                    .where((e) => e.isNotEmpty)
+                    .map<_Filter>((e) => _Filter(e, e)));
+                labelFilters.add(_Filter(Strings.homeFilterNoLabel, ''));
+              
                 return FilterSelector(stateFilters, labelFilters,
                     trackerFilters, lastSelected, onFilterSelected);
               } else if (snapshot.hasError) {
