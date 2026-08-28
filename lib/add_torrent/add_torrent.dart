@@ -31,8 +31,10 @@ import 'file_picker.dart';
 
 class AddTorrentPage extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
+  final String? initialUrl;
+  final String? initialFilePath;
 
-  AddTorrentPage(this.addTorrentKind);
+  AddTorrentPage(this.addTorrentKind, {this.initialUrl, this.initialFilePath});
 
   @override
   State createState() => AddTorrentState();
@@ -58,7 +60,12 @@ class AddTorrentState extends State<AddTorrentPage> {
         ],
       ),
       body: LoadingContainer(
-        child: _AddTorrent(key, widget.addTorrentKind),
+        child: _AddTorrent(
+          key,
+          widget.addTorrentKind,
+          initialUrl: widget.initialUrl,
+          initialFilePath: widget.initialFilePath,
+        ),
       ),
     );
   }
@@ -66,8 +73,15 @@ class AddTorrentState extends State<AddTorrentPage> {
 
 class _AddTorrent extends StatefulWidget {
   final AddTorrentKind addTorrentKind;
+  final String? initialUrl;
+  final String? initialFilePath;
 
-  _AddTorrent(Key key, this.addTorrentKind) : super(key: key);
+  _AddTorrent(
+    Key key,
+    this.addTorrentKind, {
+    this.initialUrl,
+    this.initialFilePath,
+  }) : super(key: key);
 
   @override
   State createState() => _AddTorrentState();
@@ -97,7 +111,12 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
   @override
   void initState() {
     super.initState();
-    urlEditController = TextEditingController();
+    urlEditController =
+        TextEditingController(text: widget.initialUrl ?? "");
+    if (widget.initialFilePath != null && widget.initialFilePath!.isNotEmpty) {
+      selectedFilePath = widget.initialFilePath;
+      torrentFileName = getTorrentFileNameFromPath();
+    }
   }
 
   @override
@@ -480,7 +499,7 @@ class _AddTorrentState extends State<_AddTorrent> with TriremeProgressBarMixin {
       } else if (widget.addTorrentKind == AddTorrentKind.infohash) {
         await addTorrentHash();
       }
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } catch (e) {
       showSnackBar(prettifyError(e));
     } finally {

@@ -359,9 +359,11 @@ class _HomePageState extends State<_HomePageContent> {
     }
   }
 
-  void onAddTorrentClicked(AddTorrentKind kind) {
-    Navigator.push<void>(
-        context, MaterialPageRoute(fullscreenDialog: true, builder: (context) => AddTorrentPage(kind)));
+  void onAddTorrentClicked(AddTorrentKind kind) async {
+    var didAdd = await Navigator.push<bool>(context, MaterialPageRoute(fullscreenDialog: true, builder: (context) => AddTorrentPage(kind)));
+    if (didAdd == true) {
+      torrentListKey.currentState?.controller.getFilteredTorrentList();
+    }
   }
 
   void checkIntentDataAndAddTorrent() async {
@@ -369,18 +371,44 @@ class _HomePageState extends State<_HomePageContent> {
 
     try {
       var intentUrl = await PlatformChannel.getOpenedUrl();
-      if (intentUrl != null) {
-        addTorrentUrl(intentUrl);
+      if (intentUrl != null && intentUrl.isNotEmpty) {
+        var didAdd = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => AddTorrentPage(
+              intentUrl.startsWith("magnet")
+                  ? AddTorrentKind.infohash
+                  : AddTorrentKind.url,
+              initialUrl: intentUrl,
+            ),
+          ),
+        );
+        if (didAdd == true) {
+          torrentListKey.currentState?.controller.getFilteredTorrentList();
+        }
+        return;
       }
-      return;
     } on PlatformException {
       //nop
     }
 
     try {
       var intentFilePath = await PlatformChannel.getOpenedFile();
-      if (intentFilePath != null) {
-        addTorrentFile(intentFilePath);
+      if (intentFilePath != null && intentFilePath.isNotEmpty) {
+        var didAdd = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => AddTorrentPage(
+              AddTorrentKind.file,
+              initialFilePath: intentFilePath,
+            ),
+          ),
+        );
+        if (didAdd == true) {
+          torrentListKey.currentState?.controller.getFilteredTorrentList();
+        }
       }
     } on PlatformException catch (e) {
       if (e.code == "ERROR") {
@@ -389,40 +417,6 @@ class _HomePageState extends State<_HomePageContent> {
           duration: const Duration(seconds: 3),
         ));
       }
-    }
-  }
-
-  void addTorrentUrl(String url) async {
-    if (!repository.isReady()) {
-      await repository.readiness();
-    }
-    await repository.addTorrentUrl(url, {"owner": repository.client.username});
-  }
-
-  void addTorrentFile(String filePath) async {
-    String getTorrentFileNameFromPath(String filePath) {
-      if (filePath.isEmpty) return "";
-      var tempName = filePath.split("/").last;
-      if (tempName.contains(".torrent")) {
-        return tempName.replaceRange(tempName.lastIndexOf(".torrent"), null, ".torrent");
-      } else {
-        return tempName;
-      }
-    }
-
-    if (!repository.isReady()) {
-      await repository.readiness();
-    }
-
-    var fileName = getTorrentFileNameFromPath(filePath);
-    var torrentFile = File(filePath);
-
-    if (await torrentFile.exists()) {
-      var fileContent = await torrentFile.readAsBytes();
-      var fileDump = base64.encode(fileContent);
-      await repository.addTorrentFile(fileName, fileDump, {"owner": repository.client.username});
-    } else {
-      throw "Torrent file $fileName does not exist";
     }
   }
 

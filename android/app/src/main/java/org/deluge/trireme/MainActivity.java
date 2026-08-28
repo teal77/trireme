@@ -158,16 +158,12 @@ public class MainActivity extends FlutterActivity {
 
     void getOpenedFile(MethodChannel.Result result) {
         if (intentTorrentFile != null) {
-            if (!isReadPermissionGranted()) {
-                requestReadPermission();
-                return;
-            }
             try {
                 File f = copyFileToCacheDir(intentTorrentFile);
                 String intentTorrentFilePath = f.getAbsolutePath();
                 result.success(intentTorrentFilePath);
-            } catch (IOException e) {
-                result.error("ERROR", "Error opening file", null);
+            } catch (Exception e) {
+                result.error("ERROR", "Error opening file: " + e.getMessage(), null);
             }
         } else {
             result.error("NODATA", "No intent data", null);
