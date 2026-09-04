@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trireme_client/testing.dart';
 import 'package:trireme_client/trireme_client.dart';
@@ -222,5 +224,37 @@ void main() {
         isA<DelugeRpcError>()
             .having((e) => e.type, 'type', 'WrappedException')
             .having((e) => e.msg, 'msg', 'no such torrent'));
+  });
+
+  test('an event still arrives after the client is reinitialised mid-flight',
+      () async {
+    // Reproduces ClientProviderState.reInitClient's exact sequence on app
+    // resume: it calls setClient(null) -- which only *schedules* the widget
+    // rebuild that eventually reaches this repository's client setter -- and
+    // then, in the same synchronous stretch, calls client.init() again on the
+    // same instance. init() replaces the client's internal event stream
+    // controller before that scheduled null-branch call ever runs, so the
+    // null branch reacts *after* the swap. Disposing the client there closed
+    // the brand-new controller instead of the one that was actually meant to
+    // be torn down, permanently losing every event for the rest of the app
+    // session after the very first background/foreground cycle.
+    final events = <DelugeRpcEvent>[];
+    final subscription = repository.getDelugeRpcEvents().listen(events.add);
+    addTearDown(subscription.cancel);
+
+    await client.init();
+    repository.client = null;
+    repository.client = client;
+
+    Timer.run(() => daemon.emitEvent('TorrentAddedEvent', [torrentId]));
+
+    await waitFor(
+      () => events.isNotEmpty,
+      reason: 'an event on a client reinitialised mid-flight never arrived',
+    );
+    expect(
+        events.single,
+        isA<TorrentAddedEvent>()
+            .having((e) => e.torrentId, 'torrentId', torrentId));
   });
 }
