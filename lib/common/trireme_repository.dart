@@ -66,7 +66,6 @@ class TriremeRepository {
           client.delugeRpcEvents().listen((e) => _eventsStream?.add(e));
     } else {
       _localEventSubscription?.cancel();
-      _client?.dispose();
     }
   }
 
