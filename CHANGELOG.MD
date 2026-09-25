@@ -5,6 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.4.4] - 2026-09-25
+### Added
+- Show free disk space in sidebar
+- Pause/Resume server session button in sidebar
+- Show last seen complete in torrent details
+- Show current sorting order in sort menu
+
+### Fixed
+- Fixes timeout issue with setting labels to more than one torrent at once
+- Fix timeout issue when initially loading large number of torrents (>500) at startup
+- Fix newly added torrent not showing up in the torrent list immediately
+- Fix opening .torrent files not working correctly
+
+## [1.4.3] - 2024-04-20
+### Fixed
+- Fix deluge 1 connection not working
+
 ## [1.4.1] - 2023-12-28
 ### Fixed
 - Theme issue in F-Droid build
