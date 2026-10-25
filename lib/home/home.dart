@@ -469,7 +469,13 @@ Widget _getSortingButton(SortCriteria currentSortingCriterion, bool reverseSort,
           children: [
             Text(label),
             const Spacer(),
-            if (value == currentSortingCriterion) Icon(reverseSort ? Icons.arrow_downward : Icons.arrow_upward)
+            if (value == currentSortingCriterion)
+              Builder(
+                builder: (context) => Icon(
+                  reverseSort ? Icons.arrow_downward : Icons.arrow_upward,
+                  color: DefaultTextStyle.of(context).style.color?.withOpacity(0.6),
+                ),
+              )
           ],
         ));
   }
