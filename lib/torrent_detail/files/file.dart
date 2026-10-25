@@ -31,7 +31,7 @@ class File {
   late int priorityInt;
   late Priority priority;
   late double progress;
-  late File? parent = null;
+  File? parent;
   late List<File> children = [];
 
   File(this.name);
