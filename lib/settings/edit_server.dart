@@ -25,7 +25,7 @@ import 'package:trireme/home/home_controller.dart';
 class EditServer extends StatefulWidget {
   final ServerDBModel server;
 
-  EditServer(this.server);
+  EditServer(this.server, {super.key});
 
   @override
   EditServerState createState() => EditServerState();

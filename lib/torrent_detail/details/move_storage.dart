@@ -26,7 +26,7 @@ class MoveStorageDialog extends StatefulWidget {
   final String torrentId;
   final String currentPath;
 
-  MoveStorageDialog(this.torrentId, this.currentPath);
+  MoveStorageDialog(this.torrentId, this.currentPath, {super.key});
 
   @override
   State createState() => MoveStorageDialogState();

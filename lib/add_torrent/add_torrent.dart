@@ -34,7 +34,7 @@ class AddTorrentPage extends StatefulWidget {
   final String? initialUrl;
   final String? initialFilePath;
 
-  AddTorrentPage(this.addTorrentKind, {this.initialUrl, this.initialFilePath});
+  AddTorrentPage(this.addTorrentKind, {super.key, this.initialUrl, this.initialFilePath});
 
   @override
   State createState() => AddTorrentState();

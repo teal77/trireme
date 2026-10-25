@@ -30,7 +30,7 @@ import 'package:trireme_client/events.dart';
 class TrackerList extends StatefulWidget {
   final String torrentId;
 
-  TrackerList(this.torrentId);
+  TrackerList(this.torrentId, {super.key});
 
   @override
   State createState() {

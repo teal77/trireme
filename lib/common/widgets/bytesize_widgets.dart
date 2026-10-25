@@ -24,7 +24,7 @@ import 'package:trireme/common/common.dart';
 class ByteSize extends StatelessWidget {
   final int bytes;
 
-  ByteSize(this.bytes);
+  ByteSize(this.bytes, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ByteSize extends StatelessWidget {
 class ByteSizePerSecond extends StatelessWidget {
   final int bytes;
 
-  ByteSizePerSecond(this.bytes);
+  ByteSizePerSecond(this.bytes, {super.key});
 
   @override
   Widget build(BuildContext context) {

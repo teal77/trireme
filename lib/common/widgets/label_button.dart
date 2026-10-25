@@ -27,7 +27,7 @@ class LabelButton extends StatelessWidget {
   final TriremeRepository repository;
   final OnLabelSelected labelSelectedCallback;
 
-  LabelButton(this.repository, this.tooltip, this.labelSelectedCallback);
+  LabelButton(this.repository, this.tooltip, this.labelSelectedCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {

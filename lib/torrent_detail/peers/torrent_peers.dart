@@ -27,7 +27,7 @@ import 'package:trireme/common/common.dart';
 class TorrentPeersPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentPeersPage(this.torrentId);
+  TorrentPeersPage(this.torrentId, {super.key});
 
   @override
   State<StatefulWidget> createState() {

@@ -34,7 +34,7 @@ import 'options/torrent_options.dart';
 class TorrentDetailPage extends StatefulWidget {
   final TorrentItem torrentItem;
 
-  TorrentDetailPage(this.torrentItem);
+  TorrentDetailPage(this.torrentItem, {super.key});
 
   @override
   State<StatefulWidget> createState() {

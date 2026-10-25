@@ -22,7 +22,7 @@ class TriremeBanner extends StatelessWidget {
   final String text;
   final List<Widget> actions;
 
-  TriremeBanner(this.text, this.actions);
+  TriremeBanner(this.text, this.actions, {super.key});
 
   @override
   Widget build(BuildContext context) {

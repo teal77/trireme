@@ -22,6 +22,8 @@ import 'package:trireme/common/common.dart';
 import 'package:trireme/core/persistence.dart';
 
 class AppearanceSettingsScreen extends StatelessWidget {
+  const AppearanceSettingsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
 }
 
 class AppearanceSettings extends StatefulWidget {
+  const AppearanceSettings({super.key});
+
   @override
   _AppearanceSettingsState createState() => _AppearanceSettingsState();
 }
@@ -153,7 +157,7 @@ class MaterialColorPicker extends StatelessWidget {
   final MaterialColor selectedColor;
   final ValueChanged<MaterialColor> onColorChanged;
 
-  MaterialColorPicker(this.selectedColor, this.onColorChanged);
+  MaterialColorPicker(this.selectedColor, this.onColorChanged, {super.key});
 
   @override
   Widget build(BuildContext context) {

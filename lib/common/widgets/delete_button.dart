@@ -26,7 +26,7 @@ class DeleteButton extends StatelessWidget {
   final String toolTip;
   final DeleteCallback deleteCallback;
 
-  DeleteButton(this.toolTip, this.deleteCallback);
+  DeleteButton(this.toolTip, this.deleteCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {

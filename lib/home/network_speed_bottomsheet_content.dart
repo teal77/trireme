@@ -32,7 +32,7 @@ class NetworkSpeedBottomSheet extends StatelessWidget {
   final bool isDownload;
   final TriremeRepository repository;
 
-  NetworkSpeedBottomSheet(this.isDownload, this.repository);
+  NetworkSpeedBottomSheet(this.isDownload, this.repository, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +140,7 @@ class SpeedLimitSetter extends StatefulWidget {
   final bool isForDownloadSpeed;
   final TriremeRepository repository;
 
-  SpeedLimitSetter(this.isForDownloadSpeed, this.repository);
+  SpeedLimitSetter(this.isForDownloadSpeed, this.repository, {super.key});
 
   @override
   _SpeedLimitSliderState createState() => _SpeedLimitSliderState();

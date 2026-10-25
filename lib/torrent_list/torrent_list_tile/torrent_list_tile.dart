@@ -31,7 +31,7 @@ class TorrentListItem extends StatefulWidget {
   final TorrentItem data;
   final TorrentListController listController;
 
-  TorrentListItem(this.data, this.listController);
+  TorrentListItem(this.data, this.listController, {super.key});
 
   @override
   State<StatefulWidget> createState() => TorrentListItemState();

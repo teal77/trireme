@@ -29,7 +29,7 @@ import 'package:trireme/common/common.dart';
 class NetworkSpeedGraph extends StatelessWidget {
   final Stream<NetworkSpeedData> speeds;
 
-  NetworkSpeedGraph(this.speeds);
+  NetworkSpeedGraph(this.speeds, {super.key});
 
   @override
   Widget build(BuildContext context) {

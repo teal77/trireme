@@ -26,7 +26,7 @@ class MaxSpeedSettingScreen extends StatelessWidget {
   final bool isDownloadSpeed;
 
   MaxSpeedSettingScreen(
-      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed);
+      this.torrentId, this.currentMaxSpeed, this.isDownloadSpeed, {super.key});
 
   @override
   Widget build(BuildContext context) {

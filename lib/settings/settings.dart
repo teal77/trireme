@@ -24,6 +24,8 @@ import 'appearance.dart';
 import 'servers.dart';
 
 class SettingsList extends StatelessWidget {
+  const SettingsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

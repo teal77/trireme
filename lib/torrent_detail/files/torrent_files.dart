@@ -37,7 +37,7 @@ import 'torrent_files_controller.dart';
 class TorrentFileListPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentFileListPage(this.torrentId);
+  TorrentFileListPage(this.torrentId, {super.key});
 
   @override
   State<StatefulWidget> createState() {
