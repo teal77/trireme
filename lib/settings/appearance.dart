@@ -30,7 +30,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(Strings.settingsAppearance),
       ),
-      body: AppearanceSettings(),
+      body: const AppearanceSettings(),
     );
   }
 }
@@ -157,7 +157,7 @@ class MaterialColorPicker extends StatelessWidget {
   final MaterialColor selectedColor;
   final ValueChanged<MaterialColor> onColorChanged;
 
-  MaterialColorPicker(this.selectedColor, this.onColorChanged, {super.key});
+  const MaterialColorPicker(this.selectedColor, this.onColorChanged, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +190,7 @@ class MaterialColorPicker extends StatelessWidget {
 
     Widget _getColorButton(MaterialColor c) {
       return Padding(
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           child: GestureDetector(
             onTap: () => onColorChanged(c),
             child: CircleAvatar(

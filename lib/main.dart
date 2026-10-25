@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:trireme/home/home.dart';
 import 'package:trireme/common/common.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

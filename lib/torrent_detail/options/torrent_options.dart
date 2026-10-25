@@ -33,7 +33,7 @@ import 'torrent_options_controller.dart';
 class TorrentOptionsPage extends StatefulWidget {
   final String torrentId;
 
-  TorrentOptionsPage(this.torrentId, {super.key});
+  const TorrentOptionsPage(this.torrentId, {super.key});
 
   @override
   State createState() {
@@ -76,7 +76,7 @@ class _TorrentOptionsContent extends StatefulWidget {
   final String torrentId;
   final TorrentOptions torrentOptions;
 
-  _TorrentOptionsContent(this.torrentId, this.torrentOptions);
+  const _TorrentOptionsContent(this.torrentId, this.torrentOptions);
 
   @override
   State createState() {

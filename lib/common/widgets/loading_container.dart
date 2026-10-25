@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 class LoadingContainer extends StatefulWidget {
   final Widget child;
 
-  LoadingContainer({Key? key, required this.child}) : super(key: key);
+  const LoadingContainer({Key? key, required this.child}) : super(key: key);
 
   static LoadingContainerState of(BuildContext context) {
     var state =
@@ -44,7 +44,7 @@ class LoadingContainerState extends State<LoadingContainer>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: Duration(milliseconds: 250), vsync: this);
+        duration: const Duration(milliseconds: 250), vsync: this);
   }
 
   @override

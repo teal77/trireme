@@ -314,7 +314,7 @@ class TriremeRepository {
   }
 
   Stream<TorrentDetail> getTorrentDetails(String torrentId) {
-    if (client.isDisposed || torrentId.isEmpty) return Stream.empty();
+    if (client.isDisposed || torrentId.isEmpty) return const Stream.empty();
     return _clockStream
         .flatMap((_) => Stream.fromFuture(client.getTorrentDetails(torrentId)))
         .retry()

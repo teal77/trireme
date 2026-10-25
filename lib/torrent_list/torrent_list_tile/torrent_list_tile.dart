@@ -31,7 +31,7 @@ class TorrentListItem extends StatefulWidget {
   final TorrentItem data;
   final TorrentListController listController;
 
-  TorrentListItem(this.data, this.listController, {super.key});
+  const TorrentListItem(this.data, this.listController, {super.key});
 
   @override
   State<StatefulWidget> createState() => TorrentListItemState();
@@ -125,7 +125,7 @@ class TorrentListItemState extends State<TorrentListItem> {
         style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.w600),
       ),
       Padding(
-        padding: EdgeInsets.only(top: 4.0),
+        padding: const EdgeInsets.only(top: 4.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -235,15 +235,15 @@ class TorrentListItemState extends State<TorrentListItem> {
 class TorrentStateProperties {
   static const iconSize = 40.0;
 
-  static final downloadingColor = Colors.blue;
-  static final queuedColor = Colors.lightBlue;
-  static final seedingColor = Colors.lightGreen;
-  static final inactiveColor = Colors.grey;
-  static final pausedColor = Colors.pink;
+  static const downloadingColor = Colors.blue;
+  static const queuedColor = Colors.lightBlue;
+  static const seedingColor = Colors.lightGreen;
+  static const inactiveColor = Colors.grey;
+  static const pausedColor = Colors.pink;
 
   static final downloading = TorrentStateProperties._(
       downloadingColor,
-      Icon(
+      const Icon(
         Icons.cloud_download,
         size: iconSize,
         color: downloadingColor,
@@ -251,7 +251,7 @@ class TorrentStateProperties {
 
   static final seeding = TorrentStateProperties._(
       seedingColor,
-      Icon(
+      const Icon(
         Icons.cloud_upload,
         size: iconSize,
         color: seedingColor,
@@ -259,7 +259,7 @@ class TorrentStateProperties {
 
   static final inactive = TorrentStateProperties._(
       inactiveColor,
-      Icon(
+      const Icon(
         Icons.cloud_off,
         size: iconSize,
         color: inactiveColor,
@@ -267,7 +267,7 @@ class TorrentStateProperties {
 
   static final paused = TorrentStateProperties._(
       pausedColor,
-      Icon(
+      const Icon(
         Icons.cloud_off,
         size: iconSize,
         color: pausedColor,
@@ -275,7 +275,7 @@ class TorrentStateProperties {
 
   static final queuedForDownload = TorrentStateProperties._(
       queuedColor,
-      Icon(
+      const Icon(
         Icons.cloud_queue,
         size: iconSize,
         color: queuedColor,
@@ -283,7 +283,7 @@ class TorrentStateProperties {
 
   static final queuedForUpload = TorrentStateProperties._(
       inactiveColor,
-      Icon(
+      const Icon(
         Icons.cloud_done,
         size: iconSize,
         color: inactiveColor,

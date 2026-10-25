@@ -248,7 +248,7 @@ class _HomePageState extends State<_HomePageContent> {
   }
 
   void onAddServerClicked() async {
-    var didAddServer = await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => AddServerPage()));
+    var didAddServer = await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => const AddServerPage()));
 
     if (didAddServer == null || didAddServer == false) return;
 
@@ -277,7 +277,7 @@ class _HomePageState extends State<_HomePageContent> {
 
   void launchSettingsScreen() async {
     Navigator.pop(context);
-    await Navigator.push<void>(context, MaterialPageRoute(builder: (context) => SettingsList()));
+    await Navigator.push<void>(context, MaterialPageRoute(builder: (context) => const SettingsList()));
     var servers = await controller.getSavedServers();
     setState(() {
       this.servers = servers;

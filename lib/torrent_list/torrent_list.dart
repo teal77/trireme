@@ -30,7 +30,7 @@ class TorrentList extends StatefulWidget {
   final FilterSpec filterSpec;
   final ValueChanged<int> selectionCountChangedCallback;
 
-  TorrentList(Key key, this.sortCriterion, this.reverseSort, this.filterSpec,
+  const TorrentList(Key key, this.sortCriterion, this.reverseSort, this.filterSpec,
       this.selectionCountChangedCallback)
       : super(key: key);
 
@@ -70,7 +70,7 @@ class TorrentListState extends State<TorrentList> with TriremeProgressBarMixin {
       children: <Widget>[
         Scrollbar(
             child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 16.0),
                 itemCount: controller.getItemCount(),
                 itemBuilder: (context, index) {
                   TorrentItem t = controller.getItemAt(index);

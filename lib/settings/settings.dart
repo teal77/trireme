@@ -55,10 +55,10 @@ class SettingsList extends StatelessWidget {
   }
 
   void launchServerListScreen(BuildContext context) {
-    _launchScreen(context, ServerList());
+    _launchScreen(context, const ServerList());
   }
 
   void launchAppearanceSettingsScreen(BuildContext context) {
-    _launchScreen(context, AppearanceSettingsScreen());
+    _launchScreen(context, const AppearanceSettingsScreen());
   }
 }

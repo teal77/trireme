@@ -26,8 +26,8 @@ const _siUnits = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 const _iecUnits = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
 
 class ByteSizeFormatter {
-  static final kiloByte = ByteSizeFormatter(ByteSizeStyle.si);
-  static final kibiByte = ByteSizeFormatter(ByteSizeStyle.iec);
+  static const kiloByte = ByteSizeFormatter(ByteSizeStyle.si);
+  static const kibiByte = ByteSizeFormatter(ByteSizeStyle.iec);
 
   static ByteSizeFormatter of(ByteSizeStyle style) {
     if (style == ByteSizeStyle.si) {

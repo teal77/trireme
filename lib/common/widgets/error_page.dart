@@ -24,7 +24,7 @@ class ErrorPage extends StatelessWidget {
   static const _tag = "ErrorPage";
   final Object error;
 
-  ErrorPage(this.error, {super.key});
+  const ErrorPage(this.error, {super.key});
 
   @override
   Widget build(BuildContext context) {

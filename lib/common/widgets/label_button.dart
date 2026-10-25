@@ -27,7 +27,7 @@ class LabelButton extends StatelessWidget {
   final TriremeRepository repository;
   final OnLabelSelected labelSelectedCallback;
 
-  LabelButton(this.repository, this.tooltip, this.labelSelectedCallback, {super.key});
+  const LabelButton(this.repository, this.tooltip, this.labelSelectedCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class LabelButton extends StatelessWidget {
 
     return FutureBuilder<List<String>>(
       future: repository.getLabels(),
-      initialData: [],
+      initialData: const [],
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isEmpty) {
@@ -55,7 +55,7 @@ class LabelButton extends StatelessWidget {
                         value: s,
                         child: Text(s),
                       )))
-                ..add(PopupMenuDivider())
+                ..add(const PopupMenuDivider())
                 ..add(PopupMenuItem<String>(
                   value: "",
                   child: Text(Strings.detailNoLabel),
