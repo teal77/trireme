@@ -21,7 +21,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:charts_flutter/flutter.dart';
+import 'package:nimble_charts/flutter.dart';
 
 import 'package:trireme/common/common.dart';
 
