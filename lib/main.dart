@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
 }
 
 class _MyApp extends StatelessWidget {
-  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +51,9 @@ class _MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         textSelectionTheme: TextSelectionThemeData(
-          selectionHandleColor: PreferenceProvider.of(context).appThemeColor.shade400,
+          selectionHandleColor:
+              PreferenceProvider.of(context).appThemeColor.shade400,
         ),
-        toggleableActiveColor: PreferenceProvider.of(context).appThemeColor.shade200,
       ),
       themeMode: PreferenceProvider.of(context).themeMode,
       scaffoldMessengerKey: scaffoldMessengerKey,
