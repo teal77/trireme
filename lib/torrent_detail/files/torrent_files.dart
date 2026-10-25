@@ -380,8 +380,8 @@ class _TorrentFileListState extends State<_TorrentFileList>
   }
 }
 
-typedef void _TorrentFileSelectedCallback(File file);
-typedef void _TorrentFileClickedCallback(File file);
+typedef _TorrentFileSelectedCallback = void Function(File file);
+typedef _TorrentFileClickedCallback = void Function(File file);
 
 class _TorrentFileListTile extends StatelessWidget {
   final File file;
@@ -435,7 +435,7 @@ class _TorrentFileListTile extends StatelessWidget {
 
 enum SortBy { name, size, priority, progress }
 
-typedef void OnSortModeSelected(SortBy newSortBy);
+typedef OnSortModeSelected = void Function(SortBy newSortBy);
 
 Widget _getSortingButton(OnSortModeSelected callback) {
   return PopupMenuButton<SortBy>(
