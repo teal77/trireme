@@ -23,7 +23,6 @@ import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 class NetworkSpeedGraph extends StatelessWidget {

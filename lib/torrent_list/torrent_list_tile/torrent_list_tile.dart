@@ -18,7 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 import 'package:trireme/common/widgets/selectable.dart';
 import 'package:trireme/torrent_list/torrent_list_tile/torrent_list_tile_controller.dart';

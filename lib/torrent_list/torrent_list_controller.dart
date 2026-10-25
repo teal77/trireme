@@ -21,7 +21,6 @@ import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
 
-import 'package:trireme_client/events.dart';
 import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/common/common.dart';

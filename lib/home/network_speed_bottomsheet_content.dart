@@ -23,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/events.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'network_speed_graph.dart';

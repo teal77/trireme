@@ -18,7 +18,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 class ByteSize extends StatelessWidget {

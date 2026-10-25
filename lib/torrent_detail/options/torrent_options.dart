@@ -24,7 +24,6 @@ import 'package:trireme/torrent_detail/options/trackers/trackers_list.dart';
 
 import 'package:trireme_client/deserialization.dart';
 
-import 'package:trireme/common/bytesize.dart';
 import 'package:trireme/common/common.dart';
 
 import 'max_speed_setting.dart';

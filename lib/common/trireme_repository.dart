@@ -22,8 +22,6 @@ import 'dart:collection';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:trireme_client/events.dart';
-import 'package:trireme_client/deserialization.dart';
 import 'package:trireme_client/trireme_client.dart';
 
 import 'package:trireme/common/bytesize.dart';
