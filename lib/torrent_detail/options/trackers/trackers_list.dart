@@ -99,7 +99,7 @@ class _TrackerListState extends State<TrackerList>
                 )
               ],
               title: Text(selectedItemCount.toString()),
-              backgroundColor: theme.colorScheme.background,
+              backgroundColor: theme.colorScheme.surface,
               toolbarTextStyle: theme.textTheme.bodyMedium,
               titleTextStyle: theme.textTheme.titleLarge,
               iconTheme: theme.iconTheme,
