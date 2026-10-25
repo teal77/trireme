@@ -211,7 +211,8 @@ class _TorrentFileListState extends State<_TorrentFileList>
                           "assets/icons/highest.svg",
                           width: 24.0,
                           height: 24.0,
-                          color: IconTheme.of(context).color,
+                          colorFilter: ColorFilter.mode(
+                              IconTheme.of(context).color!, BlendMode.srcIn),
                         ),
                         tooltip: Strings.detailFileHighest,
                         onPressed: disableButtons

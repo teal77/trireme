@@ -98,9 +98,11 @@ class NavDrawerHeader extends StatelessWidget {
         child: SvgPicture.asset("assets/icons/trireme.svg",
             height: 80.0,
             width: 80.0,
-            color: Theme.of(context).primaryColor.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white),
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).primaryColor.computeLuminance() > 0.5
+                    ? Colors.black
+                    : Colors.white,
+                BlendMode.srcIn)),
       ),
     );
   }
