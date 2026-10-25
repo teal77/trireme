@@ -45,7 +45,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   @override
   void initState() {
     super.initState();
-    this.data = widget.data;
+    data = widget.data;
     controller.torrentItem = data;
     widget.listController.subscribeForStatusUpdates(data);
   }
@@ -53,7 +53,7 @@ class TorrentListItemState extends State<TorrentListItem> {
   @override
   void didUpdateWidget(TorrentListItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this.data = widget.data;
+    data = widget.data;
     controller.torrentItem = data;
     widget.listController.unSubscribeFromUpdates(oldWidget.data);
     widget.listController.subscribeForStatusUpdates(data);
@@ -220,7 +220,7 @@ class TorrentListItemState extends State<TorrentListItem> {
       var eta = controller.getEta();
       children.add(Expanded(
           child: Text(
-        "$eta",
+        eta,
         textAlign: TextAlign.end,
       )));
     }

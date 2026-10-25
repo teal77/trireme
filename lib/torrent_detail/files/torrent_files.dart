@@ -251,7 +251,7 @@ class _TorrentFileListState extends State<_TorrentFileList>
     return children;
   }
 
-  Map<SortBy, Comparator<File>> _comparators = {
+  final Map<SortBy, Comparator<File>> _comparators = {
     SortBy.name: (f1, f2) => f1.name.compareTo(f2.name),
     SortBy.size: (f1, f2) => f1.size.compareTo(f2.size),
     SortBy.priority: (f1, f2) => f1.priority.index.compareTo(f2.priority.index),

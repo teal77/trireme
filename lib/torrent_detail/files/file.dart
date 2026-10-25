@@ -62,7 +62,7 @@ class File {
   void addChild(File file) {
     children.add(file);
     file.parent = this;
-    file.path = "${this.path}/${file.name}";
+    file.path = "$path/${file.name}";
   }
 
   @override
@@ -122,7 +122,7 @@ File convertToFileTree(TorrentFiles torrentFiles) {
 
   void computeFolderMetadata(File file) {
     if (file.isFile) return;
-    file.children.forEach((f) => computeFolderMetadata(f));
+    file.children.forEach(computeFolderMetadata);
 
     file.size = file.children.fold(0, (t, f) => t + f.size);
     file.progress =
