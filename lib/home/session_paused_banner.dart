@@ -71,10 +71,12 @@ class _SessionPausedBannerState extends State<SessionPausedBanner>
       animation: animation,
       builder: (context, child) => TickerMode(
           enabled: animation.value > 0.0,
-          child: Align(
-            alignment: AlignmentDirectional.bottomEnd,
-            heightFactor: animation.value,
-            child: child,
+          child: ClipRect(
+            child: Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              heightFactor: animation.value,
+              child: child,
+            ),
           )),
       child: TriremeBanner(Strings.homeSessionPaused, [
         TextButton(

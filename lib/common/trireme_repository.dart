@@ -146,9 +146,11 @@ class TriremeRepository {
   Stream<SessionStatus> _getSessionStatusStream() {
     _sessionStatusStream ??= _clockStream
           .flatMap((_) => Stream.fromFuture(_getSessionStatus()))
+          .doOnError((e, _) {
+            if (!_isDisposed && _client != null) _errorStream.add(e);
+          })
           .retry()
           .syncWithClockStream(_clockStream)
-          .doOnError((e, _) => _errorStream.add(e))
           .asBroadcastStream()
           .where(_isResponseValid)
           .map(_unpackResponse);
