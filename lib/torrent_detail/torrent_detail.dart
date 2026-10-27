@@ -50,19 +50,29 @@ class TorrentDetailState extends State<TorrentDetailPage> {
     Tab(text: Strings.detailTabOptions),
   ];
 
-  late StreamSubscription<DelugeRpcEvent> _eventSubscription;
+  TriremeRepository? _repository;
+  StreamSubscription<DelugeRpcEvent>? _eventSubscription;
 
   @override
-  Widget build(BuildContext context) {
-    _eventSubscription = RepositoryProvider.repositoryOf(context)
-        .getDelugeRpcEvents()
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final repository = RepositoryProvider.repositoryOf(context);
+    if (identical(_repository, repository)) return;
+
+    _eventSubscription?.cancel();
+    _repository = repository;
+    _eventSubscription = repository.getDelugeRpcEvents()
         .where((e) => e is TorrentRemovedEvent)
         .map((e) => e as TorrentRemovedEvent)
         .where((e) => e.torrentId == widget.torrentItem.id)
         .listen((e) {
+      if (!mounted) return;
       Navigator.pop(context);
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
         length: tabs.length,
         child: Scaffold(
@@ -87,7 +97,7 @@ class TorrentDetailState extends State<TorrentDetailPage> {
 
   @override
   void dispose() {
-    _eventSubscription.cancel();
+    _eventSubscription?.cancel();
     super.dispose();
   }
 }
