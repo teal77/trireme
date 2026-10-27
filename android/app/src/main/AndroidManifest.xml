@@ -43,6 +43,11 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
 
+            <!-- Torrent intents are handled by MainActivity's method channel. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
