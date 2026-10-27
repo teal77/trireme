@@ -16,11 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'dart:async';
-
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
-
-import 'package:rxdart/rxdart.dart';
 
 import 'package:trireme/common/common.dart';
 
@@ -35,12 +32,9 @@ class DisconnectedBanner extends StatefulWidget {
 
 class _DisconnectedBannerState extends State<DisconnectedBanner>
     with SingleTickerProviderStateMixin {
-  static const _tag = "_DisconnectedBannerState";
-
   late AnimationController controller;
-  late TriremeRepository repository;
-  late StreamSubscription subscription;
-  var isBannerShowing = false;
+  late ClientProviderState clientProvider;
+  ValueListenable<bool>? connectionLost;
   var enableRetry = true;
 
   @override
@@ -53,16 +47,19 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    repository = RepositoryProvider.repositoryOf(context);
-    subscription = errorStreamDebounced().listen((e) async {
-      if (!isBannerShowing) {
-        await checkConnectionAndShowBanner();
-        while (mounted && isBannerShowing) {
-          await Future<void>.delayed(const Duration(seconds: 2));
-          await checkConnectionAndShowBanner();
-        }
-      }
-    });
+    connectionLost?.removeListener(updateVisibility);
+    clientProvider = ClientProvider.of(context);
+    connectionLost = clientProvider.connectionLost;
+    connectionLost!.addListener(updateVisibility);
+    updateVisibility();
+  }
+
+  void updateVisibility() {
+    if (connectionLost!.value) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
   }
 
   @override
@@ -90,8 +87,8 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
 
   @override
   void dispose() {
+    connectionLost?.removeListener(updateVisibility);
     controller.dispose();
-    subscription.cancel();
     super.dispose();
   }
 
@@ -99,39 +96,10 @@ class _DisconnectedBannerState extends State<DisconnectedBanner>
     setState(() {
       enableRetry = false;
     });
-    await checkConnectionAndShowBanner();
+    await clientProvider.ensureConnected();
+    if (!mounted) return;
     setState(() {
       enableRetry = true;
     });
-  }
-
-  Stream<Object> errorStreamDebounced() => repository.errorStream()
-      .debounceTime(const Duration(seconds: 1));
-
-  var checking = false;
-
-  Future checkConnectionAndShowBanner() async {
-    if (checking) return;
-    Log.v(_tag, "Checking connection to daemon");
-    checking = true;
-    try {
-      await repository.getDaemonInfo();
-      hideBanner();
-    } catch (e) {
-      Log.e(_tag, e.toString());
-      showBanner();
-    } finally {
-      checking = false;
-    }
-  }
-
-  void showBanner() {
-    isBannerShowing = true;
-    controller.forward();
-  }
-
-  void hideBanner() async {
-    isBannerShowing = false;
-    controller.reverse();
   }
 }

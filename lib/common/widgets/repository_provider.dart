@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:trireme_client/trireme_client.dart';
 
 import '../trireme_repository.dart';
@@ -66,8 +69,11 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
     with WidgetsBindingObserver {
   TriremeRepository? repository;
   TriremeClient? _client;
+  late ClientProviderState _clientProvider;
+  StreamSubscription<Object>? _errorSubscription;
 
   void setRepository(TriremeRepository repository) {
+    _listenForErrors(repository);
     setState(() {
       this.repository = repository;
     });
@@ -77,14 +83,23 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
   void initState() {
     super.initState();
     repository ??= TriremeRepository();
+    _listenForErrors(repository!);
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _client = ClientProvider.of(context).client;
+    _clientProvider = ClientProvider.of(context);
+    _client = _clientProvider.client;
     repository?.client = _client;
+  }
+
+  void _listenForErrors(TriremeRepository repository) {
+    _errorSubscription?.cancel();
+    _errorSubscription = repository.errorStream()
+        .debounceTime(const Duration(seconds: 1))
+        .listen((_) => _clientProvider.ensureConnected());
   }
 
   @override
@@ -108,6 +123,7 @@ class RepositoryProviderState extends State<_RepositoryProviderInternal>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _errorSubscription?.cancel();
     repository?.dispose();
     super.dispose();
   }

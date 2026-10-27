@@ -16,6 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 
 import 'package:trireme_client/trireme_client.dart';
@@ -46,13 +49,22 @@ class ClientProviderState extends State<ClientProvider>
   static const _tag = "ClientProviderState";
 
   TriremeClient? _client;
+  Future<bool>? _connecting;
+  Timer? _retryTimer;
+  bool _isActive = true;
+  final _connectionLost = ValueNotifier<bool>(false);
+
+  ValueListenable<bool> get connectionLost => _connectionLost;
 
   TriremeClient? get client => _client;
 
   void setClient(TriremeClient? client) {
+    _retryTimer?.cancel();
     setState(() {
       _client = client;
     });
+    _connectionLost.value = client?.isDisposed ?? false;
+    if (_connectionLost.value) _scheduleRetry();
   }
 
   @override
@@ -60,6 +72,10 @@ class ClientProviderState extends State<ClientProvider>
     super.initState();
     _client = widget.client;
     WidgetsBinding.instance.addObserver(this);
+    if (_client?.isDisposed ?? false) {
+      _connectionLost.value = true;
+      _scheduleRetry();
+    }
   }
 
   @override
@@ -73,28 +89,64 @@ class ClientProviderState extends State<ClientProvider>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
+      _isActive = false;
+      _retryTimer?.cancel();
       _client?.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (_client != null) {
-        reInitClient();
-      }
+      _isActive = true;
+      ensureConnected();
     }
   }
 
-  void reInitClient() async {
-    var client = _client;
-    setClient(null);
+  Future<bool> ensureConnected() {
+    return _connecting ??= _ensureConnected().whenComplete(() {
+      _connecting = null;
+    });
+  }
+
+  Future<bool> _ensureConnected() async {
+    final currentClient = _client;
+    if (!mounted || !_isActive || currentClient == null) return false;
+
+    var reinitialized = false;
     try {
-      await client?.init();
+      if (currentClient.isDisposed || _connectionLost.value) {
+        await currentClient.init();
+        reinitialized = true;
+      }
+      await currentClient.daemonInfo();
+      if (!mounted || !_isActive || !identical(_client, currentClient)) {
+        if (reinitialized) currentClient.dispose();
+        return false;
+      }
+      if (reinitialized) setClient(currentClient);
+      _connectionLost.value = false;
+      _retryTimer?.cancel();
+      return true;
     } catch (e) {
       Log.e(_tag, e.toString());
+      if (mounted && _isActive && identical(_client, currentClient)) {
+        _connectionLost.value = true;
+        _scheduleRetry();
+      }
+      return false;
     }
-    setClient(client);
+  }
+
+  void _scheduleRetry() {
+    _retryTimer?.cancel();
+    if (mounted && _isActive && _client != null) {
+      _retryTimer = Timer(const Duration(seconds: 2), () {
+        ensureConnected();
+      });
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _retryTimer?.cancel();
+    _connectionLost.dispose();
     _client?.dispose();
     super.dispose();
   }
