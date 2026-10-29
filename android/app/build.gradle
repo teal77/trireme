@@ -31,7 +31,7 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace "org.deluge.trireme"
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     lintOptions {
         disable 'InvalidPackage'
