@@ -375,9 +375,7 @@ class _HomePageState extends State<_HomePageContent> {
           MaterialPageRoute(
             fullscreenDialog: true,
             builder: (context) => AddTorrentPage(
-              intentUrl.startsWith("magnet")
-                  ? AddTorrentKind.infohash
-                  : AddTorrentKind.url,
+              AddTorrentKind.url,
               initialUrl: intentUrl,
             ),
           ),
