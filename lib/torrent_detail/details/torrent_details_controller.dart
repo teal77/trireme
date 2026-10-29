@@ -43,7 +43,7 @@ class TorrentDetailsController {
     } else if (since.inDays > 30) {
       return DateFormat("MMM d").add_jm().format(addedDate);
     } else if (since.inHours > 24) {
-      return DateFormat("EEEEE, MMM d").add_jm().format(addedDate);
+      return DateFormat("EEE, MMM d").add_jm().format(addedDate);
     } else {
       return DateFormat.jms().format(addedDate);
     }
@@ -61,7 +61,7 @@ class TorrentDetailsController {
     } else if (since.inDays > 30) {
       return DateFormat("MMM d").add_jm().format(completedDate);
     } else if (since.inHours > 24) {
-      return DateFormat("EEEEE, MMM d").add_jm().format(completedDate);
+      return DateFormat("EEE, MMM d").add_jm().format(completedDate);
     } else {
       return DateFormat.jms().format(completedDate);
     }
@@ -142,7 +142,7 @@ class TorrentDetailsController {
     } else if (since.inDays > 30) {
       return DateFormat("MMM d").add_jm().format(lastSeenComplete);
     } else if (since.inHours > 24) {
-      return DateFormat("EEEEE, MMM d").add_jm().format(lastSeenComplete);
+      return DateFormat("EEE, MMM d").add_jm().format(lastSeenComplete);
     } else {
       return DateFormat.jms().format(lastSeenComplete);
     }
