@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:trireme/home/home.dart';
 import 'package:trireme/common/common.dart';
@@ -59,6 +60,26 @@ class _MyApp extends StatelessWidget {
       ),
       themeMode: PreferenceProvider.of(context).themeMode,
       scaffoldMessengerKey: scaffoldMessengerKey,
+      builder: (context, child) {
+        final navigationBarColor = Theme.of(context).primaryColorDark;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            systemNavigationBarColor: navigationBarColor,
+            systemNavigationBarIconBrightness:
+                ThemeData.estimateBrightnessForColor(navigationBarColor) == Brightness.dark
+                    ? Brightness.light
+                    : Brightness.dark,
+            systemNavigationBarContrastEnforced: false,
+          ),
+          child: ColoredBox(
+            color: navigationBarColor,
+            child: SafeArea(
+              top: false,
+              child: ClipRect(child: child!),
+            ),
+          ),
+        );
+      },
       home: HomePage(scaffoldMessengerKey),
     );
   }
