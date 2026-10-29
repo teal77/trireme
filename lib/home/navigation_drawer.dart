@@ -128,9 +128,7 @@ class _SelectedServerState extends State<SelectedServer> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     repository = RepositoryProvider.repositoryOf(context);
-    if (Scaffold.of(context).isDrawerOpen) {
-      _fetchFreeSpace();
-    }
+    _fetchFreeSpace();
   }
 
   @override
