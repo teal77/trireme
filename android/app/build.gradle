@@ -45,7 +45,7 @@ android {
     defaultConfig {
         applicationId "org.deluge.trireme"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode 31
         versionName "1.4.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
