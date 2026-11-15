@@ -5,6 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.5.0-beta.1] - 2026-11-15
+
+### Added
+
+- Add F-Droid listing metadata and screenshots
+
+## [1.5.0-beta.0] - 2026-10-29
+
+### Fixed
+- Fix opening magnet links
+- Fix connection recovery and torrent details not loading after reconnecting from a broken connection
+- Fix incorrect disconnected/session-paused banner display
+- Fix session state and free-space loading when sidebar is swiped open instead of opened by hamburger button
+- Fix sort arrow visibility in light mode
+- Fix one letter weekdays in timestamps in torrent detail screen
+
 ## [1.4.4] - 2026-09-25
 ### Added
 - Show free disk space in sidebar
