@@ -1,0 +1,5 @@
+- Fix opening magnet links from other apps.
+- Fix connection recovery, disconnected banners, and torrent details after reconnecting.
+- Fix session state and free-space loading when swiping the sidebar open.
+- Fix Android 15 navigation-bar overlap, colors, and toolbar shadows.
+- Fix sort-arrow visibility in light mode and weekday names in timestamps.

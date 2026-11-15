@@ -1,0 +1,5 @@
+Use this app to connect and manage your Deluge Daemon.
+
+Deluge is a popular torrent client which follows a server client model.
+
+This app will act as a client.

@@ -1,0 +1,5 @@
+- Show free disk space and a session pause/resume button in the sidebar.
+- Show last seen complete in torrent details and the current sorting order.
+- Fix timeouts when setting labels on multiple torrents or loading large torrent lists.
+- Fix newly added torrents not appearing immediately.
+- Fix opening .torrent files.
