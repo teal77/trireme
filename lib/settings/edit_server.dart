@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import 'package:trireme/common/common.dart';
 import 'package:trireme/core/persistence.dart';
+import 'package:trireme/add_server/add_server_controller.dart';
 import 'package:trireme/home/home_controller.dart';
 
 class EditServer extends StatefulWidget {
@@ -64,32 +65,136 @@ class _EditServer extends StatefulWidget {
 }
 
 class _EditServerState extends State<_EditServer> {
+  late ServerDBModel server = widget.server;
+  final controller = AddServerController();
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        sectionHeader(Strings.settingsServerConnection),
         ListTile(
           title: Text(Strings.addServerHostLabel),
-          subtitle: Text(widget.server.host),
+          subtitle: Text(server.host),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            iconSize: 20,
+            tooltip: 'Edit ${Strings.addServerHostLabel}',
+            onPressed: () => editField('host', Strings.addServerHostLabel,
+                server.host, controller.validateHost, keyboardType: TextInputType.url),
+          ),
         ),
         ListTile(
           title: Text(Strings.addServerPortLabel),
-          subtitle: Text(widget.server.port.toString()),
+          subtitle: Text(server.port.toString()),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            iconSize: 20,
+            tooltip: 'Edit ${Strings.addServerPortLabel}',
+            onPressed: () => editField('port', Strings.addServerPortLabel,
+                server.port.toString(), controller.validatePort,
+                keyboardType: TextInputType.number),
+          ),
         ),
+        const Divider(height: 24),
+        sectionHeader(Strings.settingsServerCredentials),
+        ListTile(
+          title: Text(Strings.addServerUsernameLabel),
+          subtitle: Text(server.username),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            iconSize: 20,
+            tooltip: 'Edit ${Strings.addServerUsernameLabel}',
+            onPressed: () => editField('username', Strings.addServerUsernameLabel,
+                server.username, controller.validateUsername),
+          ),
+        ),
+        ListTile(
+          title: Text(Strings.addServerPasswordLabel),
+          subtitle: const Text('********'),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            iconSize: 20,
+            tooltip: 'Edit ${Strings.addServerPasswordLabel}',
+            onPressed: () => editField('password', Strings.addServerPasswordLabel,
+                server.password, controller.validatePassword, obscureText: true),
+          ),
+        ),
+        const Divider(height: 24),
         ListTile(
           title: Text(Strings.settingsCertSaved),
           subtitle: Text(_isCertSaved() ? Strings.strYes : Strings.strNo),
         ),
-        ListTile(
-          title: Text(Strings.addServerUsernameLabel),
-          subtitle: Text(widget.server.username),
-        )
       ],
     );
   }
 
+  Widget sectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Text(title,
+          style: TextStyle(fontSize: 13, color: Theme.of(context).hintColor)),
+    );
+  }
+
+  Future<void> editField(String column, String title, String initialValue,
+      FormFieldValidator<String> validator,
+      {TextInputType? keyboardType, bool obscureText = false}) async {
+    final formKey = GlobalKey<FormState>();
+    var value = initialValue;
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            initialValue: initialValue,
+            autofocus: true,
+            keyboardType: keyboardType,
+            obscureText: obscureText,
+            autocorrect: !obscureText,
+            enableSuggestions: !obscureText,
+            validator: validator,
+            onChanged: (text) => value = text,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(Strings.strcCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) Navigator.pop(context, value);
+            },
+            child: Text(Strings.strcSave),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || result == null || result == initialValue) return;
+
+    final values = server.toMap();
+    values[column] = column == 'port' ? int.parse(result) : result;
+    final updated = ServerDBModel.fromMap(values);
+    final database = ServerDetailsDatabase();
+    final loading = LoadingContainer.of(context);
+    loading.showProgress();
+    try {
+      await database.open();
+      await database.updateServer(server, updated);
+      if (mounted) setState(() => server = updated);
+    } catch (e) {
+      if (mounted) showSnackBar(e.toString());
+    } finally {
+      await database.close();
+      if (mounted) loading.hideProgress();
+    }
+  }
+
   bool _isCertSaved() {
-    var cert = widget.server.certificate;
+    var cert = server.certificate;
     return cert.isNotEmpty;
   }
 

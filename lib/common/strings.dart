@@ -166,6 +166,7 @@ class Strings {
   static String strcYes = "YES";
   static String strcNo = "NO";
   static String strcSave = "SAVE";
+  static String strcCancel = "CANCEL";
 
   static String detailBandwidthLabel = "Bandwidth";
   static String detailQueueLabel = "Queue";
@@ -202,8 +203,10 @@ class Strings {
 
   static String settingsTitle = "Settings";
   static String settingsServers = "Servers";
-  static String settingsServersInfo = "View, Remove servers";
+  static String settingsServersInfo = "View, Edit, Remove servers";
   static String settingsServerDetails = "Server details";
+  static String settingsServerConnection = "Connection";
+  static String settingsServerCredentials = "Credentials";
   static String settingsEditServer = "Edit Server";
   static String settingsDeleteServerTooltip = "Delete server";
   static String settingsCertSaved = "Certificate saved";

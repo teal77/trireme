@@ -88,13 +88,10 @@ class _ServerListState extends State<_ServerList> {
   }
 
   void launchServerDetails(ServerDBModel s) async {
-    var result = await Navigator.push<bool>(
+    await Navigator.push<bool>(
         context,
         MaterialPageRoute(builder: (context) => EditServer(s))
     );
-    if (result == null) return;
-    if (result) {
-      getServersAsync();
-    }
+    if (mounted) getServersAsync();
   }
 }

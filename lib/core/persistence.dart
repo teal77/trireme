@@ -107,8 +107,8 @@ class ServerDetailsDatabase {
   }
 
   Future updateServer(ServerDBModel oldData, ServerDBModel newData) async {
-    await deleteServer(oldData);
-    await addServer(newData);
+    await _database!.update(_tableName, newData.toMap(),
+        where: "$_columnId = ?", whereArgs: <Object>[oldData.id!]);
   }
 
   Future deleteServer(ServerDBModel server) async {

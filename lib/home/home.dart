@@ -19,6 +19,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter/services.dart';
 import 'package:trireme/home/session_paused_banner.dart';
 
@@ -277,9 +278,18 @@ class _HomePageState extends State<_HomePageContent> {
     Navigator.pop(context);
     await Navigator.push<void>(context, MaterialPageRoute(builder: (context) => const SettingsList()));
     var servers = await controller.getSavedServers();
-    setState(() {
-      this.servers = servers;
-    });
+    var currentServer = await controller.getSelectedServer();
+    if (!mounted) return;
+    if (!mapEquals(selectedServer?.toMap(), currentServer.toMap())) {
+      repository.dispose();
+      repository.client.dispose();
+      RepositoryProvider.of(context).setRepository(TriremeRepository());
+      await initStateAsync();
+    } else {
+      setState(() {
+        this.servers = servers;
+      });
+    }
   }
 
   void onSortCriterionChanged(SortCriteria newCriterion) {
