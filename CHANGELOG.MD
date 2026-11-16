@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0-beta.2] - 2026-11-16
+
+### Added
+
+- Edit saved server host, port, username and password from Settings > Servers
+
 ## [1.5.0-beta.1] - 2026-11-15
 
 ### Added

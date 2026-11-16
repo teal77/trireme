@@ -1,0 +1,1 @@
+- Edit saved server host, port, username and password from Settings > Servers.
