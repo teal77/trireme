@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-22
+
+### Added
+
+- Edit saved server host, port, username and password from Settings > Servers
+
+### Fixed
+
+- Fix opening magnet links
+- Fix connection recovery and torrent details not loading after reconnecting from a broken connection
+- Fix incorrect disconnected/session-paused banner display
+- Fix session state and free-space loading when sidebar is swiped open instead of opened by hamburger button
+- Fix sort arrow visibility in light mode
+- Fix one letter weekdays in timestamps in torrent detail screen
+
 ## [1.5.0-beta.2] - 2026-11-16
 
 ### Added
